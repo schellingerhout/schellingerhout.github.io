@@ -7,6 +7,13 @@ tags:
   - R
   - Tutorial
 ---
+Expanding on the basics of the simple data classes we now start with the first higher dimension construct: vectors
+<!--more-->
+
+
+I am posting this tutorial as I learn R. I will add comments section soon and will respond to feedback for errata.
+{: .notice}
+
 
 ## Combining values
 
@@ -67,7 +74,7 @@ combined_integer <- c(1, 2, 4)
 combined_integer[4]
 ```
 
-Did you get what you expected? Most programming languages would throw an "Index out of bounds" exception. R returns a polite `NA` value. Simply it means "Not Available" (the value is missing). `NA` is somewhat analogous to a null value, in that it shows the absence of a value
+Did you get what you expected? Most programming languages would throw an "Index out of bounds" exception. R returns a polite `NA` value. Simply it means "Not Available" (the value is missing). `NA` is somewhat analogous to a null value, in that it shows the absence of a value. But, as you will soon see, `NULL` is also present in the R language
 
 Try the following 
 

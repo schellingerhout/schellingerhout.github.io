@@ -9,8 +9,10 @@ tags:
 ---
 
 Here is a very fast moving tutorial in getting started in R. Hold on to your hat
-
 <!--more-->
+
+I am posting this tutorial as I learn R. I will add comments section soon and will respond to feedback for errata.
+{: .notice}
 
 ## Installation
 
@@ -27,6 +29,9 @@ In R-Studio you can directly enter new commands in the console. Try some typing 
 ```
 
 By looking at the results the first few are very obviously addition, subtraction, multiplication and exponentiation, the last one `%%` may not be that obious. That is the modulo operator (returns the remainder after division)
+
+**Self Study**: Find out what `**` and `%/%` does.
+{: .notice--info}
 
 When you entered the commands you may have noticed that the results looked a bit odd. For instance
 
@@ -45,12 +50,12 @@ The 8 makes sense, but what is up with the `[1]`?
 Since R is mostly concerned with multi-dimensional data it is telling you that a one dimensional construct was returned and the value at its first index had a value of 8.
 
 **Watch out!** Most programming languages have zero based indexing, R has index 1 as the first.
-{: .notice}
+{: .notice--warning}
 
 ## Variables
 
 Variables are assigned using the `<-` operator as in `variable <- value`
-Can you assign `42` to the variable 
+Can you assign `42` to the variable `answer`.
 
 ``` R
 answer <- 42
@@ -58,7 +63,7 @@ answer <- 42
 
 Try typing the command above in the console. Notice the console immediately returns to the `>` prompt and does not return a value. You may have seen a value show up in the environment pane, don't worry about that for now.
 
-type the name of the variable by itself
+Type the name of the variable by itself
 
 ``` R
 answer
@@ -76,8 +81,7 @@ Answer
 What happened?
 
 **Watch out!** R variables are case sensitive.
-{: .notice}
-
+{: .notice--warning}
 
 Variables can be used wherever values are used. Try these
 
