@@ -11,7 +11,7 @@ Expanding on the basics of the simple data classes we now start with the first h
 <!--more-->
 
 
-I am posting this tutorial as I learn R. I will add comments section soon and will respond to feedback for errata.
+I am posting this tutorial as I learn R. I will respond to feedback for errata in the comments.
 {: .notice}
 
 
