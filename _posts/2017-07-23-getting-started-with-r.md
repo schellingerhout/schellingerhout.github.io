@@ -11,8 +11,9 @@ tags:
 Here is a very fast moving tutorial in getting started in R. Hold on to your hat
 <!--more-->
 
-I am posting this tutorial as I learn R. I will add comments section soon and will respond to feedback for errata.
+I am posting this tutorial as I learn R. I will respond to feedback for errata in the comments.
 {: .notice}
+
 
 ## Installation
 
