@@ -30,7 +30,7 @@ combined_logical
 combined_integer
 ```
 
-Try a variable of combined characters on your own.
+Try a variable of combined `characters` type on your own.
 
 ## Coercing
 
@@ -45,13 +45,13 @@ combined_mixed
 
 ``` R
 combined_basic_classes <- c(12.3, FALSE, 4, "Arggh")
-combined_basic_classes
+.combined_basic_classes
 ```
 
 **Careful!** When combining different classes into a vector. Values are coerced to a type that can represent them all, often the `numeric` or `characters` type
 {: .notice}
 
-## Indexing
+## Basic Indexing
 
 We have already touched on the fact that R uses 1-based indexing. This is different from most other programming languages that use 0-based indexing
 
@@ -65,7 +65,7 @@ combined_logical[2]
 combined_integer[3]
 ```
 
-The `[]` syntax is called the extract\replace operator. But for now think of it as a way to index values, we'll dig into its advanced properties later
+The `[]` syntax is called the extract\replace operator. But for now think of it as a way to index values, we'll dig into its advanced properties later. 
 
 As you can see the first, second and third values of each of the vectors were returned. What if we pass an index outside the range such as `combined_integer[4]`. Try it. 
 
