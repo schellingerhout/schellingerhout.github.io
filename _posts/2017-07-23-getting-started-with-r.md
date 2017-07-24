@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with R (Part 1)"
+title: "Getting Started with R - Part 1: The Console and Variables"
 excerpt_separator: "<!--more-->"
 categories:
   - Data Science
@@ -18,27 +18,27 @@ Install [R-Studio](https://www.rstudio.com/). You will most likely work in it an
 
 ## Mathematical Operators
 In R-Studio you can directly enter new commands in the console. Try some typing in the console. Specifically, try a few basic mathematical operations
-{% highlight R %}
+``` R
 3 + 5
 3 - 5
 3 * 5
 3 ^ 5
 13 %% 5
-{% endhighlight %}
+```
 
 By looking at the results the first few are very obviously addition, subtraction, multiplication and exponentiation, the last one `%%` may not be that obious. That is the modulo operator (returns the remainder after division)
 
 When you entered the commands you may have noticed that the results looked a bit odd. For instance
 
-{% highlight R %}
+``` R
 3 + 5
-{% endhighlight %}
+```
 
 yields
 
-{% highlight R %}
+``` R
 [1] 8
-{% endhighlight %}
+```
 
 The 8 makes sense, but what is up with the `[1]`?
 
@@ -136,7 +136,7 @@ class(my_string_err_characters)
 
 ## Comments
 
-Comments are done with a `#` character. Everything following to the end of the line is ignored
+Comments are done with a `#` character. Everything following to the end of the line is ignored. 
 
 ``` R
 # Calculate rectangular area
@@ -145,3 +145,5 @@ height <- 6 # both measurements in inches
 area <- height * width
 area
 ```
+
+You will most likely not use comments in the console, but you will probably use them in an R script.  
