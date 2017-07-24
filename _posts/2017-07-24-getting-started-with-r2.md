@@ -34,7 +34,7 @@ Try a variable of combined characters on your own.
 
 ## Coercing
 
-What happens if we mix types? Go ahead and try.
+.What happens if we mix types? Go ahead and try.
 
 ``` R
 combined_mixed <- c(12.3, FALSE, 4)
@@ -87,7 +87,7 @@ Bet you were expecting an `NA` value. This is an odd case. The online help state
 
 ## Help
 
-Before I continue with more advanced indexing, a quick note on the help system. To get help on anything simply prefix `?` to the function for instance. To get help on the combine function we can use
+Before I continue with more advanced indexing, a quick note on the help system. To get help on anything simply prefix `?` to the function For instance, to get help on the combine function we can use:
 
 ``` R
 ?c
