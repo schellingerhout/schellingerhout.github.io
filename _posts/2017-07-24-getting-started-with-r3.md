@@ -34,7 +34,7 @@ Warning message:
 In probability_of_rain_play + probability_of_rain_work :
   longer object length is not a multiple of shorter object length
 ```
-Looks like Saturday and Sundays values were added to Monday and Tuesday, and again to Wednesday and Thursday. Finally Saturday's value was added to Friday. We did not want this and that is why we used `c()` in our previous post.
+Looks like Saturday and Sundays values were added to Monday and Tuesday, and again to Wednesday and Thursday. Finally Saturday's value was added to Friday. **We did not want this** and that is why we used `c()` in our previous post.
 
 We did learn something from the result and message above. The smaller vector was repeatedly applied to the larger vector, almost like a [rack and pinion gear](https://en.wikipedia.org/wiki/Rack_and_pinion) rolling. Per the error message above, one vector needs to be at least a multiple of the other to avoid a warning. This makes sense because otherwise we'd have an remainder of unapplied values.
 
@@ -73,11 +73,11 @@ Shows a nice element-wise difference vector
      0.00      0.03      0.01     -0.01     -0.02 
 ```
 
-We are not limited to just mathematical operators we can also use logical operators
+We are not limited to just mathematical operators we can also use logical operators like this ...
 ```R
 actual_precipitation > 0.0
 ```
-Yields a result as if each element was compared against 0.0. In essence we applied the operator against a vector of length 5 and a vector of length 1, and 5 is a multiple of 1 so the comparison applied to each element.
+... which yields a result as if each element was compared against 0.0. In essence we applied the `>` operator against a vector of length 5 and a vector of length 1. Since 5 is a multiple of 1 the comparison was applied to each element.
 
 ```
    Monday   Tuesday Wednesday  Thursday    Friday 
@@ -115,11 +115,14 @@ yields
 
 I could also have used `predicted_precipitation[predicted_precipitation > actual_precipitation]`, but sometimes readability trumps short code.
 
-From your new found knowledge, can you predict the result of the following
+From your new found knowledge, can you predict the result of the following?
 
 ```R
 cincinnati_rainfall[c(T,F)]
 ```
+Do you understand why you got the result? If not, please re-read the section above, or post in the comment section below.
+
+I will cover other ways to use the `[]`Extract\Replace operator in the next post.
 
 ## Vector functions
 
