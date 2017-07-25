@@ -54,6 +54,7 @@ yields a result showing that the quater irrigation values are cycled over the la
 
 From this it should be obvious what happens when the vectors are exactly the same length.
 
+
 Lets test that with the `-` operator
 
 ```R
@@ -114,6 +115,11 @@ yields
 
 I could also have used `predicted_precipitation[predicted_precipitation > actual_precipitation]`, but sometimes readability trumps short code.
 
+From your new found knowledge, can you predict the result of the following
+
+```R
+cincinnati_rainfall[c(T,F)]
+```
 
 ## Vector functions
 
