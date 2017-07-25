@@ -36,7 +36,7 @@ In probability_of_rain_play + probability_of_rain_work :
 ```
 Looks like Saturday and Sundays values were added to Monday and Tuesday. We did not want this and that is why we used `c()` in our previous post.
 
-What if we want to add the values of one vector to another? Per the error message above one vector needs to be at least a multiple of the other. Let us see what happens if one vector is a multiple of another so lets add a 3 value vector to a 12 value vector
+We did learn something from the result and message above. We can add vector values and per the error message above one vector needs to be at least a multiple of the other (at least to avoid a warning). Let us see what happens if one vector is a multiple of another, so lets add a 3 value vector to a 12 value vector:
 
 ``` R
 cincinnati_rainfall <- c(2.87, 2.64, 3.82, 3.82, 4.72, 4.17, 3.86, 3.98, 3.11, 2.83, 3.31, 3.11)
@@ -74,14 +74,14 @@ We are not limited to just mathematical operators we can also use logical operat
 ```R
 actual_precipitation > 0.0
 ```
-Yields a result as if each element was compared against 0.0. In essence we applied the operator against a vector of length 5 and a vector of length1, and 5 is a multiple of 1 so the comparison applied to each element. Smart! Cool! Powerful!
+Yields a result as if each element was compared against 0.0. In essence we applied the operator against a vector of length 5 and a vector of length 1, and 5 is a multiple of 1 so the comparison applied to each element. Smart! Cool! Powerful!
 
 ```
    Monday   Tuesday Wednesday  Thursday    Friday 
     FALSE      TRUE     FALSE      TRUE      TRUE 
 ```
 
-Using this same principle I can do this just as easily!
+Using this same principle I can do the following just as easily!
 
 ```R
 predicted_precipitation > actual_precipitation
@@ -110,12 +110,12 @@ yields
      0.30      0.01 
 ```
 
-I could also have used `predicted_precipitation[predicted_precipitation > actual_precipitation]`, but sometimes readability trumps short code..
+I could also have used `predicted_precipitation[predicted_precipitation > actual_precipitation]`, but sometimes readability trumps short code.
 
 
 ## Vector functions
 
-There are many built in functions in R for vectors, but lets look at a few common ones
+Let me leave you with some of the many built in functions in R for vectors
 
 ```R
 length(predicted_precipitation)
@@ -126,6 +126,3 @@ min(predicted_precipitation)
 ```
 
 These operate accross the vector and return a single value. I'll let you use the help system to read up on those if you are not familiar with the difference between `mean` and `median`
-
-
-
