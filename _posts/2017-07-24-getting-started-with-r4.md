@@ -20,7 +20,7 @@ Some recap from earlier lessons
 
 ### Extract via index
 
-In [Part 2({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) of the tutorial we saw that we can use the `[]` operator similar to indexer in tradtional languages by providing a 1-based index. Like this:
+In [Part 2]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) of the tutorial we saw that we can use the `[]` operator similar to indexer in tradtional languages by providing a 1-based index. Like this:
 ```R
 combined_integer <- c(1, 2, 4)
 combined_integer[3]
