@@ -36,7 +36,7 @@ In probability_of_rain_play + probability_of_rain_work :
 ```
 Looks like Saturday and Sundays values were added to Monday and Tuesday, and again to Wednesday and Thursday. Finally Saturday's value was added to Friday. We did not want this and that is why we used `c()` in our previous post.
 
-We did learn something from the result and message above. The smaller vector was repeatedly applied to the larger vector, almost like a [rack and pinion gear](https://en.wikipedia.org/wiki/Rack_and_pinion) rolling. Per the error message above, one vector needs to be at least a multiple of the other to avoid a warning. This makes sense because otherwise we'd have an odd value. 
+We did learn something from the result and message above. The smaller vector was repeatedly applied to the larger vector, almost like a [rack and pinion gear](https://en.wikipedia.org/wiki/Rack_and_pinion) rolling. Per the error message above, one vector needs to be at least a multiple of the other to avoid a warning. This makes sense because otherwise we'd have an remainder of unapplied values.
 
 Let us see what happens if one vector is a multiple of another, so lets add a 3 value vector to a 12 value vector:
 
