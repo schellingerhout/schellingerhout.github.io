@@ -97,3 +97,41 @@ or in some cases we need to quote the item for which we want help, like this:
 ``` R
 ?"["
 ```
+
+## Naming and combining vectors
+
+Sometimes working with vectors is easier if we can name the indices. To do that we can use the `names` function
+
+``` R
+probability_of_rain <- c(0.8, 0.2, 0.05, 0.4, 0.65)
+names(probability_of_rain) = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+probability_of_rain
+```
+Now we see a nice output showing the labels over each indexed value
+
+```  
+   Monday   Tuesday Wednesday  Thursday    Friday 
+     0.80      0.20      0.05      0.40      0.65 
+```
+
+Cool, say we have another two vectors like this 
+
+``` R
+probability_of_rain_work <- c(0.8, 0.2, 0.05, 0.4, 0.65)
+names(probability_of_rain_work) = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+probability_of_rain_play <- c(0.1, 0.0)
+names(probability_of_rain_play) = c("Saturday", "Sunday")
+```
+How can I combine the two vectors? Combine? Combine? yes, combine as in `c()`
+
+```R
+c(probability_of_rain_play, probability_of_rain_work)
+```
+yields this nice result
+
+```
+ Saturday    Sunday    Monday   Tuesday Wednesday  Thursday    Friday 
+     0.10      0.00      0.80      0.20      0.05      0.40      0.65 
+```
+
+Of course as before we can assign the result to a new variable as well. use `?c`, notice that the signature can accept a parameter `use.names` that has a default value `TRUE`. This is why our index names were preserved
