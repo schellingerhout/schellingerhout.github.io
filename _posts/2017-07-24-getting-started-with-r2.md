@@ -1,4 +1,4 @@
-3--
+---
 title: "Getting Started with R - Part 2: Vector Basics"
 excerpt_separator: "<!--more-->"
 categories:
