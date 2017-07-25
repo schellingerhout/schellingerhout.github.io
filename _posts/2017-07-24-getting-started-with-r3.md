@@ -7,7 +7,7 @@ tags:
   - R
   - Tutorial
 ---
-Expanding on our [Vectors Basics]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) we will continue with operations accross vectors as well as selecting and subsetting vectors beyond simple indexing.
+Expanding on our [Vectors Basics]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) we will continue with operations accross vectors.
 <!--more-->
 
 
