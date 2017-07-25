@@ -117,7 +117,7 @@ This also means that variables can be combined in expressions.
 ``` R
 width <- 5
 height <- 6
-area <- height  * width
+area <- height * width
 area
 ```
 
