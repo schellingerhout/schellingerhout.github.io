@@ -7,7 +7,10 @@ tags:
   - R
   - Tutorial
 ---
-Expanding on the basics of the simple data classes we now start with the first higher dimension construct: vectors
+
+
+
+Expanding on the basics of the simple data classes in [Part 1: The Console and Variables]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r %}), we now start with the first higher dimension construct: vectors
 <!--more-->
 
 
