@@ -52,7 +52,7 @@ combined_basic_classes <- c(12.3, FALSE, 4, "Arggh")
 ```
 
 **Careful!** When combining different classes into a vector. Values are coerced to a type that can represent them all, often the `numeric` or `characters` type
-{: .notice}
+{: .notice--warning}
 
 ## Basic Indexing
 
