@@ -7,7 +7,7 @@ tags:
   - R
   - Tutorial
 ---
-Often we have the need to arrange data in a structure with rows and columns, or we need to represent a collection of vectors. R has a built matrix type that allows us to create a basic structure of rows and columns
+Often we have the need to arrange data in a structure with rows and columns, or we need to represent a collection of vectors. R has a built-in matrix type that allows us to create a basic structure of rows and columns
 <!--more-->
 
 
@@ -17,12 +17,12 @@ I am posting this tutorial as I learn R. I will respond to feedback for errata i
 
 ## Constructing a matrix with the `matrix` function
 
-Before we start lets look at the basics in the online help by executing `?matrix` which reveals the signature of the function
+Before we start, lets look at the basics in the online help by executing `?matrix`. Doing that reveals the signature of the function
 ```R
 matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
        dimnames = NULL)
 ```
-Reading further in the help you'll see we can supply a vector for the data or use a type that can be coerced to a vector. We can specify the number of rows and columns and how the vector should be used to fill the matrix and we can supply dimension names which I'll cover a bit later. For now let us create a matrix
+Reading further in the help you'll see we can supply a vector for the data, or use a type that can be coerced to a vector. We can specify the number of rows and columns and how the vector should be used to fill the matrix, and we can supply dimension names (which I'll cover a bit later). For now let us create a matrix
 
 If we simply call `matrix()` we will get all the default parameters as specified with the `=` operator in definition of the help file. The `=` is very similar to the `<-` operator in that it is an assignment operator, but it can only be used in specific scope. So our simple `matrix()` call will create a 1 by 1 matrix with an `NA` value in it.
 
@@ -34,8 +34,11 @@ yields
      [,1]
 [1,]   NA
 ```
- What on earth are those commas? Let us create a matrix with 1 row and 3 columns. Notice how we can use the `=` assignment operator to provide select values for a function without specifying them all
-
+ What on earth are those commas? Let us create a matrix with 1 row and 3 columns. You can see I can assign select variable like this `variable_name=value`, without the need to list them all in order.
+ 
+**Note:** Here we use the `=` assignment operator to assign to a parameter, its scope in this case is limited to the call. We cannot get access to the value at the top level, by calling `ncol` after the the matrix function.
+{: .notice--info}
+ 
  ```R
 vectorlike_matrix <- matrix(ncol=3)
 vectorlike_matrix
@@ -50,7 +53,7 @@ Now we have some more clarity. Matrix values are indexed by rows then columns in
 
 ## `rbind()` and `cbind()`
 
-Simply put these add rows or columns to a matrix. lets add combine the `vectorlike_matrix` above with itself to create a two by three matrix.
+Simply put these add rows or columns to a matrix, or can combine matrices. lets add combine the `vectorlike_matrix` above with itself to create a two by three matrix.
 
 ```R
 a_proper_matrix <- rbind(vectorlike_matrix, vectorlike_matrix)
@@ -87,7 +90,7 @@ We can see that the data was filled by column as expected
  ```R
  two_by_three[2,3]
  ```
- returns the value 6 as expected. But what if we want to work with rows or columns and treat them as vectors? Our output above describing the matrix already revealed how this is done : simply ommit the dimension you want to include completely, for instance `[,2]` gives me all rows, and column two. This is similar to what we saw in our previous lesson when we tried to set the entire vector's values. We wanted to set the entire vector's values without changing the vector, so we used empty brackets `[]` to select all values to be updated. We can do the same here
+returns the value 6 as expected. But what if we want to work with rows or columns and treat them as vectors? Our output above describing the matrix already revealed how this is done : simply ommit the dimension you want to include completely, for instance `[,2]` gives me all rows, and only column two. This is similar to what we saw in our previous lesson when we tried to set the entire vector's values. We wanted to set the entire vector's values without changing the vector, so we used empty brackets `[]` to select all values to be updated. We can do the same here
 
 Say we want to fill our matrix, we can use the `rep()` function to repeat a value...
  ```R
@@ -97,11 +100,11 @@ Say we want to fill our matrix, we can use the `rep()` function to repeat a valu
 
  ```R
  fill_me_up <- matrix(nrow=3, ncol=4)
- fill_me_up[,] <- 0
+ fill_me_up[] <- 0
  fill_me_up
  ```
 
-It would have been perfectly legal to use `fill_me_up[] <- 0`. We can extend this idea to setting entire rows or columns as vectors:
+It would have been perfectly legal to use `fill_me_up[,] <- 0`. We can extend this idea to setting entire rows or columns as vectors:
 
 ```R
  fill_me_up[,1] <- 1
@@ -115,7 +118,7 @@ It would have been perfectly legal to use `fill_me_up[] <- 0`. We can extend thi
  fill_me_up
  ```
 
- So far I've only show the replace side of the extract \ replace `[]` operator. You can extract columns, rows, and cells similar to our replace operation. The only difference is that instead of setting values we yield them or assign them to other variables.
+So far I've mainly shown the replace side of the extract \ replace `[]` operator. You can extract columns, rows, and cells similar to our replace operation. The only difference is that instead of setting values we yield them or assign them to other variables.
 
  ```R
  row_one <- fill_me_up[1,]
@@ -125,15 +128,14 @@ It would have been perfectly legal to use `fill_me_up[] <- 0`. We can extend thi
  ```
 
 ## Using the extract \ replace operator beyond just indexing
-In [Part 4: Vector Extracting, Replacing and Excluding]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r4 %}), we saw that we can use combined integer indexes, for example `myvector[c(1,3)]` would select the first and third element. We can do the same here. We can use the `rep()` function to repeat a value a certain number of times
-
+In [Part 4: Vector Extracting, Replacing and Excluding]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r4 %}), we saw that we can use combined integer indexes, for example `myvector[c(1,3)]` would select the first and third element. We can do the same here. To prevent repeated typing of the same value We can use the `rep()` function.
 
  ```R
 three_by_three_identity_matrix <- matrix(rep(0.0, 9), nrow=3)
 three_by_three_identity_matrix[c(1,5,9)] <-  1.0
 three_by_three_identity_matrix
  ```
- Here you can see an excelent example of how the single indexing of a matrix helps us... lets generalize that a bit. I will use the `seq()` function to generate a sequence of numbers with a step
+Here you can see an excelent example of how the single indexing of a matrix helps us... lets generalize that matrix a bit. I will use the `seq()` function to generate a sequence of numbers with a step.
 
   ```R
 matrix_dim <- 10  
@@ -143,7 +145,7 @@ identity_matrix[seq(1, num_cells, matrix_dim + 1)] <-  1.0
 identity_matrix
  ```
 
- But we are not restricted to using only single dimension syntax. We can apply index vector to the row or column side of the `,` inside the matrix `[]` operator. For instance
+We are not restricted to using only single dimension syntax. We can apply index vector to the row or column side of the `,` inside the matrix `[]` operator. For instance
 
  ```R
 matrix_dim <- 10  
