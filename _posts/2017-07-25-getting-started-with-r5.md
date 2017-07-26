@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with R - Part 5: Matrices"
+title: "Getting Started with R - Part 5: Matrices - Creating, Filling and Subsetting"
 excerpt_separator: "<!--more-->"
 categories:
   - Data Science
@@ -71,6 +71,7 @@ When we created our matrix we didn't specify data at create time. We could have 
 
 ```R
 two_by_three <- matrix(1:6, nrow=2)
+two_by_three
 ```
 
 We can see that the data was filled by column as expected
@@ -86,7 +87,7 @@ We can see that the data was filled by column as expected
  ```R
  two_by_three[2,3]
  ```
- returns the value 6 as expected. But what if we want to work with rows or columns and treat them as vectors? Our output describing the our matrix already revealed how this is done : simply ommit the dimension you want to include completely, for instance `[,2]` gives me all rows, and column two. This is similar to what we saw in our previous lesson when we tried to set the entire vector's values. We wanted to set the entire vector's values without changing the vector, so we used empty brackets `[]` to select all values to be updated. We can do the same here
+ returns the value 6 as expected. But what if we want to work with rows or columns and treat them as vectors? Our output above describing the matrix already revealed how this is done : simply ommit the dimension you want to include completely, for instance `[,2]` gives me all rows, and column two. This is similar to what we saw in our previous lesson when we tried to set the entire vector's values. We wanted to set the entire vector's values without changing the vector, so we used empty brackets `[]` to select all values to be updated. We can do the same here
 
 Say we want to fill our matrix, we can use the `rep()` function to repeat a value...
  ```R
@@ -100,7 +101,7 @@ Say we want to fill our matrix, we can use the `rep()` function to repeat a valu
  fill_me_up
  ```
 
-It would have been perfectly legal to use ` fill_me_up[] <- 0`. We can extend this idea to setting entire rows or columns as vectors:
+It would have been perfectly legal to use `fill_me_up[] <- 0`. We can extend this idea to setting entire rows or columns as vectors:
 
 ```R
  fill_me_up[,1] <- 1
@@ -149,19 +150,35 @@ matrix_dim <- 10
 x_matrix <- matrix(ncol=matrix_dim, nrow=matrix_dim)
 x_matrix[] <- " "
 x_matrix[c(3:5, 9), c(3, 7:9)] <- "X"
+x_matrix[, c(1, 10)] <- "|"
 x_matrix
 ```
  Gives us this output
+
  ```
      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
- [1,] " "  " "  " "  " "  " "  " "  " "  " "  " "  " "  
- [2,] " "  " "  " "  " "  " "  " "  " "  " "  " "  " "  
- [3,] " "  " "  "X"  " "  " "  " "  "X"  "X"  "X"  " "  
- [4,] " "  " "  "X"  " "  " "  " "  "X"  "X"  "X"  " "  
- [5,] " "  " "  "X"  " "  " "  " "  "X"  "X"  "X"  " "  
- [6,] " "  " "  " "  " "  " "  " "  " "  " "  " "  " "  
- [7,] " "  " "  " "  " "  " "  " "  " "  " "  " "  " "  
- [8,] " "  " "  " "  " "  " "  " "  " "  " "  " "  " "  
- [9,] " "  " "  "X"  " "  " "  " "  "X"  "X"  "X"  " "  
-[10,] " "  " "  " "  " "  " "  " "  " "  " "  " "  " "  
+ [1,] "|"  " "  " "  " "  " "  " "  " "  " "  " "  "|"  
+ [2,] "|"  " "  " "  " "  " "  " "  " "  " "  " "  "|"  
+ [3,] "|"  " "  "X"  " "  " "  " "  "X"  "X"  "X"  "|"  
+ [4,] "|"  " "  "X"  " "  " "  " "  "X"  "X"  "X"  "|"  
+ [5,] "|"  " "  "X"  " "  " "  " "  "X"  "X"  "X"  "|"  
+ [6,] "|"  " "  " "  " "  " "  " "  " "  " "  " "  "|"  
+ [7,] "|"  " "  " "  " "  " "  " "  " "  " "  " "  "|"  
+ [8,] "|"  " "  " "  " "  " "  " "  " "  " "  " "  "|"  
+ [9,] "|"  " "  "X"  " "  " "  " "  "X"  "X"  "X"  "|"  
+[10,] "|"  " "  " "  " "  " "  " "  " "  " "  " "  "|"  
  ```
+
+ Extracting a subset from a matrix is again similar to replacing values. We either yield the value or assign it. as we saw above.
+
+ ```R
+ double_x_pipe <- x_matrix[3:4, 9:10]
+ double_x_pipe
+ ```
+shows that `double_x_pipe` is a nice sub-matrix
+
+```
+     [,1] [,2]
+[1,] "X"  "|" 
+[2,] "X"  "|" 
+```
