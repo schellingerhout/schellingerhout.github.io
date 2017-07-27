@@ -1,4 +1,4 @@
-# Jasper Schellingerhout's Blog
+# [Jasper Schellingerhout's Blog](https://schellingerhout.github.io)
 
 Many thanks to [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) for an awesome template for blogging in GitHub
 
