@@ -184,3 +184,5 @@ shows that `double_x_pipe` is a nice sub-matrix
 [1,] "X"  "|" 
 [2,] "X"  "|" 
 ```
+
+But, look at the rows and columns. The indices are based on their ordinal positions and not on the original source. We will address this next.
