@@ -17,7 +17,10 @@ I am posting this tutorial as I learn R. I will respond to feedback for errata i
 
 ## Installation
 
-Install [R-Studio](https://www.rstudio.com/). You will most likely work in it and it will direct you to get the correct version of R for your platform. If you want to install R by itself and you can get R from [CRAN](https://cran.r-project.org/). The tutorial will use R-Studio.
+Install [R-Studio](https://www.rstudio.com/). You will most likely work in it and it will direct you to get the correct version of R for your platform. If you want to install R by itself and you can get R from [CRAN](https://cran.r-project.org/). 
+
+## No installation
+Head over to [r-fiddle](http://www.r-fiddle.org) and you can start R today without installing it. This is great if you are using a Chromebook to follow this tutorial.
 
 ## Mathematical Operators
 In R-Studio you can directly enter new commands in the console. Try some typing in the console. Specifically, try a few basic mathematical operations
