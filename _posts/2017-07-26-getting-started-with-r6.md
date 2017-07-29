@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with R - Part 5: Matrices - Captions"
+title: "Getting Started with R - Part 6: Matrices - Captions"
 excerpt_separator: "<!--more-->"
 categories:
   - Data Science
@@ -54,11 +54,13 @@ x_matrix[3:4, 9:10]
 
 ```
 
+Now we can see the original row and columns that were the source of the subset.
+
 Of course we are not limited to just numeric ranges for captions. Just like with our vectors we can also use characters.
 
 ## Adding captions during matrix construction
 
-To add the captions during construction I can use the dimnames parameter. This paramter takes a list with two vectors: The row captions, then the column captions
+To add the captions during construction I can use the `dimnames` parameter. This parameter takes a `list()` with two vectors: The row captions, then the column captions
 
 ```R
 month_names <- c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
@@ -117,3 +119,5 @@ If you know of a way I can simplify the selection, please comment below so I can
 30 "Tue" NA    "Fri" "Mon" "Wed" "Sat" "Mon" "Thu" "Sun" "Tue" "Fri" "Sun"
 31 "Wed" NA    "Sat" NA    "Thu" NA    "Tue" "Fri" NA    "Wed" NA    "Mon"
 ```
+
+In the next post we will see how we can improve on our days of the week, by using factors
