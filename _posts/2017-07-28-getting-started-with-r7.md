@@ -31,7 +31,7 @@ Levels: I myself often repeat
 ```
 In this case there were four levels for the vector strings: `I`, `myself`, `often` and `repeat`. The levels were simply created by taking the unique strings in the vector, and then sorting them. We could have also provided `levels` during the factor's construction. A little later I will show you how to change the ordinal positions of the levels. To see the levels of a factor you can simply call `levels(afactor)` to get the list of factors in order.
 
-**Notice!** The `levels` are used to class the values into factors. We can also attach `labels` to the factor, if you do this and query the `levels` of the factor you will see the values you passed in `labels`. During construction `levels` are used for classing, `labels` are for naming the levels in the resulting factor *differently* than from the levels used for mapping during construction. 
+**Notice!** The `levels` are used to class the values into factors. We can also pass `labels` to the factor constructor, if you do this and query the `levels` of the resulting factor you will see the values you passed in `labels`. During construction `levels` are used for classing, `labels` are for naming the levels in the resulting factor *differently* than from the levels used for mapping during construction. 
 {: .notice--info}
 
 Let us take a look at the attributes of the factor object
