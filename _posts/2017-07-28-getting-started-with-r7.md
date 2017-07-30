@@ -82,7 +82,7 @@ days_of_week = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday
 days_of_week_factor <- factor(days_of_week, order=TRUE, levels=days_of_week)
 days_of_week_factor
 ```
-shows us that levels have order, byt displaying  `<`  between them
+shows us that levels have order, by displaying  `<`  between them
 ```
 [1] Sunday    Monday    Tuesday   Wednesday Thursday  Friday    Saturday 
 Levels: Sunday < Monday < Tuesday < Wednesday < Thursday < Friday < Saturday
@@ -95,12 +95,19 @@ tuesday
 days_of_week_factor[c(2:7, 1)] # days of the week starting with Monday instead of Sunday
 ```
 
-## Factors and matrices
-
-All is nice in our factor space, but let us try and use that in our matrix
-
+Ordered vectors allow us to do inequalities in expressions
 ```R
 sunday <- days_of_week_factor[1]
+days_of_week_factor[days_of_week_factor > sunday]
+```
+
+
+## Factors and matrices
+
+All is nice in our factor space, but let us try and use factors in our matrix
+
+```R
+#sunday <- days_of_week_factor[1] 
 
 month_names <- c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
 calendar_matrix <- matrix(nrow=31, ncol=12, dimnames = list(1:31, month_names))
