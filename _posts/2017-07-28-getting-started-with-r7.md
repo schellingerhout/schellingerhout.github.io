@@ -73,4 +73,71 @@ levels(repeat_factor_labeled)[1] <- "Mr. Prelutsky"
 repeat_factor_labeled
 ```
 
+## Ordered factors
 
+We may have factors where the ordinal positition of the values are not important. In the example above the factors for the words above do not have a specific order to them. We can change that by adding the `order=TRUE` optional parameter to the constructor. First let us find a factor where we have order
+
+```R
+days_of_week = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+days_of_week_factor <- factor(days_of_week, order=TRUE, levels=days_of_week)
+days_of_week_factor
+```
+shows us that levels have order, byt displaying  `<`  between them
+```
+[1] Sunday    Monday    Tuesday   Wednesday Thursday  Friday    Saturday 
+Levels: Sunday < Monday < Tuesday < Wednesday < Thursday < Friday < Saturday
+```
+Since my vector was already unique and in the correct order I could use it for my levels. If I didn't my levels would just be ordered alphabetically. If I need to take a subset of a factor I can do the same as with vectors
+
+```R
+tuesday <- days_of_week_factor[3] 
+tuesday
+days_of_week_factor[c(2:7, 1)] # days of the week starting with Monday instead of Sunday
+```
+
+## Factors and matrices
+
+All is nice in our factor space, but let us try and use that in our matrix
+
+```R
+sunday <- days_of_week_factor[1]
+
+month_names <- c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
+calendar_matrix <- matrix(nrow=31, ncol=12, dimnames = list(1:31, month_names))
+months_31days <- c(1,3,5,7,8,10,12)
+months_30days <- c(4,6,9,11)
+calendar_matrix[1:31, months_31days] <- sunday
+calendar_matrix[1:30, months_30days] <- sunday
+calendar_matrix[1:28, 'Feb'] <- sunday
+# Invalid calendar positions are now NA, valid ones are are the factor value of Sunday
+
+oldw <- getOption("warn")
+# We have to turn off a warning because the days of the week do not even divide - there is a remainder of 1
+options(warn = -1) 
+calendar_matrix[!is.na(calendar_matrix)] <- days_of_week_factor[c(2:7, 1)] # assuming Jan 1 fell on a Monday
+options(warn = oldw)
+
+calendar_matrix
+```
+
+Did you get what you expected? You see that the days of the week are populated by the ordinal values. This gives us a little peak of what is really going on inside of the factor: We have the integer values that simply index their names. Matrices are really not factors and giving them factors makes them store ordinal values. We will learn of another structure called a dataframe later that will make some of these complex scenarios simpler
+
+What if we wanted to display our matrix with the labels of the factor? That is a bit tricky so here is the step by step breakdown. We can get our level names of our factor like this: `levels(days_of_week_factor)` and we can index the values
+
+```R
+levels(days_of_week_factor)[2] #Gives us "Monday"
+levels(days_of_week_factor)[calendar_matrix] #Gives use the strings of the calendar_matrix, but as a vector
+```
+
+So we can get the calendar's values in 1-dimensional form so how can we get it back as a matrix. Simply we assign it to matrix with the same shape.
+
+```R
+matrix(levels(days_of_week_factor)[calendar_matrix], nrow=31, ncol=12, dimnames = list(1:31, month_names))
+```
+We could have also made a copy of our other calendar matrix and assign, like this
+
+```R
+calendar_matrix_names <- calendar_matrix
+calendar_matrix_names[]  <- levels(days_of_week_factor)[calendar_matrix]
+calendar_matrix_names
+```
