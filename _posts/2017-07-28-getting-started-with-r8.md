@@ -126,15 +126,17 @@ class(nickname)
 population was numeric to begin, but nicname was converted from characters to a factor. So doing this
 
 ```R
-oh_city_df <- data.frame(city_name, longitude, latitude, as.integer(population), nickname, on_state_border, row.names=1)
+oh_city_df <- data.frame(city_name, longitude, latitude, as.integer(population), nickname, 
+                          on_state_border, row.names=1)
 
 str(oh_city_df)
 ```
 
-Fixes the population, but `as.characters(nickname)` does not change our input at all so it calling that in the constructor will not help. To fix this we need to pass
+Fixes the population, but `as.characters(nickname)` does not change our input at all so it calling that in the constructor will not help. To fix this we need to pass `stringsAsFactors=F`
 
 ```R
-oh_city_df <- data.frame(city_name, longitude, latitude, as.integer(population), nickname, on_state_border, row.names=1, stringsAsFactors=F)
+oh_city_df <- data.frame(city_name, longitude, latitude, as.integer(population), nickname, 
+                          on_state_border, row.names=1, stringsAsFactors=F)
 str(oh_city_df)
 ```
 
