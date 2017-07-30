@@ -17,7 +17,7 @@ I am posting this tutorial as I learn R. I will respond to feedback for errata i
 
 ## How to create a factor
 
-If we have a vector of values where the values can be only one of a few values it becomes a good candidate for a factor. I essence we will convert a vector into a new kind of vector we call a factor that internally has integer values and labels associated with each integer value. 
+If we have a vector of values where the values can be only one of a few values it becomes a good candidate for a factor. In essence we will convert a vector into a new kind of vector we call a factor that internally has integer values and labels associated with each integer value. 
 
 ```R
 repeat_vector <- c('I', 'often', 'repeat', 'repeat', 'myself', 'I', 'often', 'repeat', 'repeat') # Jack Prelutsky
@@ -48,7 +48,7 @@ $levels
 $class
 [1] "factor"
 ```
-Let us use `labels` to change our factor, and I will also pass the associated `levels` for classing the input.
+I'll get to these attributes in a moment, but first let us use `labels` to change the level names in our new factor. We will also pass the associated `levels` for classing the input. Again, please do not confuse these two parameters. Levels are matched against input to categorize, it will also be used to name the levels except if we pass `labels`. Once the vector is constructed with `lablels` the levels names passed in constructor are the names of my levels. 
 
 ```R
 repeat_factor_labeled <- factor(repeat_vector, levels = c("I", "often", "repeat", "myself"), 
@@ -62,7 +62,7 @@ returns this
 Levels: Jack frequently repeats himself
 ```
 
-You may have noticed that when I listed the levels I swapped `"repeat"` and `"myself"` for the previously sorted order (look at how I ordered them in the `levels=`). You can see that the levels in the new factor are also listed in the new order, but with the new names. Run `attributes(repeat_factor_labeled)` and you will see that the difference.
+You may have noticed that when I listed the levels I swapped `"repeat"` and `"myself"` for the previously sorted order (look at how I ordered them in the `levels=`). You can see that the levels in the new factor are also listed in the new order, but with the new names. Run `attributes(repeat_factor_labeled)` and you will see that the difference. Compare the result of the `attributes` function to when you ran it before against `repeat_factor`.
 
 ## Changing levels
 
@@ -72,6 +72,8 @@ You can set the levels labels after constructing a factor. This would be similar
 levels(repeat_factor_labeled)[1] <- "Mr. Prelutsky"
 repeat_factor_labeled
 ```
+
+There are some advanced actions you can take to combine levels in a factor using the `levels()` function.  See [Cleaning up factor levels (collapsing multiple levels/labels)](https://stackoverflow.com/questions/19410108/cleaning-up-factor-levels-collapsing-multiple-levels-labels) for some advanced factor level cleanup.
 
 ## Ordered factors
 
@@ -97,10 +99,12 @@ days_of_week_factor[c(2:7, 1)] # days of the week starting with Monday instead o
 
 Ordered vectors allow us to do inequalities in expressions
 ```R
+days_of_week_factor[3] > days_of_week_factor[1]
 sunday <- days_of_week_factor[1]
 days_of_week_factor[days_of_week_factor > sunday]
 ```
 
+Try the same code above but omit the `order=TRUE`, you'll get a vector of `NA`s. To understand why compare two days `days_of_week_factor[2] > days_of_week_factor[1]`. There is no order so `>` has no meaning leading to an `NA` result
 
 ## Factors and matrices
 
