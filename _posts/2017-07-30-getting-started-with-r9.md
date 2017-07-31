@@ -17,7 +17,7 @@ I am posting this tutorial as I learn R. I will respond to feedback for errata i
 
 ## What is a list?
 
-A `list` object allows us to maintain a a list objects of various types. We can mix different values of different types in a 1 list structure similar to what you find in a `vecotor` but without the restrictions of holding a single type.
+A `list` object allows us to maintain a a list objects of various types. We can mix different values of different types in a 1 dimensional list structure similar to what you find in a `vecotor` but without the restrictions of holding a single type.
 
 ## Constructing a data frame
 
@@ -31,7 +31,7 @@ alist
  returns the list and its content
 
  ```
- [[1]]
+[[1]]
 [1] "Columbus"   "Cleveland"  "Cincinnati"
 
 [[2]]
@@ -127,6 +127,7 @@ $matrix_3x3
 ```
 This new naming allows us to also use the `$` operator to extract values like this: `alist_named$magic_number`. That is easy to read, yet shorter than typing `alist_named[["magic_number"]]`
 
+If we re-run our earlier queries with `[]` and `[[]]` you will notice the one includes the name with the value, the other just the value at that index position
 
 ## Adding to a list
 
