@@ -24,8 +24,8 @@ A dataframe allows us to mix different values in a tabular form similar to what 
 Most often dataframes are imported from csv (comma separated values), but you can create data frames inside of R. Here is a data frame with some basic types
 ```R
 city_name <- c( "Columbus", "Cleveland", "Cincinnati")
-longitude <- c(39.98, 41.48, 39.14)
-latitude <-  c(-82.99, -81.68, -84.51)
+latitude <- c(39.98, 41.48, 39.14)
+longitude <-  c(-82.99, -81.68, -84.51)
 population <- c(860090, 385809, 298800)
 nickname <- c( "The Arch City", "America's North Coast", "The Queen City")
 on_state_border <- c(F, T, T)
@@ -36,10 +36,10 @@ oh_city_df
  returns this nice dataframe
 
 ```
-    city_name longitude latitude population              nickname on_state_border
-1   Columbus     39.98   -82.99     860090         The Arch City           FALSE
-2  Cleveland     41.48   -81.68     385809 America's North Coast            TRUE
-3 Cincinnati     39.14   -84.51     298800        The Queen City            TRUE
+   city_name longitude latitude population              nickname on_state_border
+1   Columbus    -82.99    39.98     860090         The Arch City           FALSE
+2  Cleveland    -81.68    41.48     385809 America's North Coast            TRUE
+3 Cincinnati    -84.51    39.14     298800        The Queen City            TRUE
 ```
 
 ## Indexing a data frame
@@ -85,9 +85,9 @@ gives us this more readable dataframe:
 
 ```
            longitude latitude population              nickname on_state_border
-Columbus       39.98   -82.99     860090         The Arch City           FALSE
-Cleveland      41.48   -81.68     385809 America's North Coast            TRUE
-Cincinnati     39.14   -84.51     298800        The Queen City            TRUE
+Columbus      -82.99    39.98     860090         The Arch City           FALSE
+Cleveland     -81.68    41.48     385809 America's North Coast            TRUE
+Cincinnati    -84.51    39.14     298800        The Queen City            TRUE
 ```
 
 
@@ -100,18 +100,45 @@ oh_city_df[1] # returns column 1 the logitude
 oh_city_df[1:3] #returns city location and population
 ```
 
+This is one reason it may better to use name based indexing, to prevent inadvertent errors with numeric indexes
+
+```R
+oh_city_df["Cincinnati", "nickname"]
+oh_city_df["Columbus", c("longitude", "latitude", "on_state_border")]
+```
+As with matrices we have the full logic of matches to our disposal
+
+```R
+oh_city_df[ oh_city_df$on_state_border,  ]
+```
+
+Give use the cities on the state border. The reason this simple logic works is that the `oh_city_df[ oh_city_df$on_state_border` is a vector of type logical and it works as a selector similar to what we saw in my earlier post on vectors. Lets try some of the other fields
+
+```R
+oh_city_df[ oh_city_df$longitude< 40,  ]
+```
+Returns all the fields for the cities south of 40.
+
+```R
+oh_city_df[ (oh_city_df$population > 300000) & (oh_city_df$population < 600000)
+            , "population", drop=F] 
+```
+Returns the city that has a population between 300,000 and 600,000. Notice the optional drop paramter, I pass that to prevent the result to be converted to a vector. Try it without that to see what happens
+
 ## Structure information
 Often, data frames are much larger than this dataset and viewing the data can be difficult. Often we just want to see a basic summary of information. To assist and getting a general overview of the data frame you can use the `str()` structure function
 
 ```R
 str(oh_city_df)
 ```
+oh_city_df[1:3] #returns city location and population
+
 
 shows us the structure of our dataframe
 ```
 'data.frame':	3 obs. of  5 variables:
- $ longitude      : num  40 41.5 39.1
- $ latitude       : num  -83 -81.7 -84.5
+ $ longitude      : num  -83 -81.7 -84.5
+ $ latitude       : num  40 41.5 39.1
  $ population     : num  860090 385809 298800
  $ nickname       : Factor w/ 3 levels "America's North Coast",..: 2 1 3
  $ on_state_border: logi  FALSE TRUE TRUE
@@ -123,20 +150,17 @@ Observations are our rows, variables are our columns. We can see all our columns
 class(population)
 class(nickname)
 ```
-population was numeric to begin, but nicname was converted from characters to a factor. So doing this
+population was numeric to begin, but nickname was converted from characters to a factor. So doing this
 
 ```R
-oh_city_df <- data.frame(city_name, longitude, latitude, as.integer(population), nickname, 
+population <- as.integer(population) #convert from numeric to integer
+oh_city_df <- data.frame(city_name, longitude, latitude, population, nickname, 
                           on_state_border, row.names=1)
 
 str(oh_city_df)
 ```
+This Fixes the population, but `as.characters(nickname)` does not change our input at all so it calling that in the constructor will not help. To fix this we need to pass `stringsAsFactors=F`. 
 
-Fixes the population, but `as.characters(nickname)` does not change our input at all so it calling that in the constructor will not help. To fix this we need to pass `stringsAsFactors=F`
-
-```R
-oh_city_df <- data.frame(city_name, longitude, latitude, as.integer(population), nickname, 
-                          on_state_border, row.names=1, stringsAsFactors=F)
-str(oh_city_df)
+**Beware!** Passing  `as.integer(population)` as column set adds a column of NULLS with exactly that name. This is why I had to convert population *before* passing it to the data frame constructor
+{: .notice--warning}
 ```
-
