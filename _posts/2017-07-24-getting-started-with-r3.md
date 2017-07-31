@@ -122,7 +122,7 @@ cincinnati_rainfall[c(T,F)]
 ```
 Do you understand why you got the result? If not, please re-read the section above, or post in the comment section below.
 
-I will cover other ways to use the `[]`Extract\Replace operator in the next post.
+I will cover other ways to use the `[]` Extract\Replace operator in the next post.
 
 ## Vector functions
 
@@ -137,3 +137,16 @@ min(predicted_precipitation)
 ```
 
 These operate accross the vector and return a single value. I'll let you use the help system to read up on those if you are not familiar with the difference between `mean` and `median`
+
+One very useful function for vectors is order
+
+```R
+actual_precipitation <-  c(0.0, 0.27, 0.0, 0.08, 0.02)
+order(actual_precipitation)
+```
+Returns the indices in order as a vector. We can of course use that vector to index the vector itself
+
+```R
+actual_precipitation <-  c(0.0, 0.27, 0.0, 0.08, 0.02)
+actual_precipitation[ order(actual_precipitation) ]
+```

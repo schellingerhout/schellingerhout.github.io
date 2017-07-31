@@ -163,4 +163,12 @@ This Fixes the population, but `as.characters(nickname)` does not change our inp
 
 **Beware!** Passing  `as.integer(population)` as column set adds a column of NULLS with exactly that name. This is why I had to convert population *before* passing it to the data frame constructor
 {: .notice--warning}
+
+
+## Ordering Data Frames
+At the end of [Part 3: Vector Operations](2017-07-24-getting-started-with-r3.md) I briefly discussed using the `order()` function on a vector to get a vector of indices in order. We can apply what we have learned there to data frames as well
+
+```R
+oh_city_df[ order(oh_city_df$latitude), ]
 ```
+Gives us our cities ordered by latitude. This works simply becase the input to the rows in the selector is the ordered indices. If its not clear run `order(oh_city_df$latitude)` and notice that it returns a vector of values in the order 3, 1, 2
