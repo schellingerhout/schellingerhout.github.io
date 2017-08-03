@@ -1,10 +1,12 @@
 ---
-title: "Notes on Datacamp's kaggle tutorial"
+title: "Notes on Datacamp's Kaggle R tutorial"
 excerpt_separator: "<!--more-->"
 categories:
   - Data Science
 tags:
   - R
+  - Kaggle
+  - Datacamp
 ---
 Kaggle has a tutorial competition on the survival of the passengers of the Titanic. Datacamp has a handy tutorial on using R to tackle the problem. Here are my notes working through the tutorial
 <!--more-->
