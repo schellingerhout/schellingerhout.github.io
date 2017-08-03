@@ -53,8 +53,8 @@ In this case we can see the crosstabulation of `Child` and `Survived`. Now you c
 
 ## Making your first prediction
 You should by now know how to do everthing required by this page:
-    * Adding a variable (column) through initialization 
-    * Setting one field's values based on a logical condition of another 
+* Adding a variable (column) through initialization 
+* Setting one field's values based on a logical condition of another 
 Both these can be done, but just refering back to how we set the `Child` column
 
 ## Intro to decision trees
