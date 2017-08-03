@@ -117,7 +117,7 @@ Let us compare a tree and a forest created to class a predicted variable
 forest <- randomForest(forumula=as.factor(predicted_variable) ~ variable1 + variable2 + variable3, data = train)
 tree <- rpart(predicted_variable ~  variable1 + variable2 + variable3, method = "class")
 ```
-In this case we also have to add set the number of trees with `ntree=1000` (which defaults to 500) and `importance=TRUE`. Not 100% clear on the importance variable, but it aparently records the importance of each variable in the reduction of the error. I assume it is used when we call `predict`, but I don't yet know how it affects that function
+In this case we also have to add set the number of trees with `ntree=1000` (which defaults to 500) and `importance=TRUE`. The importance variables are recoded in the tree object, but don't seem to be used when we call `predict`. The next slide will have more details on those
 
 The `predict` function applies a dataset to the forest which votes on the probability of the final result. 
 
