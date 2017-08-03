@@ -67,7 +67,7 @@ In the distribution I installed `rpart` (recursive partitioning) was included an
 ### rpart.plot library with plot.rpart() and text.rpart() functions
 The `plot()` and `text()` function called here are actually the overloads that takes an `rpart` object and plots it, and adds text to a plot. Just for interest sake the plot generated is called a "dendograph" because it is a graph of a tree.
 
-# rattle and RColorBrewer libraries
+### rattle and RColorBrewer libraries
 The `rattle` package contains the `fancyRpartPlot()` creats the nice looking colorized dendograph. Not sure why the `RColorBrewer` package was listed here, its certainly not needed for the graph and including it does not seem to change the appearance of the graph. I'm not sure why my graph is colorized without the package, but I assume at some point it was needed to create the nice blue and green hues.
 
 ## Interpreting your decision tree
