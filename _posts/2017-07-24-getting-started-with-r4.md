@@ -7,7 +7,7 @@ tags:
   - R
   - Tutorial
 ---
-Reaching beyond the basic indexing of Vectors we started in our previous post [Vectors Operations]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r3 %}) we will continue selecting, subsetting, replacing vectors beyond simple indexing.
+Reaching beyond the basic indexing of Vectors we started in our previous post [Vectors Operations]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r3 %}) we will continue selecting, subsetting, replacing vectors beyond simple indexing.
 <!--more-->
 
 
@@ -20,13 +20,13 @@ Some recap from earlier lessons
 
 ### Extract via index
 
-In [Part 2]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) of the tutorial we saw that we can use the `[]` operator similar to indexer in tradtional languages by providing a 1-based index. Like this:
+In [Part 2]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r2 %}) of the tutorial we saw that we can use the `[]` operator similar to indexer in tradtional languages by providing a 1-based index. Like this:
 ```R
 combined.integer <- c(1, 2, 4)
 combined.integer[3]
 ```
 
-But as we saw in [Part 3]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r3 %}), we need to think beyond our old ideas of indexing. We can just as well pass a vector to the `[]` operator. For instance...
+But as we saw in [Part 3]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r3 %}), we need to think beyond our old ideas of indexing. We can just as well pass a vector to the `[]` operator. For instance...
 ```R
 combined.integer[c(1, 3)]
 ```
@@ -46,7 +46,7 @@ cincinnati.rainfall[3:8]
 Gives us a nice concise way to get our rainfall from March to August. Surely more convenient than typing `cincinnati.rainfall[c(3, 4, 5, 6, 7, 8)]`
 
 ### Extracting via logical
-In [Part 3]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r3 %}) we also learned that we can pass in a boolean vector to select. Just a recap:
+In [Part 3]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r3 %}) we also learned that we can pass in a boolean vector to select. Just a recap:
 
 We created two vectors
 ```R
