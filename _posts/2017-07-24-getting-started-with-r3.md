@@ -7,7 +7,7 @@ tags:
   - R
   - Tutorial
 ---
-Expanding on our [Vectors Basics]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r2 %}) we will continue with operations accross vectors.
+Expanding on our [Vectors Basics]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) we will continue with operations accross vectors.
 <!--more-->
 
 

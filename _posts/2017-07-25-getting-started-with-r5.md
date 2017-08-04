@@ -128,7 +128,7 @@ So far I've mainly shown the replace side of the extract \ replace `[]` operator
  ```
 
 ## Using the extract \ replace operator beyond just indexing
-In [Part 4: Vector Extracting, Replacing and Excluding]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r4 %}), we saw that we can use combined integer indexes, for example `myvector[c(1,3)]` would select the first and third element. We can do the same here. To prevent repeated typing of the same value We can use the `rep()` function.
+In [Part 4: Vector Extracting, Replacing and Excluding]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r4 %}), we saw that we can use combined integer indexes, for example `myvector[c(1,3)]` would select the first and third element. We can do the same here. To prevent repeated typing of the same value We can use the `rep()` function.
 
  ```R
 three.by.three.identity.matrix <- matrix(rep(0.0, 9), nrow=3)
