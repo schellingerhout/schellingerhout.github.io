@@ -138,8 +138,8 @@ Can you try to create variables of each kind and return their values? You can ve
 Here is an example that should be enough to help you do the boolean (I mean logical), and floating point (I mean numeric) types.
 
 ``` R
-myStringErrCharacters <- "Jasper"
-class(myStringErrCharacters)
+my_string_err_characters <- "Jasper"
+class(my_string_err_characters)
 ```
 
 ## Comments
