@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 9: Lists and the [[]] operator"
-excerpt_separator: "<!--more-->"
+excerpt.separator: "<!--more-->"
 categories:
   - Data Science
 tags:
@@ -24,8 +24,8 @@ A `list` object allows us to maintain a a list objects of various types. We can 
 A list is constructed with `list()` and we pass in the values we want to keep in that list. We can pass matrices, vectors, simple values and even dataframes to be held in a list 
 
 ```R
-city_name <- c( "Columbus", "Cleveland", "Cincinnati")
-alist <- list( city_name, 12.4, TRUE, matrix(1:9, nrow=3))
+city.name <- c( "Columbus", "Cleveland", "Cincinnati")
+alist <- list( city.name, 12.4, TRUE, matrix(1:9, nrow=3))
 alist
 ```
  returns the list and its content
@@ -104,8 +104,8 @@ Reveals what is going on behind the scenes
 The list holds its elements inside a object of class list and our data is the first element in that object. Let us dig deeper into this by giving our list elements names
 
 ```R
-alist_named <- list (cities=city_name, magic_number=12.4, TRUE, matrix_3x3=matrix(1:9, nrow=3))
-alist_named
+alist.named <- list (cities=city.name, magic.number=12.4, TRUE, matrix.3x3=matrix(1:9, nrow=3))
+alist.named
 ```
 Shows the same list, but now we have named values
 
@@ -113,19 +113,19 @@ Shows the same list, but now we have named values
 $cities
 [1] "Columbus"   "Cleveland"  "Cincinnati"
 
-$magic_number
+$magic.number
 [1] 12.4
 
 [[3]]
 [1] TRUE
 
-$matrix_3x3
+$matrix.3x3
      [,1] [,2] [,3]
 [1,]    1    4    7
 [2,]    2    5    8
 [3,]    3    6    9
 ```
-This new naming allows us to also use the `$` operator to extract values like this: `alist_named$magic_number`. That is easy to read, yet shorter than typing `alist_named[["magic_number"]]`
+This new naming allows us to also use the `$` operator to extract values like this: `alist.named$magic.number`. That is easy to read, yet shorter than typing `alist.named[["magic.number"]]`
 
 If we re-run our earlier queries with `[]` and `[[]]` you will notice the one includes the name with the value, the other just the value at that index position
 
@@ -134,7 +134,7 @@ If we re-run our earlier queries with `[]` and `[[]]` you will notice the one in
 Adding to a list is simple. We use the `c()` combine function. 
 
 ```
-alist_named_with_extra <- c(alist_named, extra="Hello")
-alist_named_with_extra
+alist.named.added <- c(alist.named, extra="Hello")
+alist.named.added
 ```
-You will see in the results that the new `alist_named_with_extra$extra` value was added
+You will see in the results that the new `alist.named.added$extra` value was added

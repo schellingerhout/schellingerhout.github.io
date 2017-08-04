@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 5: Matrices - Creating, Filling and Subsetting"
-excerpt_separator: "<!--more-->"
+excerpt.separator: "<!--more-->"
 categories:
   - Data Science
 tags:
@@ -34,14 +34,14 @@ yields
      [,1]
 [1,]   NA
 ```
- What on earth are those commas? Let us create a matrix with 1 row and 3 columns. You can see I can assign select variable like this `variable_name=value`, without the need to list them all in order.
+ What on earth are those commas? Let us create a matrix with 1 row and 3 columns. You can see I can assign select variable like this `variable.name=value`, without the need to list them all in order.
  
 **Note:** Here we use the `=` assignment operator to assign to a parameter, its scope in this case is limited to the call. We cannot get access to the value at the top level, by calling `ncol` after the the matrix function.
 {: .notice--info}
  
  ```R
-vectorlike_matrix <- matrix(ncol=3)
-vectorlike_matrix
+vectorlike.matrix <- matrix(ncol=3)
+vectorlike.matrix
 ```
 yields
 ```
@@ -53,11 +53,11 @@ Now we have some more clarity. Matrix values are indexed by rows then columns in
 
 ## `rbind()` and `cbind()`
 
-Simply put these add rows or columns to a matrix, or can combine matrices. lets add combine the `vectorlike_matrix` above with itself to create a two by three matrix.
+Simply put these add rows or columns to a matrix, or can combine matrices. lets add combine the `vectorlike.matrix` above with itself to create a two by three matrix.
 
 ```R
-a_proper_matrix <- rbind(vectorlike_matrix, vectorlike_matrix)
-a_proper_matrix
+a.proper.matrix <- rbind(vectorlike.matrix, vectorlike.matrix)
+a.proper.matrix
 ```
 yields what we expect:
 
@@ -73,8 +73,8 @@ yields what we expect:
 When we created our matrix we didn't specify data at create time. We could have done so using a vector that would be unpacked row-wise or column-wise depending on the `byrow` parameter. The `byrow` parameter is FALSE if not specified so let us see what that looks like. Also, if we provide data we only need to specify either the column or row count. No need to do extra work
 
 ```R
-two_by_three <- matrix(1:6, nrow=2)
-two_by_three
+two.by.three <- matrix(1:6, nrow=2)
+two.by.three
 ```
 
 We can see that the data was filled by column as expected
@@ -85,75 +85,75 @@ We can see that the data was filled by column as expected
 ```
 
 ## Basic indexing
- The `[]` operator on a matrix looks suspiciously like the one we had for vectors so lets try it out. Try indexing from 1 to 6 on our `two_by_three` and you will see that we get our values by row, without specifying two coordinates. For instance `two_by_three[4]` yields 4. In case you are wondering, this has nothing to do with the `byrow` option during contruction. Single indexing is by row, regardless of how the data was unpacked. This is great news, there are many cases where the two coordinate indexing of matrices just get in the way. But, most of the time its still easier to index by row and column. 
+ The `[]` operator on a matrix looks suspiciously like the one we had for vectors so lets try it out. Try indexing from 1 to 6 on our `two.by.three` and you will see that we get our values by row, without specifying two coordinates. For instance `two.by.three[4]` yields 4. In case you are wondering, this has nothing to do with the `byrow` option during contruction. Single indexing is by row, regardless of how the data was unpacked. This is great news, there are many cases where the two coordinate indexing of matrices just get in the way. But, most of the time its still easier to index by row and column. 
 
  ```R
- two_by_three[2,3]
+ two.by.three[2, 3]
  ```
 returns the value 6 as expected. But what if we want to work with rows or columns and treat them as vectors? Our output above describing the matrix already revealed how this is done : simply ommit the dimension you want to include completely, for instance `[,2]` gives me all rows, and only column two. This is similar to what we saw in our previous lesson when we tried to set the entire vector's values. We wanted to set the entire vector's values without changing the vector, so we used empty brackets `[]` to select all values to be updated. We can do the same here
 
 Say we want to fill our matrix, we can use the `rep()` function to repeat a value...
  ```R
- zero_matrix <- matrix(rep(0.0, 12), nrow=3) 
+ zero.matrix <- matrix(rep(0.0, 12), nrow=3) 
  ```
  ...or, we could have set all the values later with like this
 
  ```R
- fill_me_up <- matrix(nrow=3, ncol=4)
- fill_me_up[] <- 0
- fill_me_up
+ fill.me.up <- matrix(nrow=3, ncol=4)
+ fill.me.up[] <- 0
+ fill.me.up
  ```
 
-It would have been perfectly legal to use `fill_me_up[,] <- 0`. We can extend this idea to setting entire rows or columns as vectors:
+It would have been perfectly legal to use `fill.me.up[,] <- 0`. We can extend this idea to setting entire rows or columns as vectors:
 
 ```R
- fill_me_up[,1] <- 1
- fill_me_up
+ fill.me.up[, 1] <- 1
+ fill.me.up
  ```
  will set the entire first column as 1.
 
  We can also set a specific cell with basic indexing as you'd expect
  ```R
- fill_me_up[2,1] <- 2
- fill_me_up
+ fill.me.up[2, 1] <- 2
+ fill.me.up
  ```
 
 So far I've mainly shown the replace side of the extract \ replace `[]` operator. You can extract columns, rows, and cells similar to our replace operation. The only difference is that instead of setting values we yield them or assign them to other variables.
 
  ```R
- row_one <- fill_me_up[1,]
- column_two <- fill_me_up[,2]
- cell_3_2 <- fill_me_up[3, 2]
- fill_me_up[2, 2]
+ row.one <- fill.me.up[1, ]
+ column.two <- fill.me.up[, 2]
+ cell.3.2 <- fill.me.up[3, 2]
+ fill.me.up[2, 2]
  ```
 
 ## Using the extract \ replace operator beyond just indexing
-In [Part 4: Vector Extracting, Replacing and Excluding]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r4 %}), we saw that we can use combined integer indexes, for example `myvector[c(1,3)]` would select the first and third element. We can do the same here. To prevent repeated typing of the same value We can use the `rep()` function.
+In [Part 4: Vector Extracting, Replacing and Excluding]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r4 %}), we saw that we can use combined integer indexes, for example `myvector[c(1,3)]` would select the first and third element. We can do the same here. To prevent repeated typing of the same value We can use the `rep()` function.
 
  ```R
-three_by_three_identity_matrix <- matrix(rep(0.0, 9), nrow=3)
-three_by_three_identity_matrix[c(1,5,9)] <-  1.0
-three_by_three_identity_matrix
+three.by.three.identity.matrix <- matrix(rep(0.0, 9), nrow=3)
+three.by.three.identity.matrix[c(1, 5, 9)] <-  1.0
+three.by.three.identity.matrix
  ```
 Here you can see an excelent example of how the single indexing of a matrix helps us... lets generalize that matrix a bit. I will use the `seq()` function to generate a sequence of numbers with a step.
 
   ```R
-matrix_dim <- 10  
-num_cells <- matrix_dim ^ 2
-identity_matrix <- matrix(rep(0.0, num_cells), nrow=matrix_dim)
-identity_matrix[seq(1, num_cells, matrix_dim + 1)] <-  1.0
-identity_matrix
+matrix.dim <- 10  
+num.cells <- matrix.dim ^ 2
+identity.matrix <- matrix(rep(0.0, num.cells), nrow=matrix.dim)
+identity.matrix[seq(1, num.cells, matrix.dim + 1)] <- 1.0
+identity.matrix
  ```
 
 We are not restricted to using only single dimension syntax. We can apply index vector to the row or column side of the `,` inside the matrix `[]` operator. For instance
 
  ```R
-matrix_dim <- 10  
-x_matrix <- matrix(ncol=matrix_dim, nrow=matrix_dim)
-x_matrix[] <- " "
-x_matrix[c(3:5, 9), c(3, 7:9)] <- "X"
-x_matrix[, c(1, 10)] <- "|"
-x_matrix
+matrix.dim <- 10  
+x.matrix <- matrix(ncol=matrix.dim, nrow=matrix.dim)
+x.matrix[] <- " "
+x.matrix[c(3:5, 9), c(3, 7:9)] <- "X"
+x.matrix[, c(1, 10)] <- "|"
+x.matrix
 ```
  Gives us this output
 
@@ -174,10 +174,10 @@ x_matrix
  Extracting a subset from a matrix is again similar to replacing values. We either yield the value or assign it. as we saw above.
 
  ```R
- double_x_pipe <- x_matrix[3:4, 9:10]
- double_x_pipe
+ double.x.pipe <- x.matrix[3:4, 9:10]
+ double.x.pipe
  ```
-shows that `double_x_pipe` is a nice sub-matrix
+shows that `double.x.pipe` is a nice sub-matrix
 
 ```
      [,1] [,2]
