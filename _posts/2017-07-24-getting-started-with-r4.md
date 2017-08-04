@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 4: Vector Extracting, Replacing and Excluding"
-excerpt_separator: "<!--more-->"
+excerpt.separator: "<!--more-->"
 categories:
   - Data Science
 tags:

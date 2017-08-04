@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 6: Matrices - Captions"
-excerpt_separator: "<!--more-->"
+excerpt.separator: "<!--more-->"
 categories:
   - Data Science
 tags:

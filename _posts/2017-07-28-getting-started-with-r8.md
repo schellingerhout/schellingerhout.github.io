@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 8: Data frames - Construction, Subsetting and Structure"
-excerpt_separator: "<!--more-->"
+excerpt.separator: "<!--more-->"
 categories:
   - Data Science
 tags:
