@@ -8,7 +8,7 @@ tags:
   - Tutorial
 ---
 
-Expanding on the basics of the simple data classes in [Part 1: The Console and Variables]({{ site.baseurl }}{% post.url 2017-07-23-getting-started-with-r %}), we now start with the first higher dimension construct: vectors
+Expanding on the basics of the simple data classes in [Part 1: The Console and Variables]({{ site.baseurl }}{% post_url 2017-07-23-getting-started-with-r %}), we now start with the first higher dimension construct: vectors
 <!--more-->
 
 I am posting this tutorial as I learn R. I will respond to feedback for errata in the comments.

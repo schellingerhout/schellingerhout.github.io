@@ -17,7 +17,7 @@ I am posting this tutorial as I learn R. I will respond to feedback for errata i
 
 ## Adding columns after construction
 
-You should remember how we added names to our vector values. In that case we used the `names()` function. If you need a second look, then head back to [Part 2: Vector Basics]({{ site.baseurl }}{% post.url 2017-07-24-getting-started-with-r2 %}).
+You should remember how we added names to our vector values. In that case we used the `names()` function. If you need a second look, then head back to [Part 2: Vector Basics]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}).
 
 We have two similar functions for matrices: `rownames` and `colnames`. Let us retry our previous subset
 
