@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 7: Factors - Levels and Labels"
-excerpt.separator: "<!--more-->"
+excerpt_separator: "<!--more-->"
 categories:
   - Data Science
 tags:

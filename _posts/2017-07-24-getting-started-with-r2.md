@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 2: Vector Basics"
-excerpt.separator: "<!--more-->"
+excerpt_separator: "<!--more-->"
 categories:
   - Data Science
 tags:

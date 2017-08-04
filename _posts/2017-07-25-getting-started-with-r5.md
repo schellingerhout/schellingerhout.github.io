@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 5: Matrices - Creating, Filling and Subsetting"
-excerpt.separator: "<!--more-->"
+excerpt_separator: "<!--more-->"
 categories:
   - Data Science
 tags:

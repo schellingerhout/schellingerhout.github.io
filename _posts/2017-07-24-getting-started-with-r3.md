@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 3: Vector Operations"
-excerpt.separator: "<!--more-->"
+excerpt_separator: "<!--more-->"
 categories:
   - Data Science
 tags:

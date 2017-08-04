@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with R - Part 9: Lists and the [[]] operator"
-excerpt.separator: "<!--more-->"
+excerpt_separator: "<!--more-->"
 categories:
   - Data Science
 tags:
