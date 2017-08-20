@@ -14,11 +14,13 @@ Working through a free course at Udemy [R, ggplot, and Simple Linear Regression]
 I am posting this tutorial as I learn R. I will respond to feedback for errata in the comments.
 {: .notice}
 
-I will not address any issues that we have covered in the getting started section (or the [Kaggle Titanic tutorial follow-along] ({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}). Follow along at Udemy [R, ggplot, and Simple Linear Regression](https://www.udemy.com/machlearn1/learn/v4/overview)
+I will not address any issues that we have covered in the getting started section or the [Kaggle Titanic tutorial follow-along]({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}). 
+
+To follow along with this blog post you can head to Udemy [R, ggplot, and Simple Linear Regression](https://www.udemy.com/machlearn1/learn/v4/overview). Register and and follow along with the free class.
 
 ## Getting Started
 ### Introduction
-Dr. Charles Redmond has a series of R videos at Udemy. Gives a motivation that he wants to bring data science under other disciplines. His goal is understanding linear regression. I am already familiar with linear regression, but a refresher is good.
+Dr. Charles Redmond has a series of R videos at Udemy. In the introduction he gives a motivation that he wants to bring data science under other disciplines. His goal is understanding linear regression. I am already familiar with linear regression, but a refresher is good.
 
 This course is provided for free and I don't want to be too harsh, but I will point out shortcomings and errors in the tutorial. Anyone that makes a course and provides it for free needs to be commended, even if the course or material is not perfect. This is why I always ask for feedback. I will use the feedback and adjust and fix my material as needed
 
@@ -32,12 +34,12 @@ He likes to use the console to do his interactive work and the top panel for scr
 
 He also mentions the Ctrl-L hotkey for clearing the console. Expanding the menus at the top will reveal other shortcuts. I accidentaly found Ctrl-L trying to delete a line in a script file. Many text editors - including Notepad++ - uses that for clearing a single line. 
 
-### Vectors  
-I already covered vectors in [Getting Started with R - Part 2: Vector Basics] ({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2.md %}) and [Getting Started with R - Part 3: Vector Operations]({{ site.baseurl }}{post_url 2017-07-24-getting-started-with-r3.md}). Notice that he typed `X<-3` in the console, this is **not** acceptable formatting because it can be confused for "Is x less than minus 3?".
+### Vectors 
+I already covered vectors in [Getting Started with R - Part 2: Vector Basics]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r2 %}) and [Getting Started with R - Part 3: Vector Operations]({{ site.baseurl }}{post_url 2017-07-24-getting-started-with-r3 %}). Notice that he typed `X<-3` in the console, this is **not** acceptable formatting because it can be confused for "Is x less than minus 3?".
 
-He shows how to use the combine function to create a vector using `c()` and basic indexing with the `[]`. His showing of slicing with `:` operator hides the real dynamic of the the `:` operator is really a range generator :- essentially creating a series and that the series is actually then the vector for indexing. I covered this in [Getting Started with R - Part 4: Vector Extracting, Replacing and Excluding]({ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r4.md %}). For example: `-2:-6` is really just `c(-2, -3, -4, -5, -6)`. Since indices with a `-` are simply excluded.
+He shows how to use the combine function to create a vector using `c()` and basic indexing with the `[]`. His showing of slicing with `:` operator hides the real dynamic of the the `:` operator. This operator is really a range generator :- essentially creating a series and that the series is actually then the vector for indexing. I covered this in [Getting Started with R - Part 4: Vector Extracting, Replacing and Excluding]({ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r4 %}). For example: `-2:-6` is really just `c(-2, -3, -4, -5, -6)`. Since indices with a `-` are simply excluded.
 
-This lesson glosses over important concepts of the `[]` Extract\Replace operator. Understanding how it works early on will save students lots of headaches later
+This lesson glosses over important concepts of the `[]` Extract\Replace operator. Please understand how it works early on to save you headaches later
 
 ### Data Frames
 He skips lists and matrices and move to data frames. Nothing much new here. Immediatly jumps into indexing by name with the `$` operator. 
@@ -60,7 +62,7 @@ He shows how to install a package using the "Tools, Install Packages..." menu an
 
 He mentions that once the cursor stops you know the package is installed. There is an easier way to see if the package is installed. Look to the right panel where it shows "Files, Plots, **Packages**, Help, viewer". Simply see if the package is listed under the Packages tab.
 
-He does mention the `library()` function we saw in the [Kaggle Titanic tutorial follow-along] ({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}). In this case its a trivial `library(ggplot2)`.
+He does mention the `library()` function we saw in the [Kaggle Titanic tutorial follow-along]({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}). In this case its a trivial `library(ggplot2)`.
 
 Just a note on CRAN. I've had trouble getting packages to install. Sometimes the servers are just too busy, and often you just have to try at a later time. I don't know of any trustworth repositories outside of CRAN. 
 
@@ -72,7 +74,8 @@ Yes, the package is `ggplot2` and the function is `ggplot`.
 The `ggplot()` constructs the inital plot object often given a default dataset and aesthetics. The function is almost always followed by the `+` operator to add components to the plot. The sample created here was just a simple skeletal plot to which a geometry point layer was added.
 
 ```R
-ggplot() + geom_point(data = dat, mapping = aes(x = x, y = y), color = "blue")  # code like this: spaces on either side of bin-ops (=, <-, +) and spaces after commas
+# code like this: spaces on either side of infix operators (=, <-, +) and spaces after commas
+ggplot() + geom_point(data = dat, mapping = aes(x = x, y = y), color = "blue")  
 ```
 You'll notice that he is supplying the aesthetics opject without a parameter name. Its actually the second parameter so if he wanted to omit the name he should have had this format, otherwise specifify the name "mapping"
 
@@ -91,7 +94,7 @@ So the following will yield the exact same result
 ggplot(dat, aes(x = x, y = y)) + geom_point(size = 5, color = "blue")
 ```
 
-The data is the first parameter in ggplot, and mapping is the second so I can supply `dat` and `aes`, without variable names.  Just note that the two parameters are reversed in the `geom_point` and `geom_line` functions. So most samples in this Udemy class are technically wrong since the aesthetics object is passed without a parameter name ever time as the second parameter into these functions.
+The data is the first parameter in ggplot, and mapping is the second so I can supply `dat` and `aes`, without variable names.  Just note that the two parameters are reversed in the `geom_point` and `geom_line` functions. So most samples in this Udemy class are technically wrong since the aesthetics object is passed without a parameter name ever time as the second parameter into these functions. There may be an error handling mechanism that correctly assings the aesthetics option to the "mapping" variable, but technically these calls should have produced erros.
 
 His explanation of assigning x to x and y to y is a bit brief. Here is deal: the `=` operator assign at current context and lower, while `<-` assigns in the global context. Here the `x` on the left is in defined inside the context of the function and the `x` on the right is on the global context. In this case the x on the right will reference `dat$x`. Since the console context cannot see what is assigned and cannot even see the `x` on the left this is a perfectly fine assignment. This type of assignment is most commonly used to pass parameters by name.
 
@@ -146,7 +149,7 @@ In this case he uses `geom_line`. If he created the `ggplot` object earlier with
 
 ### More with lines
 
-If you remember my [post on vector operations]({{ site.baseurl }}{post_url 2017-07-24-getting-started-with-r3.md}) (and the illustration of the rack-and-pinion gear) you know how a smaller vector gets applied in multiples over the larger vector. It should be no surprise that you can assign the vector y based on math of the applied to another.
+If you remember my [post on vector operations]({{ site.baseurl }}{% post_url 2017-07-24-getting-started-with-r3 %}) (and the illustration of the rack-and-pinion gear) you know how a smaller vector gets applied in multiples over the larger vector. It should be no surprise that you can assign the vector y based on math of the applied to another.
 
 ## Sampling form populations
 ### Normal populations
@@ -279,10 +282,10 @@ Note that the standard deviation in x and y are different. also note that if you
 ### Father and son heights
  I prefer `str()` over `head()`. It still shows a few values for each variable (column), but in a transposed output.
 
- ### Equation of a line
+### Equation of a line
  Simple refresher on getting a line using the slope-point method
 
- ### Residual visualizations
+### Residual visualizations
 One way to create the two data frames is just to use `assign` to make clone of the dataframe and add the extra column. 
 
 ```R
@@ -300,7 +303,7 @@ In this lesson he explains that residuals are the deltas in Y between measured a
 Pretty straightforward explanation of the sum of squares.
 
 ### Least Squars Line
-`lm` or Fit Linear Model function takes a formula as its first parameter. We saw formulas in [Kaggle Titanic tutorial follow-along] ({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}) where we used them as parameters to the tree and random forest generator functions.
+`lm` or Fit Linear Model function takes a formula as its first parameter. We saw formulas in  [Kaggle Titanic tutorial follow-along]({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}) where we used them as parameters to the tree and random forest generator functions.
 
 In this case we have `y ~ model` where we are attempting to predict y based off a model of other driving fields separated by `+`. We saw that in the Kaggle Titanic Turional. Note that there are advanced operators such as `*` for factor crossing, but that is an advanced topic. In this case we have a simple linear form so we are tracking the dependenct of y on x so the model is just `x` so the formula is simply `y ~ x`. 
 
@@ -319,7 +322,7 @@ Not much here except that the regressed line does a best (least squares best) ap
 
 ### Readin in Excel Files
 
-Saving as csv. Pretty much what you should know from the [Kaggle Titanic tutorial follow-along] ({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}). R-Studio has the ability to bring in Excel files directly if you select that from the "Import Dataset" menu (using the `readxl` package). Also, note that csv is also included under the "Import Dataset". In that case the `read_csv` package will be used to read the csv, that package has a slightly different syntax than the built in `read.csv`
+Saving as csv. Pretty much what you should know from the [Kaggle Titanic tutorial follow-along]({{ site.baseurl }}{% post_url 2017-07-31-datacamp-kaggle-tutorial %}). R-Studio has the ability to bring in Excel files directly if you select that from the "Import Dataset" menu (using the `readxl` package). Also, note that csv is also included under the "Import Dataset". In that case the `read_csv` package will be used to read the csv, that package has a slightly different syntax than the built in `read.csv`
 
 ### Conclusion
 This course is just OK. I already knew how linear regression worked, but maybe you found value in this course
