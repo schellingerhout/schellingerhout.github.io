@@ -244,14 +244,14 @@ sapply(x, sqrt)
 ```
 As long as the elements in the supplied data can be passed to the function as `FUN(x[[index]], ...)` most of the time that would be fine, but as the documentation points out `is.numeric` (and potentially other `is.*` functions), may give you different results if you expected the indexing to be simple `[]` indexing instead of `[[]]` (indexing with tag removal)
 
-A note on infix operators for instance `x ^ 2`, this can be rewritten as ```^`(x, 2)`` so in that case 
+A note on infix operators for instance `x ^ 2`, this can be rewritten as `` `^`(x, 2)`` so in that case 
 
 ```R
 x <- c(2, 4, 9, 15)
 sapply(x, `^`, 2) 
 ```
 
-Note that I just added the second parameter to `^` as an additional parameter. It will automatically be placed by index in the function after the indexed value in the input. The nice thing about this is that the operator written as a parameter in the form ``(x, `^`, 2`)``, looks surprisingly like the normal infix notation `x ^ 2`. 
+Note that I just added the second parameter to `^` as an additional parameter. It will automatically be placed by index in the function after the indexed value in the input. The nice thing about this is that the operator written as a parameter in the form ``(x, `^`, 2)``, looks surprisingly like the normal infix notation `x ^ 2`. 
 
 Now, in the case where he calculates rnorm we are a bit out of luck as far as I know. I think in that case we have to use the `function(x) rnorm(1, x, 10)` format. If you know of an elegant alternative then please comment below
 
