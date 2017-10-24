@@ -1,4 +1,14 @@
-Installing node-red on Bash on Ubuntu on Windows
+---
+title: "Installing node-red on Bash on Ubuntu on Windows"
+excerpt_separator: "<!--more-->"
+categories:
+  - "Bash on Ubuntu on Windows"
+tags:
+  - node-red bash windows
+---
+A simple how-to showing the process of installing node-red on Bash for Ubuntu on Windows
+
+<!--more-->
 
 First you need node-js and npm
 
@@ -7,7 +17,7 @@ $ sudo apt-get install nodejs
 $ sudo apt-get install npm
 ```
 
-Wait for the entire Internet to download. The install node-red as per their instructions
+Wait for the entire Internet to download. Then install node-red as per their instructions
 
 ```
 $ sudo npm install -g --unsafe-perm node-red
@@ -25,7 +35,8 @@ So lets fix it. First lets locate nodejs
 ```
 $ whereis nodejs
 nodejs: /usr/bin/nodejs /usr/lib/nodejs /usr/include/nodejs /usr/share/nodejs /usr/share/man/man1/nodejs.1.gz
-``
+
+```
 
 Next, lets add a symbolic link from node to nodejs:
 
