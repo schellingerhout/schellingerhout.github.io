@@ -12,7 +12,7 @@ tags:
 In this blog post I will start to describe the process to develop a solution in Delphi using the Active Object Design Pattern. This pattern is a concurrency design pattern based in part on the Proxy pattern. 
 
 <!--more-->
-As far as I can determine it originated from "Pattern-Oriented Software Architecture, Volume 2: Patterns for Concurrent and Networked Objects" and you can view an updated paper on the subject here [](http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf). I will refer to the paper from time to time and it may be good to first read it to grasp what it entails.
+As far as I can determine it originated from "Pattern-Oriented Software Architecture, Volume 2: Patterns for Concurrent and Networked Objects" and you can view an updated paper on the subject here [http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf](http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf). I will refer to the paper from time to time and it may be good to first read it to grasp what it entails.
 
 The Active Object Pattern describes a system where the Client interacts with a Proxy that directs commands to a Servant Object. The Proxy presents the same or similar interface as the Servant to consumers. The Proxy uses a Scheduler (or Activation Queue) to queue method requests to the Servant and dispatches them in order*. Methods with return values are returned as Futures (also known as Promises). Demanding a Future Value blocks until the value is ready.
 
@@ -39,7 +39,10 @@ Some mehtod requests need to satisfy Futures or Promised Values. Instead of the 
   end;
 {% endhighlight %}
 
-:Note: Delphi has a IFuture<T> that is run via a TTask, that interface is more complex than we need to implement.  
+Delphi has a IFuture<T> that is run via a TTask, that interface is more complex than we need to implement.  
+{: .notice}
+
+## Direct conversion of Sample
 
  In the sample presented in the paper each method request decends from the abstract method request and are constructed using the Servant and - in cases returning a value - a Future or Promise that needs to be satisfied.  I recreated a skeletal structure representing the design of the sample in the paper below. The main difference here is that the Future is created with a Method Request. In the paper the Proxy creaded the Future and passed it into the Method Request to be filled.
 
@@ -113,9 +116,9 @@ begin
 end;
 {% endhighlight %}
 
-** Generalizing the sample
+## Generalizing the Sample
 
-While this somewhat direct conversion of the sample from the paper would work in Delphi there are a few problems with the design. First the sample is very simple. Only two method invocations with one type passed. There is only on Future Value type and lastly the Method requests are tightly bound to the Passive objects on which they operate.
+While this somewhat direct conversion of the sample from the paper would work in Delphi there are a few problems with the design. First, the sample is very simple. Only two method invocations with one type passed. There is only on Future Value type and lastly the Method requests are tightly bound to the Passive objects on which they operate.
 
 We can use anonymous functions and closures to generalize the Method Request class
 
@@ -202,7 +205,7 @@ begin
 end;
 {% endhighlight %}
 
-The above looks like more work, but consider the case where the Servant had many more methods or many more properties. We would have to create classes for each of those. Say my Servant object has another property PropA of type integer we can easily make could quickly add a setter and getter to the Proxy
+The above looks like more work, but consider the case where the Servant had many more methods or many more properties. We would have to create classes for each of those. Say my Servant object has another property PropA of type integer we can easily and quickly add a setter and getter to the Proxy. 
 
 {% highlight pascal %}
 function TPassiveObjectProxy.getPropAFuture: IFuture<integer>;
