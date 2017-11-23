@@ -1,4 +1,4 @@
-t--
+---
 title: "Active Object Design Pattern in Delphi (Part 1): Method Requests and Future Values"
 excerpt_separator: "<!--more-->"
 categories:
@@ -19,7 +19,7 @@ The Active Object Pattern describes a system where the Client interacts with a P
 Every call to the Active Object gets turned into a Method Request. So let us start there
 
 {% highlight pascal %}
-t  TMethodRequest = class
+  TMethodRequest = class
     // some details covered later
   public
     function Guard: boolean; 
