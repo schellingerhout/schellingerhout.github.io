@@ -1,4 +1,4 @@
----
+t--
 title: "Active Object Design Pattern in Delphi (Part 1): Method Requests and Future Values"
 excerpt_separator: "<!--more-->"
 categories:
@@ -19,7 +19,7 @@ The Active Object Pattern describes a system where the Client interacts with a P
 Every call to the Active Object gets turned into a Method Request. So let us start there
 
 {% highlight pascal %}
-  TMethodRequest = class
+t  TMethodRequest = class
     // some details covered later
   public
     function Guard: boolean; 
@@ -27,9 +27,9 @@ Every call to the Active Object gets turned into a Method Request. So let us sta
   end;
 {% endhighlight %}
 
-The method request just like we saw in Lavender and Schmidt's paper has a guard that determines if the call can be be made and a call to invoke the actual method on the client. The sceduler loops through the queued requests, checks their Guard and then issues a Call.
+The method request just like we saw in Lavender and Schmidt's paper has a guard that determines if the call can be made and a call to invoke the actual method on the client. The Scheduler loops through the queued requests, checks their Guard and then issues a Call.
 
-Some mehtod requests need to satisfy Futures or Promised Values. Instead of the standard property "getters" in the Servant, the Proxy should generally return the value in a Future, so that the client can delay the use of the value for as long as possible since it may be a blocking action if the value is not ready. To facilitate with the return of Future Values consider this simple generic interface  
+Some method requests need to satisfy Futures or Promised Values. Instead of the standard property "getters" in the Servant, the Proxy should generally return the value in a Future, so that the client can delay the use of the value for as long as possible since it may be a blocking action if the value is not ready. To facilitate with the return of Future Values consider this simple generic interface  
 
 
 {% highlight pascal %}
@@ -44,7 +44,7 @@ Delphi has a IFuture<T> that is run via a TTask, that interface is more complex 
 
 ## Direct conversion of Sample
 
- In the sample presented in the paper each method request decends from the abstract method request and are constructed using the Servant and - in cases returning a value - a Future or Promise that needs to be satisfied.  I recreated a skeletal structure representing the design of the sample in the paper below. The main difference here is that the Future is created with a Method Request. In the paper the Proxy creaded the Future and passed it into the Method Request to be filled.
+ In the sample presented in the paper each method request descends from the abstract method request and are constructed using the Servant and - in cases returning a value - a Future or Promise that needs to be satisfied.  I recreated a skeletal structure representing the design of the sample in the paper below. The main difference here is that the Future is created with a Method Request. In the paper the Proxy created the Future and passed it into the Method Request to be filled.
 
 {% highlight pascal %}
  TMethodRequest = class abstract
@@ -163,7 +163,7 @@ begin
 end;
 {% endhighlight %}
 
-We no longer need to subclass TMethodRequest, but how we we return Futures? First, let us define the implementation of of our TFutureValue<T> generic class:
+We no longer need to subclass TMethodRequest, but how we return Futures? First, let us define the implementation of of our TFutureValue<T> generic class:
 
 {% highlight pascal %}
   TFutureValue<T> = class(TInterfacedObject, IFutureValue<T>)
@@ -250,7 +250,7 @@ end;
 {% endhighlight %}
 
 
-Why did I not simply use Tasks and Futures from the System.Threading library?  You can create a Task without running it immediately and with a bit of effort you can create a Future that is not started immediately so perhaps I could have run those as the scheduler dequeues them. I initially went down that path, but the code was actually more complex and more unreadible. I needed a simple solution that checks a guard and calls a method. While most methods do not need guards, it is part of the pattern and was hard to implement with the out-of-the-box structures
+Why did I not simply use Tasks and Futures from the System.Threading library?  You can create a Task without running it immediately and with a bit of effort you can create a Future that is not started immediately so perhaps I could have run those as the scheduler dequeues them. I initially went down that path, but the code was actually more complex and more unreadable. I needed a simple solution that checks a guard and calls a method. While most methods do not need guards, it is part of the pattern and was hard to implement with the out-of-the-box structures
 
 You can download the [source code](https://github.com/schellingerhout/active-object-delphi). Please comment or contribute.
 
