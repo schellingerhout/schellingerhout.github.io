@@ -12,7 +12,7 @@ tags:
 In this blog post I will start to describe the process to develop a solution in Delphi using the Active Object Design Pattern. This pattern is a concurrency design pattern based in part on the Proxy pattern. 
 
 <!--more-->
-As far as I can determine it originated from "Pattern-Oriented Software Architecture, Volume 2: Patterns for Concurrent and Networked Objects" and you can view an updated paper on the subject here [http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf](http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf). I will refer to the paper from time to time and it may be good to first read it to grasp what it entails.
+As far as I can determine it originated from "Pattern-Oriented Software Architecture, Volume 2: Patterns for Concurrent and Networked Objects" and you can view an updated paper on the subject here: [http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf](http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf). I will refer to the paper from time to time and it may be good to first read it to grasp what it entails.
 
 The Active Object Pattern describes a system where the Client interacts with a Proxy that directs commands to a Servant Object. The Proxy presents the same or similar interface as the Servant to consumers. The Proxy uses a Scheduler (or Activation Queue) to queue method requests to the Servant and dispatches them in order*. Methods with return values are returned as Futures (also known as Promises). Demanding a Future Value blocks until the value is ready.
 
@@ -39,7 +39,7 @@ Some method requests need to satisfy Futures or Promised Values. Instead of the 
   end;
 {% endhighlight %}
 
-Delphi has a IFuture<T> that is run via a TTask, that interface is more complex than we need to implement.  
+*Note:* Delphi has a IFuture<T> that is run via a TTask, that interface is more complex than we need to implement.  
 {: .notice}
 
 ## Direct conversion of Sample
@@ -54,7 +54,7 @@ Delphi has a IFuture<T> that is run via a TTask, that interface is more complex 
  end;
 
 // The sample only had one future. 
-IMessage_Future = Interface
+IMessage_Future = Interface(IInterface)
   function GetValue: TMessage;
   property Value : TMessage read GetValue;
 end;
@@ -123,7 +123,7 @@ While this somewhat direct conversion of the sample from the paper would work in
 We can use anonymous functions and closures to generalize the Method Request class
 
 {% highlight pascal %}
-  TMethodRequest = class
+  TMethodRequest = class(TObject)
   private
     FCall: TProc;
     FGuard: TFunc<boolean>;
@@ -140,7 +140,7 @@ We can pass a simple TProc that is invoked in TMethodRequest.call via the Schedu
 
 
 {% highlight pascal %}
-procedure TPassiveObjectProxy.put(const msg: TMessage);
+procedure TProxy.put(const msg: TMessage);
 var
   LMsg: TMessage;
 begin
@@ -180,7 +180,7 @@ We no longer need to subclass TMethodRequest, but how we return Futures? First, 
 Our code on the Proxy side is a bit more code, but it is still better than creating a new MethodRequest sub-class
 
 {% highlight pascal %}
-function TPassiveObjectProxy.get: IFuture<TMessage>;
+function TProxy.get: IFuture<TMessage>;
 var
   LActiveFuture: TFuture<TMessage>;
 begin
@@ -208,7 +208,7 @@ end;
 The above looks like more work, but consider the case where the Servant had many more methods or many more properties. We would have to create classes for each of those. Say my Servant object has another property PropA of type integer we can easily and quickly add a setter and getter to the Proxy. 
 
 {% highlight pascal %}
-function TPassiveObjectProxy.getPropAFuture: IFuture<integer>;
+function TProxy.getPropAFuture: IFuture<integer>;
 var
   LActiveFuture: TFuture<integer>;
 begin
@@ -226,7 +226,7 @@ begin
   );
 end;
 
-procedure TPassiveObjectProxy.SetPropA(const Value: Integer);
+procedure TProxy.SetPropA(const Value: Integer);
 var
   LValue: Integer;
 begin
@@ -243,14 +243,15 @@ begin
 end;
 
 // For backwards compatibility only... better for clients to use the Future
-procedure TPassiveObjectProxy.GetPropA: integer;
+procedure TProxy.GetPropA: integer;
 begin
   result:=  GetPropAFuture.Value;
 end;
 {% endhighlight %}
 
+You will notice that Futures are now created by the Proxy as described in the paper. The closure we formed with the anonymous procedure now allows the scheduler to have no knowledge of Futures.
 
-Why did I not simply use Tasks and Futures from the System.Threading library?  You can create a Task without running it immediately and with a bit of effort you can create a Future that is not started immediately so perhaps I could have run those as the scheduler dequeues them. I initially went down that path, but the code was actually more complex and more unreadable. I needed a simple solution that checks a guard and calls a method. While most methods do not need guards, it is part of the pattern and was hard to implement with the out-of-the-box structures
+Why did I not simply use Tasks and Futures from the System.Threading library?  You can create a Task without running it immediately and with a bit of effort you can create a Future that is not started immediately so perhaps I could have run those as the scheduler dequeues them. I initially went down that path, but the code was actually more complex and more unreadible. I needed a simple solution that checks a guard and calls a method. While most methods do not need guards, it is part of the pattern and was hard to implement with the out-of-the-box structures
 
 You can download the [source code](https://github.com/schellingerhout/active-object-delphi). Please comment or contribute.
 
