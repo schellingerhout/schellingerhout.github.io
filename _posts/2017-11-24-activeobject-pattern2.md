@@ -12,7 +12,7 @@ tags:
 In this blog post I will continue to describe the process to develop a solution in Delphi using the Active Object Design Pattern. Specifically, we will see how method requests can be scheduled
 
 <!--more-->
-If you missed [Part 1: Method Requests and Future Values]({{ site.baseurl }}{% post_url 2017-11-22-activeobject-pattern1 %}) I would recommend that you read that first before proceeding.
+If you missed [Part 1: Method Requests]({{ site.baseurl }}{% post_url 2017-11-22-activeobject-pattern1 %}) I would recommend that you read that first before proceeding.
 
 I want to delve into more detail of the Active Object's Activation Queue or Scheduler.
 
@@ -164,3 +164,5 @@ end;
 {% endhighlight %}
 
 In a later post you will see how we compose the Scheduler with the Proxy, but for now its sufficient to know that the Proxy will schedule request for its servant on the Scheduler. Events will be fired in order as Guards allow.
+
+You can download the [source code](https://github.com/schellingerhout/active-object-delphi). Please comment or contribute.

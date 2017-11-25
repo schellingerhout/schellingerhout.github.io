@@ -1,5 +1,5 @@
 ---
-title: "Active Object Design Pattern in Delphi (Part 1): Method Requests and Future Values"
+title: "Active Object Design Pattern in Delphi (Part 1): Method Requests"
 excerpt_separator: "<!--more-->"
 categories:
   - Design Patterns
@@ -31,7 +31,6 @@ The method request just like we saw in Lavender and Schmidt's paper has a guard 
 
 Some method requests need to satisfy Futures or Promised Values. Instead of the standard property "getters" in the Servant, the Proxy should generally return the value in a Future, so that the client can delay the use of the value for as long as possible since it may be a blocking action if the value is not ready. To facilitate with the return of Future Values consider this simple generic interface  
 
-
 {% highlight pascal %}
   IFutureValue<T> = interface
     function GetValue: T;
@@ -39,8 +38,10 @@ Some method requests need to satisfy Futures or Promised Values. Instead of the 
   end;
 {% endhighlight %}
 
-*Note:* Delphi has a IFuture<T> that is run via a TTask, that interface is more complex than we need to implement.  
+*Note:* Delphi has a IFuture<T> that is run via a TTask, that interface is more complex than we need to implement. 
 {: .notice}
+
+I cover Future values in more depth in [Part 3: Futures]({{ site.baseurl }}{% post_url 2017-11-25-activeobject-pattern3 %}).  
 
 ## Direct conversion of Sample
 
@@ -136,8 +137,7 @@ We can use anonymous functions and closures to generalize the Method Request cla
   end;
 {% endhighlight %}
 
-We can pass a simple TProc that is invoked in TMethodRequest.call via the Scheduler. We can also pass a Guard that can determine if the call can be made or needs to wait. 
-
+We can pass a simple `TProc` that is invoked in `TMethodRequest.call` via the Scheduler. We can also pass a Guard that can determine if the call can be made or needs to wait. 
 
 {% highlight pascal %}
 procedure TProxy.put(const msg: TMessage);
@@ -163,14 +163,14 @@ begin
 end;
 {% endhighlight %}
 
-We no longer need to subclass TMethodRequest, but how we return Futures? First, let us define the implementation of of our TFutureValue<T> generic class:
+We no longer need to subclass `TMethodRequest`, but how we return Futures? First, let us define the implementation of of our `TFutureValue<T>` generic class:
 
 {% highlight pascal %}
   TFutureValue<T> = class(TInterfacedObject, IFutureValue<T>)
   private
     FResult: T;
     function GetValue: T;
-    // synchronization details omited
+    // synchronization covered in Part 3 of this series
   public
     procedure SetValue(AResult: T); // called when method request is invoked
     property Value: T read GetValue;
