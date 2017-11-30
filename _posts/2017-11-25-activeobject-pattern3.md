@@ -47,7 +47,7 @@ end;
 
 Lets examine some of the basics of the definition:
 
-The property `Value` uses the `GetValue` method to `Wait` for the `FValueReadyEvent` and then returns `FResult`. The boolean `FResultSet` is used in a technique called Double-Check Locking. I will disuss that when we look at the implementation of the class.
+The property `Value` uses the `GetValue` method to `Wait` for the `FValueReadyEvent` and then returns `FResult`. The boolean `FResultSet` is used in a technique called Quick-Check Locking. I will disuss that when we look at the implementation of the class.
 
 `SetValue` is called by the service that supplies the value (in this case MethodRequest via theScheduler). When `SetValue` is called, the `FValueReadyEvent` is set and `FResultSet` is set to `true`.
 
@@ -104,7 +104,7 @@ begin
 end;
 {% endhighlight %}
 
-For simplified synchronization the assumption must be made that the value will only be set once. This allows us to use a simple boolean that we will set directly without an interlocked exchange. This boolean is used in a technique called double-checked locking, which is a way of reduce the overhead of checking or waiting for a synchronization object. This technique is often used in the Singleton Pattern, but is contra-indicated in some languages since order of execution is not always guaranteed. In this case I believe it is safe, and it speeds up the `GetValue` routine when the value has already been delivered
+For simplified synchronization the assumption must be made that the value will only be set once. This allows us to use a simple boolean that we will set directly without an interlocked exchange. This boolean is used in a technique called quick-checked locking, which is a way of reduce the overhead of checking or waiting for a synchronization object. This technique is similar to double-checked locking used in the Singleton Pattern, but is contra-indicated in some languages since order of execution is not always guaranteed. In this case I believe it is safe, and it speeds up the `GetValue` routine when the value has already been delivered
 
 You will notice that the value is set without an interlocked exhange. I believe this is safe with the assumption that we can write only once and can read only after the TEvent is set. I also believe that setting booleans are safe and do not require an interlock exchange. If you believe I am in error please comment below or create a pull request on the source code for this blog post series.
 
