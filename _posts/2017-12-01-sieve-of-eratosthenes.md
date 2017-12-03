@@ -85,7 +85,7 @@ begin
 end;
 {% endhighlight %}
 
-But, this is not needed. We know that setting every even value will just yield a bit pattern of alternating ones and zeros 101010101. We do have a special case though; 2 is not prime and, of course, 0 and 1 are not prime numbers either. Since binary 1010<sub>2</sub> is just hexadecimal 5<sub>16</sub> we can set all blocks to `$5555555555555555` except for the very first block. The only difference for the first block is that the first 4 bits would be 011<sub>2</sub> or 3<sub>16</sub>. So, we can set the first block to `$5555555555555553`
+But, this is not needed. We know that setting every even value will just yield a bit pattern of alternating ones and zeros 101010101. We do have a special case though; 2 is not prime and, of course, 0 and 1 are not prime numbers either. Since binary 1010<sub>2</sub> is just hexadecimal 5<sub>16</sub> we can set all blocks to `$5555555555555555` except for the very first block. The only difference for the first block is that the first 4 bits would be 0011<sub>2</sub> or 3<sub>16</sub>. So, we can set the first block to `$5555555555555553`
 
  {% highlight pascal %}
 FValueBitField[0] := $5555555555555553;
@@ -120,7 +120,9 @@ until (LPrime >= 14); // 14 ^ 2 is greater than 191
 
 ### Setting the bit corresponding to a composite number
 
-Next we need to find a way to set a specific bit by index. `LBlockBitIndex` tells us the bit we need to set, but how do we actually set a bit based on that index? In numeric terms each bit n represents 2<sup>n</sup>. Therefore 2<sup>LBlockBitIndex</sup>, but we don't actually need to calculate a power of 2, we can use bit shifting. The `shl` method in Delphi shifts bits left. For instance if we start with 10000<sub>2</sub> and shift 2 left we'd get 1000000<sub>2</sub>. Using `1 shl LBlockBitIndex` we will shift the value by the number of bits. At first glance this looks OK, but what size is the `1` constant used in that expression? Its unlikely to be 64-bit, which means that shifts over the size of the `1` constant will give us incorrect results.  To ensure that we shift for a 64-bit unsigned buffer value we can make it explicit by casting `UInt64(1) shl LBlockBitIndex` 
+Next we need to find a way to set a specific bit by index. `LBlockBitIndex` tells us the bit we need to set, but how do we actually set a bit based on that index? In numeric terms each bit n represents 2<sup>n</sup>, therefore we want the value 2<sup>LBlockBitIndex</sup>.
+
+However, we don't actually need to calculate a power of 2, we can use bit shifting. The `shl` method in Delphi shifts bits left. For instance if we start with 10000<sub>2</sub> and shift 2 left we'd get 1000000<sub>2</sub>. Using `1 shl LBlockBitIndex` we will shift the value by the number of bits. At first glance this looks OK, but what size is the `1` constant used in that expression? Its unlikely to be 64-bit, which means that shifts over the size of the `1` constant will give us incorrect results.  To ensure that we shift for a 64-bit unsigned buffer value we can make it explicit by casting `UInt64(1) shl LBlockBitIndex` 
 
 **Watch out!**  Don't assume the sizes of declared constants either used in expressions or declared with a const statement. If you need a specific size, make it explicit
 {: .notice--warning}
