@@ -266,7 +266,7 @@ end;
 
 
 ### Finding Primes up to a Maximum
-The process would be to mark all multiples primes using the method above up to the squareroot of the maximum. And then traverse the field and return the indexes of all the zeros. Assume the procedure that masks the bits is called `GetPrimeMask` and that `NumberOfBitsSet` is a method that returns the number of 1s in the field.
+The process would be to mark all multiples primes using the method above up to the squareroot of the maximum. And then traverse the field and return the indexes of all the zeros. Assume `NumberOfBitsSet` is a method that returns the number of 1s in the field, we will cover that in a moment.
 
 
  {% highlight pascal %}
