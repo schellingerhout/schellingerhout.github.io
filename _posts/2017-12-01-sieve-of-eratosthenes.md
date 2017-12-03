@@ -56,7 +56,7 @@ For the purposes of keeping the implementation simple and still gaining speed I 
 
 for example we could have `FBitFieldArray : Array[0..2] of UInt64;` to represent 0 to 191
 
-FBitFieldArray[0] would be 0 to 63, FBitFieldArray[1] would be 64 to 127, FBitFieldArray[2] would be 128 to 191. Indexing on field [0] is easy, we just use our number, but what about the other fields. In Delphi integer division is done with `Div` and the modulo is obtained, while the `Mod` method gets the remainder (modulus) of a number after division. Both can be done at the same time with `DivMod`. Since we have blocks of 64 we can divide by 64 to get the block we are in and the remainder would be the position inside that block
+`FBitFieldArray[0]` would be 0 to 63, `FBitFieldArray[1]` would be 64 to 127, `FBitFieldArray[2]` would be 128 to 191. Indexing on field [0] is easy, we just use our number, but what about the other fields. In Delphi integer division is done with `Div`, while the `Mod` method gets the remainder (modulus) of a number after division. Both can be done at the same time with `DivMod`. Since we have blocks of 64 we can divide by 64 to get the block we are in and the remainder would be the position inside that block
 
  {% highlight pascal %}
 DivMod(index, 64, LBlockIndex, LBlockBitIndex);
@@ -66,9 +66,9 @@ We will build our code based on 3 blocks and then we will generalize later
 
 ### 2 is the odd man out
 
-All primes are odd except for 2, which forces us to have a check every iteration of the loop. In all other cases we can move check for our next prime value starting with the previous prime's position plus 2.
+All primes are odd except for 2, which forces us to have a check every iteration of the loop for this exceptional case. In all other cases we can check for our next prime value starting with the previous prime's position plus 2.
 
-To that end we can set all the bits in our bitfield for 2s first before repeating the same process for primes 3 and up.
+To eliminate this the check for 2 each iteration (and since 2 is a trivial case) we can set all the bits in our bitfield for 2s first before repeating the same process for primes 3 and up.
 
  {% highlight pascal %}
 LMultiple := 2;
