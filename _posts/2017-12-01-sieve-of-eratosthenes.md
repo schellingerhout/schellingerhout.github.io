@@ -8,7 +8,11 @@ tags:
   - Prime Numbers
 ---
 
-The Sieve of Eratosthenes is a very fast, but memory intensive algorithm to find the primes under a given value. I first read about this method when I was about 12 in a book called "Mathematics: a Human Edeavor" by Harold R. Jacobs. I had forgotten about the details of this method until I stumbled on it again the other day. Here is how I developed a solution in Delphi:
+The Sieve of Eratosthenes is a very fast, but memory intensive algorithm to find the primes under a given value. 
+
+<!--more-->
+
+I first read about this method when I was about 12 in a book called "Mathematics: a Human Edeavor" by Harold R. Jacobs. I had forgotten about the details of this method until I stumbled on it again the other day. Here is how I developed a solution in Delphi:
 
 ## The algortihm
 
@@ -54,9 +58,9 @@ for example we could have `FBitFieldArray : Array[0..2] of UInt64;` to represent
 
 FBitFieldArray[0] would be 0 to 63, FBitFieldArray[1] would be 64 to 127, FBitFieldArray[2] would be 128 to 191. Indexing on field [0] is easy, we just use our number, but what about the other fields. In Delphi integer division is done with `Div` and the modulo is obtained, while the `Mod` method gets the remainder (modulus) of a number after division. Both can be done at the same time with `DivMod`. Since we have blocks of 64 we can divide by 64 to get the block we are in and the remainder would be the position inside that block
 
-{% highlight pascal %}
+ {% highlight pascal %}
 DivMod(index, 64, LBlockIndex, LBlockBitIndex);
-{$ endhighlight %}
+{% endhighlight %}
 
 We will build our code based on 3 blocks and then we will generalize later 
 
@@ -66,7 +70,7 @@ All primes are odd except for 2, which forces us to have a check every iteration
 
 To that end we can set all the bits in our bitfield for 2s first before repeating the same process for primes 3 and up.
 
-{% highlight pascal %}
+ {% highlight pascal %}
 LMultiple := 2;
 LNonPrime := 4; //start at 2^2
 while LNonPrime <= 191 do // maximum value represented by block [2]
@@ -79,23 +83,23 @@ begin
 
   LNonPrime := 2 * LMultiple;
 end;
-{% end highlight %}
+{% endhighlight %}
 
 But, this is not needed. We know that setting every even value will just yield a bit pattern of alternating ones and zeros 101010101. We do have a special case though 2 itself is not prime and of course 0 and 1 are not prime numbers either. Since binary 1010<sub>2</sub> is just hexadecimal 5<sub>16</sub> we can set all blocks to `$5555555555555555` except for the very first block. The only difference for the first block is that the first 4 bits would be 011<sub>2</sub> or 3<sub>16</sub>. So, we can set the first block to `$5555555555555553`
 
-{% highlight pascal %}
+ {% highlight pascal %}
 FValueBitField[0] := $5555555555555553;
 FValueBitField[1] := $5555555555555555;
 FValueBitField[2] := FValueBitField[1];
-{% end highlight %}
-
+{% endhighlight %}
+   
 Now we can move on to real algorithm.
 
 ### Eliminate multiples of primes
 
 Starting with prime 3 we can now mark multiples of 3 as not prime. We have to exclude 3 itself of course, but we already covered 2\*3 so we don't need to do 3\*2 as well. Therefore we can start at 3*3. This logic applies as we move to each next prime, so we can always start with multiples of our prime starting with its square
 
-{% highlight pascal %}
+ {% highlight pascal %}
 LPrime := 3;
 repeat
   LMultiple := LPrime;
@@ -112,7 +116,7 @@ repeat
   
   // Set LPrime to the next prime
 until (LPrime >= 14); // 14 ^ 2 is greater than 191
-{% end highlight %}
+{% endhighlight %}
 
 ### Setting the bit corresponding to a composite number
 
@@ -123,7 +127,7 @@ Next we need to find a way to set a specific bit by index. `LBlockBitIndex` tell
 
 Now that we have a value with the bit all we need to do is to apply a bitwise `or` with the correct block in the field. This way we will set the bit at that index and leave all other bits in the field as they were before
 
-{% highlight pascal %}
+ {% highlight pascal %}
 FValueBitField[LBlockIndex] := FValueBitField[LBlockIndex] or
         (UInt64(1) shl LBlockBitIndex);
 {% endhighlight %}
@@ -138,7 +142,7 @@ We know that we have checked all values up to p (our last prime). p is 3 or larg
 
 Of course as we increment to get the next prime we may loop over to the next block
 
-{% highlight pascal %}
+ {% highlight pascal %}
 class function TSieveOfEratosthenes.GetNextPrime(APreviousPrime
   : uint32): uint32;
 var
@@ -167,7 +171,7 @@ This code is not fully optimized, but shows the process of finding the next unse
 
 First lets remedy the fact that we use "magic numbers" all over the place. While it is fine to write comments to explain the use of numbers that are hard to derive from context. Instead of using 64 for our block size we can declare a constant
 
-{% highlight pascal %}
+ {% highlight pascal %}
 const
   BlockSize = 64;
 {% endhighlight %}
@@ -180,7 +184,7 @@ We know that we start marking multiples of squares of primes, therefore we don't
 
 Since we can set all of these as dependency on a single value we can write something like this:
 
-{% highlight pascal %}
+ {% highlight pascal %}
 class procedure TSieveOfEratosthenes.SetMaxValue(const Value: uint32);
 begin
   FMaxValue := Value;
@@ -192,7 +196,7 @@ end;
 
 With these changes our main loop will now look more readable. Here is our main routine that creates the prime mask
 
-{% highlight pascal %}
+ {% highlight pascal %}
 class procedure TSieveOfEratosthenes.GetPrimeMask;
 var
   i: uint32;
@@ -235,7 +239,7 @@ end;
 
 We can also clean up our `GetNextPrime` to add in our new variables:
 
-{% highlight pascal %}
+ {% highlight pascal %}
 class function TSieveOfEratosthenes.GetNextPrime(APreviousPrime
   : uint32): uint32;
 var
@@ -263,7 +267,7 @@ end;
 The process would be to mark all multiples primes using the method above up to the squareroot of the maximum. And then traverse the field and return the indexes of all the zeros. Assume the procedure that masks the bits is called `GetPrimeMask` and that `NumberOfBitsSet` is a method that returns the number of 1s in the field.
 
 
-{% highlight pascal %}
+ {% highlight pascal %}
 class function TSieveOfEratosthenes.GetPrimes(const AMaxValue: uint32)
   : ArrayOfUInt32;
 var
@@ -292,7 +296,7 @@ end;
 In order to allocate exactle enough memory to return our primes in the method above we needed to know the number of bits set. The difference between the max value and the number of bits set gives us our number of primes. I found [this nugget](https://stackoverflow.com/questions/2709430/count-number-of-bits-in-a-64-bit-long-big-integer
 ) that I converted from C to Delphi. All I do finally is looping through the blocks and accumulating the count
 
-{% highlight pascal %}
+ {% highlight pascal %}
 class function TSieveOfEratosthenes.NumberOfBitsSet: uint32;
 var
   i: integer;
