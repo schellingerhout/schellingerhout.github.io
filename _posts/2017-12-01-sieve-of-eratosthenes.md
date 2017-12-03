@@ -318,4 +318,4 @@ end;
 
 
 ## Conclusion
-I hope that you found this useful or at least interesting. Please download, clone or fork the [source code] (https://github.com/schellingerhout/sieve-of-eratosthenes-delphi).
+I hope that you found this useful or at least interesting. Please download, clone or fork the [source code](https://github.com/schellingerhout/sieve-of-eratosthenes-delphi).
