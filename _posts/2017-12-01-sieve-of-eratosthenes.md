@@ -1,5 +1,5 @@
 ---
-title: "Implementing the Sieve of Eratosthenes in Delhi"
+title: "Implementing the Sieve of Eratosthenes in Delphi"
 excerpt_separator: "<!--more-->"
 categories:
   - Algorithms
@@ -42,9 +42,9 @@ The next unmarked value greater than 3 is 5. Mark multiples of 5 starting with 5
 
 ## What is the downside to this method?
 
-We need at least one bit of storage per number that we want to mark. For simplicity if our bitfields start at 0 (and I'll show why that is a good idea soon) and we want to mark primes up to max(uint32) 4,294,967,295. Then we would need 512 MB just to for the bits. We could shrink the bitfield by only storing the odd values and starting from 3.
+We need at least one bit of storage per number that we want to mark. For simplicity if our bitfields start at 0 (and I'll show why that is a good idea soon) and we want to mark primes up to max(uint32) 4,294,967,295. Then we would need 512 MB just for the bits. We could shrink the bitfield by only storing the odd values and starting from 3.
 
-The algorithm is very fast, but the memory constraints make it problemnatic to get large primes.
+The algorithm is very fast, but the memory constraints make it problematic to get large primes.
 
 Supposing that we will need to use memory for other purposes, such as storing the prime factorization of numbers we should consider building and running the application as a 64-bit binary to allow easy access to more memory. 
 
@@ -52,7 +52,7 @@ Supposing that we will need to use memory for other purposes, such as storing th
 
 ### The Bitfield
 
-For the purposes of keeping the implementation simple and still gaining speed I will make the bitfield starting at 0 and a bit for each value. Index 0 represents 0, index n represents n. This keeps the logic very simple. I simply index by each value directly and set the bit. But what if we want to store values larger than our sample bit-field of 64 bits. We could simply keep an array of 64-bit fields
+For the purposes of keeping the implementation simple and still gaining speed I will make the bitfield starting at 0 and a bit for each value. Index 0 represents 0, index n represents n. This keeps the logic very simple. I simply index by each value directly and set the bit. But, what if we want to store values larger than our sample bit-field of 64 bits? We could simply keep an array of 64-bit fields
 
 for example we could have `FBitFieldArray : Array[0..2] of UInt64;` to represent 0 to 191
 
@@ -85,7 +85,7 @@ begin
 end;
 {% endhighlight %}
 
-But, this is not needed. We know that setting every even value will just yield a bit pattern of alternating ones and zeros 101010101. We do have a special case though 2 itself is not prime and of course 0 and 1 are not prime numbers either. Since binary 1010<sub>2</sub> is just hexadecimal 5<sub>16</sub> we can set all blocks to `$5555555555555555` except for the very first block. The only difference for the first block is that the first 4 bits would be 011<sub>2</sub> or 3<sub>16</sub>. So, we can set the first block to `$5555555555555553`
+But, this is not needed. We know that setting every even value will just yield a bit pattern of alternating ones and zeros 101010101. We do have a special case though; 2 is not prime and, of course, 0 and 1 are not prime numbers either. Since binary 1010<sub>2</sub> is just hexadecimal 5<sub>16</sub> we can set all blocks to `$5555555555555555` except for the very first block. The only difference for the first block is that the first 4 bits would be 011<sub>2</sub> or 3<sub>16</sub>. So, we can set the first block to `$5555555555555553`
 
  {% highlight pascal %}
 FValueBitField[0] := $5555555555555553;
@@ -120,7 +120,7 @@ until (LPrime >= 14); // 14 ^ 2 is greater than 191
 
 ### Setting the bit corresponding to a composite number
 
-Next we need to find a way to set a specific bit by index. `LBlockBitIndex` tells us the bit we need to set, but how do we actually set a bit based on that index? In numeric terms each bit n represents 2<sup>n</sup>. Therefore 2<sup>LBlockBitIndex</sup>, but we dont' actually need to calculate a power of 2, we can use bit shifting. The `shl` method in Delphi shifts bits left. For instance if we start with 10000<sub>2</sub> and shift 2 left we'd get 1000000<sub>2</sub>. Using `1 shl LBlockBitIndex` we will shift the value by the number of bits. At first glance this looks OK, but what size is the `1` constant used in that expression? Its unlikely to be 64-bit, which means that shifts over the size of the `1` constant will give us incorrect results.  To ensure that we shift for a 64-bit unsigned buffer value we can make it explicit by casting `UInt64(1) shl LBlockBitIndex` 
+Next we need to find a way to set a specific bit by index. `LBlockBitIndex` tells us the bit we need to set, but how do we actually set a bit based on that index? In numeric terms each bit n represents 2<sup>n</sup>. Therefore 2<sup>LBlockBitIndex</sup>, but we don't actually need to calculate a power of 2, we can use bit shifting. The `shl` method in Delphi shifts bits left. For instance if we start with 10000<sub>2</sub> and shift 2 left we'd get 1000000<sub>2</sub>. Using `1 shl LBlockBitIndex` we will shift the value by the number of bits. At first glance this looks OK, but what size is the `1` constant used in that expression? Its unlikely to be 64-bit, which means that shifts over the size of the `1` constant will give us incorrect results.  To ensure that we shift for a 64-bit unsigned buffer value we can make it explicit by casting `UInt64(1) shl LBlockBitIndex` 
 
 **Watch out!**  Don't assume the sizes of declared constants either used in expressions or declared with a const statement. If you need a specific size, make it explicit
 {: .notice--warning}
@@ -180,7 +180,7 @@ We make assumptions that the number of blocks are fixed. That may not be the cas
 
 Let start by defining `MaxValue`; this will be the cap when searching for primes. To represent that value we would need `Ceil(MaxValue/BlockSize)` blocks in our field, so that leads us to `MaxBlockIndex := Floor(MaxValue/BlockSize)`. 
 
-We know that we start marking multiples of squares of primes, therefore we don't have to check primes greater than the integer squareroot of `MaxValue`. This gives us `MaxValueISqrt := Trunc(Sqrt(MaxValue))`.
+We know that we start marking multiples of squares of primes, therefore we don't have to check primes greater than the integer square root of `MaxValue`. This gives us `MaxValueISqrt := Trunc(Sqrt(MaxValue))`.
 
 Since we can set all of these as dependency on a single value we can write something like this:
 
