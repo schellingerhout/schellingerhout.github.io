@@ -39,7 +39,7 @@ TThreadInfo = record
 end;
 {% endhighlight %}
 
-`PThreadInfo` is a pointer type to `TThreadInfo`. The type `PThreadInfo` has exacly the same size as `Pointer`, which is the same size as `NativeUInt` (32-bit or 64-bit based on the platform). So, if the `PThreadInfo` essentially just holds a numeric value just like any other pointer, then why declare it in this way? Well, as I mentioned earlier, if we know how much memory we need to read and how to interpret its values then we know what the data represents. When we de-reference a typed pointer variable like PThreadInfo (calling in this form: `LMyThread^`), then we interpret the memory at the position at the value held by `PThreadInfo` as defined by `TThreadInfo`.
+`PThreadInfo` is a pointer type to `TThreadInfo`. The type `PThreadInfo` has exacly the same size as `Pointer`, which is the same size as `NativeUInt` (32-bit or 64-bit based on the platform). So, if the `PThreadInfo` essentially just holds a numeric value just like any other pointer, then why declare it in this way? Well, as I mentioned earlier, if we know how much memory we need to read and how to interpret its values then we know what the data represents. When we de-reference a typed pointer variable like `LMyThreadPtr: PThreadInfo`, by calling in this form: `LMyThreadPtr^`, then we interpret the memory at the position value held by `LMyThreadPtr` as memory with a stucture defined by `TThreadInfo`.
 
 Besides an understanding of the data at the memory location of the pointer, the strongly typed pointer also has benefits in an area called "pointer math". In short, this means that if we increment our pointer it will not always increment by 1, but by the size of the associated type. Pointer math also allows for indexing memory positions based on a pointer type. I will explain in more detail in a future post. 
 
@@ -248,7 +248,7 @@ TxRecArc = Record
   Size: DWord;       // 4 bytes. Offset 0
   RecType: TxRectTypeEnum; // = TxRectType_Arc //1 byte //Offset 4
  
-  //Pad1 : Array[0..2] of Byte;  // implicit pad added to align CenterX to aling to a multiple of 8 bytes
+  //Pad1 : Array[0..2] of Byte;  // implicit pad added to align CenterX to align to a multiple of 8 bytes
   CenterX: Double; // offset 8
   CenterY: Double;
   StartAng: Double;
