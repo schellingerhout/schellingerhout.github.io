@@ -39,15 +39,17 @@ TThreadInfo = record
 end;
 {% endhighlight %}
 
-`PThreadInfo` is a pointer type to `TThreadInfo`. The type `PThreadInfo` has exacly the same size as `Pointer`, which is the same size as `NativeUInt` (32-bit or 64-bit based on the platform). So if the `PThreadInfo` essentially just holds a numeric value just like any other pointer, then why declare it in this way? Well, as I mentioned earlier, if we know how much memory we need to read and how to interpret its values then we know what the data represents. When we de-reference a typed pointer variable like PThreadInfo (calling in this form: `LMyThread^`), then we interpret the memory at the position at the value held by PThreadInfo onward as defined by `TThreadInfo`.
+`PThreadInfo` is a pointer type to `TThreadInfo`. The type `PThreadInfo` has exacly the same size as `Pointer`, which is the same size as `NativeUInt` (32-bit or 64-bit based on the platform). So if the `PThreadInfo` essentially just holds a numeric value just like any other pointer, then why declare it in this way? Well, as I mentioned earlier, if we know how much memory we need to read and how to interpret its values then we know what the data represents. When we de-reference a typed pointer variable like PThreadInfo (calling in this form: `LMyThread^`), then we interpret the memory at the position at the value held by `PThreadInfo` as defined by `TThreadInfo`.
 
-Besides an understanding of the data at the memory location of the pointer, the strongly typed pointer also has benefits in an area called "pointer math". In short, this means that if we increment our pointer it will not increment by 1, but by the size of the associated type. Pointer math also allows for indexing memory positions based on a pointer type. I will explain in more detail in a future post. 
+Besides an understanding of the data at the memory location of the pointer, the strongly typed pointer also has benefits in an area called "pointer math". In short, this means that if we increment our pointer it will not always increment by 1, but by the size of the associated type. Pointer math also allows for indexing memory positions based on a pointer type. I will explain in more detail in a future post. 
 
-Now we have both parts to make our communication between application and dll possible: a memory address and an interpretation of that memory.
+Now we have both parts to make our communication between application and DLL possible: a memory address and an interpretation of that memory. Let us look at an example of what our communication might look like
 
 ## Abstract Pointer Types in Window Messaging ##
 
-Windows messaging deals with lots of varying information and types in a generic way. Let us look at one scenario of windows messaging how this works with abstract treatment of.  pointers. The windows message [WM_DEVICECHANGE](https://docs.microsoft.com/en-us/windows/desktop/DevIO/wm-devicechange) can inform us of device changes on our system. Once we receive this method and the `wmparam` has a value of [DBT_DEVICEARRIVAL](https://docs.microsoft.com/en-us/windows/desktop/DevIO/dbt-devicearrival) we know that a device arrived. Then we can read the `lparam` for information for device. In the windows message strucutre `lparam` is simply a `NativeInt` (i.e. a numeric value), and for this windows message we can treat it as a pointer to [DEV_BROADCAST_HDR](https://docs.microsoft.com/en-us/windows/desktop/api/Dbt/ns-dbt-_dev_broadcast_hdr)
+Windows messaging deals with lots of varying information and types in a generic way. Let us look at one scenario of windows messaging how this works with abstract treatment of  pointers. 
+
+The windows message [WM_DEVICECHANGE](https://docs.microsoft.com/en-us/windows/desktop/DevIO/wm-devicechange) can inform us of device changes on our system. Once we receive this method and the `wmparam` has a value of [DBT_DEVICEARRIVAL](https://docs.microsoft.com/en-us/windows/desktop/DevIO/dbt-devicearrival) we know that a device arrived. Then we can read the `lparam` for information for device. In the windows message strucutre `lparam` is simply a `NativeInt` (i.e. a numeric value), and for this windows message we can treat it as a pointer to [DEV_BROADCAST_HDR](https://docs.microsoft.com/en-us/windows/desktop/api/Dbt/ns-dbt-_dev_broadcast_hdr)
 
 The pointer and the structure it refers to looks like this in Delphi:
 
@@ -133,7 +135,6 @@ Let use start by creating our header or "base" record type. As seen above we nee
 
 {% highlight pascal %}
 type
-
   TxRectTypeEnum = (TxRectType_Undefined, TxRectType_Line, TxRectType_Arc);
   
   PTxRec = ^TxRec;
@@ -149,31 +150,31 @@ Next we can define our Line and Arc records, but we have to keep in mind that th
 type
 
   PTxRecArc = ^TxRecArc;
-  TxRecArc = Record
-  // common to TxRec   
-    RecType: TxRectTypeEnum; // = TxRectType_Arc
-
-  // TxRecArc data start    
-  CenterX: Double;
-  CenterY: Double;
-  StartAng: Double; 
-  EndAng: Double;
-  Radius: Double;
-  
-  CCW: boolean    
+    TxRecArc = Record
+    // common to TxRec   
+      RecType: TxRectTypeEnum; // = TxRectType_Arc
+    
+    // TxRecArc data start    
+    CenterX: Double;
+    CenterY: Double;
+    StartAng: Double; 
+    EndAng: Double;
+    Radius: Double;
+    
+    CCW: boolean    
   End;
   
   PTxRecLine = ^TxRecLine;
   TxRecLine = Record
-  // common to TxRec     
-    RecType: TxRectTypeEnum; // = TxRectType_Line
-  
-  // TxRecLine data start    
-  P1X: Double;
-  P1Y: Double;
-  
-  P2X: Double;
-  P2Y: Double;
+    // common to TxRec     
+      RecType: TxRectTypeEnum; // = TxRectType_Line
+    
+    // TxRecLine data start    
+    P1X: Double;
+    P1Y: Double;
+    
+    P2X: Double;
+    P2Y: Double;
   End;  
   
 {% endhighlight %}  
