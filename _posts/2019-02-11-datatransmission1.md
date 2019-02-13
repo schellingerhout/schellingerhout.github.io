@@ -30,13 +30,13 @@ In the model described above a pointer is simply the address of a box as describ
 Let us look at a sample of a pointer type defined in System.SysUtils.pas
 
 {% highlight pascal %}
-  PThreadInfo = ^TThreadInfo;
-  TThreadInfo = record
-    Next: PThreadInfo;
-    ThreadID: TThreadID;
-    Active: Integer;
-    RecursionCount: Cardinal;
-  end;
+PThreadInfo = ^TThreadInfo;
+TThreadInfo = record
+  Next: PThreadInfo;
+  ThreadID: TThreadID;
+  Active: Integer;
+  RecursionCount: Cardinal;
+end;
 {% endhighlight %}
 
 `PThreadInfo` is a pointer type to `TThreadInfo`. The type `PThreadInfo` has exacly the same size as `Pointer`, which is the same size as `NativeUInt` (32-bit or 64-bit based on the platform). So if the `PThreadInfo` essentially just holds a numeric value just like any other pointer, then why declare it in this way? Well, as I mentioned earlier, if we know how much memory we need to read and how to interpret its values then we know what the data represents. When we de-reference a typed pointer variable like PThreadInfo (calling in this form: `LMyThread^`), then we interpret the memory at the position at the value held by PThreadInfo onward as defined by `TThreadInfo`.
@@ -52,35 +52,35 @@ Windows messaging deals with lots of varying information and types in a generic 
 The pointer and the structure it refers to looks like this in Delphi:
 
 {% highlight pascal %}
-  PDEV_BROADCAST_HDR = ^DEV_BROADCAST_HDR;
-  DEV_BROADCAST_HDR = record
-    dbch_size: DWORD;
-    dbch_devicetype: DWORD;
-    dbch_reserved: DWORD;
-  end;
+PDEV_BROADCAST_HDR = ^DEV_BROADCAST_HDR;
+DEV_BROADCAST_HDR = record
+  dbch_size: DWORD;
+  dbch_devicetype: DWORD;
+  dbch_reserved: DWORD;
+end;
 {% endhighlight %}
 
 The information we can glean form this is limited to essentially just the device type, so how can we get more detail? If you read the documentation for [DEV_BROADCAST_HDR](https://docs.microsoft.com/en-us/windows/desktop/api/Dbt/ns-dbt-_dev_broadcast_hdr). You will see that for each of the values of the device type it tells you that the structure is not really `DEV_BROADCAST_HDR`, but some other structure like [DEV_BROADCAST_DEVICEINTERFACE](https://docs.microsoft.com/en-us/windows/desktop/api/dbt/ns-dbt-_dev_broadcast_deviceinterface_a) or [DEV_BROADCAST_VOLUME](https://docs.microsoft.com/en-us/windows/desktop/api/dbt/ns-dbt-_dev_broadcast_volume). You may be confused at this point, but let us look at those two types as translated to Delphi code:
 
 
 {% highlight pascal %}
-  PDEV_BROADCAST_DEVICEINTERFACE = ^DEV_BROADCAST_DEVICEINTERFACE;
-  DEV_BROADCAST_DEVICEINTERFACE = record
-    dbcc_size: DWORD;
-    dbcc_devicetype: DWORD; // = DBT_DEVTYP_DEVICEINTERFACE
-    dbcc_reserved: DWORD;
-    dbcc_classguid: TGUID;
-    dbcc_name: Char;
-  end;
+PDEV_BROADCAST_DEVICEINTERFACE = ^DEV_BROADCAST_DEVICEINTERFACE;
+DEV_BROADCAST_DEVICEINTERFACE = record
+  dbcc_size: DWORD;
+  dbcc_devicetype: DWORD; // = DBT_DEVTYP_DEVICEINTERFACE
+  dbcc_reserved: DWORD;
+  dbcc_classguid: TGUID;
+  dbcc_name: Char;
+end;
 
-  PDEV_BROADCAST_VOLUME = ^DEV_BROADCAST_VOLUME;
-  DEV_BROADCAST_VOLUME = record
-    dbcv_size: DWORD;
-    dbcv_devicetype: DWORD; // = DBT_DEVTYP_VOLUME
-    dbcv_reserved: DWORD;
-    dbcv_unitmask: DWORD;
-    dbcv_flags: Word;
-  end;
+PDEV_BROADCAST_VOLUME = ^DEV_BROADCAST_VOLUME;
+DEV_BROADCAST_VOLUME = record
+  dbcv_size: DWORD;
+  dbcv_devicetype: DWORD; // = DBT_DEVTYP_VOLUME
+  dbcv_reserved: DWORD;
+  dbcv_unitmask: DWORD;
+  dbcv_flags: Word;
+end;
 {% endhighlight %}  
 
 Look at the two records above and compare them to [DEV_BROADCAST_HDR](https://docs.microsoft.com/en-us/windows/desktop/api/Dbt/ns-dbt-_dev_broadcast_hdr). You will notice that the first part of their data is the same. Once we cast our pointer from the header type (`PDEV_BROADCAST_HDR`) to the specific type (say `PDEV_BROADCAST_DEVICEINTERFACE`) we can now read more information. All of this works of course if both parties have a clear and unambiguous understanding of the size of data that needs to be read.
@@ -104,7 +104,7 @@ begin
         begin 
           LPBroadcastDeviceIntf := PDEV_BROADCAST_DEVICEINTERFACE(LPDeviceBroadcastHeader);
           LUsbDeviceName := PChar(@LPBroadcastDeviceIntf^.dbcc_name);
-		  ...
+      ...
         end;
 
       DBT_DEVTYP_VOLUME:
@@ -123,7 +123,7 @@ end;
 As long as our application and DLL have a common understanding of the structure they need to pass the call could be a simple one
 
 {% highlight pascal %}
-    procedure foo(AData: Pointer); stdcall;
+procedure foo(AData: Pointer); stdcall;
 {% endhighlight %}  
 
 The DLL receiving the information can cast to the correct pointer type and read the memory at that address, but this would not be very extensible and reduce readability of the source code. Look at the windows message handler routine we defined earlier. I that case we use the less abstract `PDEV_BROADCAST_HDR` type and cast to the appropriate `PDEV_BROADCAST_*` pointer type based on `dbch_devicetype`. We can do the same in our shared structure (record) definitions.
@@ -135,7 +135,7 @@ Let use start by creating our header or "base" record type. As seen above we nee
 type
 
   TxRectTypeEnum = (TxRectType_Undefined, TxRectType_Line, TxRectType_Arc);
-	
+  
   PTxRec = ^TxRec;
   TxRec = Record
     RecType: TxRectTypeEnum;
@@ -153,27 +153,27 @@ type
   // common to TxRec   
     RecType: TxRectTypeEnum; // = TxRectType_Arc
 
-  // TxRecArc data start  	
-	CenterX: Double;
-	CenterY: Double;
-	StartAng: Double; 
-	EndAng: Double;
-	Radius: Double;
-	
-	CCW: boolean		
+  // TxRecArc data start    
+  CenterX: Double;
+  CenterY: Double;
+  StartAng: Double; 
+  EndAng: Double;
+  Radius: Double;
+  
+  CCW: boolean    
   End;
   
   PTxRecLine = ^TxRecLine;
   TxRecLine = Record
   // common to TxRec     
     RecType: TxRectTypeEnum; // = TxRectType_Line
-	
-  // TxRecLine data start  	
-	P1X: Double;
-	P1Y: Double;
-	
-	P2X: Double;
-	P2Y: Double;
+  
+  // TxRecLine data start    
+  P1X: Double;
+  P1Y: Double;
+  
+  P2X: Double;
+  P2Y: Double;
   End;  
   
 {% endhighlight %}  
@@ -186,38 +186,38 @@ The type alone will work for single records transmitted by our API. We will need
 type
   PTxRec = ^TxRec;
   TxRec = Record
-	Size: DWord;  
+    Size: DWord;  
     RecType: TxRectTypeEnum;
   End;
   
   PTxRecArc = ^TxRecArc;
   TxRecArc = Record
-  // common to TxRec  
-	Size: DWord;
+    // common to TxRec  
+    Size: DWord;
     RecType: TxRectTypeEnum; // = TxRectType_Arc
 
-  // TxRecArc data start  	
-	CenterX: Double;
-	CenterY: Double;
-	StartAng: Double; 
-	EndAng: Double;
-	Radius: Double;
-	
-	CCW: boolean		
+    // TxRecArc data start    
+    CenterX: Double;
+    CenterY: Double;
+    StartAng: Double; 
+    EndAng: Double;
+    Radius: Double;
+    
+    CCW: boolean    
   End;
   
   PTxRecLine = ^TxRecLine;
   TxRecLine = Record
-  // common to TxRec 
+    // common to TxRec 
     Size: DWord;  
     RecType: TxRectTypeEnum; // = TxRectType_Line
-	
-  // TxRecLine data start  	
-	P1X: Double;
-	P1Y: Double;
-	
-	P2X: Double;
-	P2Y: Double;
+  
+    // TxRecLine data start    
+    P1X: Double;
+    P1Y: Double;
+    
+    P2X: Double;
+    P2Y: Double;
   End;  
   
 {% endhighlight %}  
@@ -231,7 +231,7 @@ Records are usually [padded and aligned](https://en.wikipedia.org/wiki/Data_stru
 Records are by aligned by the smaller of :
 * The record aligment setting. By default 8-byte (Quad Word)
 * The size of the largest element
-	
+  
 Record fields are aligned by the smaller of :
 * The alignment of fields of its own size
 * The aligment of the record (see above)
@@ -243,21 +243,20 @@ If we now look at our header record the `RecType: TxRectTypeEnum` gains no space
 In memory our Record really looks like this (I added comments where padding is done)
 
 {% highlight pascal %}
-  TxRecArc = Record
+TxRecArc = Record
+  Size: DWord;       // 4 bytes. Offset 0
+  RecType: TxRectTypeEnum; // = TxRectType_Arc //1 byte //Offset 4
+ 
+  //Pad1 : Array[0..2] of Byte;  // implicit pad added to align CenterX to aling to a multiple of 8 bytes
+  CenterX: Double; // offset 8
+  CenterY: Double;
+  StartAng: Double;
+  EndAng: Double;
+  Radius: Double;
   
-	Size: DWord; 			// 4 bytes. Offset 0
-	RecType: TxRectTypeEnum; // = TxRectType_Arc //1 byte //Offset 4
-	
-	//Pad1 : Array[0..2] of Byte;  // implicit pad added to align CenterX to aling to a multiple of 8 bytes
-	CenterX: Double; // offset 8
-	CenterY: Double;
-	StartAng: Double;
-	EndAng: Double;
-	Radius: Double;
-
-	CCW: boolean; // 1 byte. offset 48
-	//Pad2 : Array[0..6] of Byte;  // implicit pad added to align record with the next record
-  End;
+  CCW: boolean; // 1 byte. offset 48
+  //Pad2 : Array[0..6] of Byte;  // implicit pad added to align record with the next record
+End;
 {% endhighlight %}  
 
 
