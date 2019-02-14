@@ -1,5 +1,5 @@
 ---
-title: "Data Transmission (Part 1: Common knowledge)"
+title: "Data Transmission with Delphi (Part 1: Pointers and Structures)"
 excerpt_separator: "<!--more-->"
 categories:
   - DLL
@@ -12,7 +12,7 @@ tags:
   - Cross-Platform
 ---
 
-In this blog post I will start to describe the data structures passed in communicating cross-platform via DLLs. 
+In this blog post I will start to describe the data structures and the use of pointers in communicating cross-platform via DLLs. 
 
 <!--more-->
 The purpose of this blog series is to understand how to transfer raw data at high speed with direct access using pointers to structures that can be supported by most programming platforms.
@@ -45,9 +45,9 @@ Besides an understanding of the data at the memory location of the pointer, the 
 
 Now we have both parts to make our communication between application and DLL possible: a memory address and an interpretation of that memory. Let us look at an example of what our communication might look like
 
-## Abstract Pointer Types in Window Messaging ##
+## Abstract Structured Types in Window Messaging ##
 
-Windows messaging deals with lots of varying information and types in a generic way. Let us look at one scenario of windows messaging how this works with abstract treatment of  pointers. 
+Windows messaging deals with lots of varying information and types in a generic way. Let us look at one scenario of windows messaging how this works with abstract treatment of pointers. 
 
 The windows message [WM_DEVICECHANGE](https://docs.microsoft.com/en-us/windows/desktop/DevIO/wm-devicechange) can inform us of device changes on our system. Once we receive this method and the `wmparam` has a value of [DBT_DEVICEARRIVAL](https://docs.microsoft.com/en-us/windows/desktop/DevIO/dbt-devicearrival) we know that a device arrived. Then we can read the `lparam` for information for device. In the windows message strucutre `lparam` is simply a `NativeInt` (i.e. a numeric value), and for this windows message we can treat it as a pointer to [DEV_BROADCAST_HDR](https://docs.microsoft.com/en-us/windows/desktop/api/Dbt/ns-dbt-_dev_broadcast_hdr)
 
@@ -85,7 +85,7 @@ DEV_BROADCAST_VOLUME = record
 end;
 {% endhighlight %}  
 
-Look at the two records above and compare them to [DEV_BROADCAST_HDR](https://docs.microsoft.com/en-us/windows/desktop/api/Dbt/ns-dbt-_dev_broadcast_hdr). You will notice that the first part of their data is the same. Once we cast our pointer from the header type (`PDEV_BROADCAST_HDR`) to the specific type (say `PDEV_BROADCAST_DEVICEINTERFACE`) we can now read more information. All of this works of course if both parties have a clear and unambiguous understanding of the size of data that needs to be read.
+Look at the two records above and compare them to `DEV_BROADCAST_HDR`. You will notice that the first part of their data is the same. `DEV_BROADCAST_HDR` is an abstract structure. Once we cast our pointer from the header type `PDEV_BROADCAST_HDR` to the specific type (say `PDEV_BROADCAST_DEVICEINTERFACE`) we can now read more information. All of this works of course if both parties have a clear and unambiguous understanding of the size of data that needs to be read.
 
 Without going into detail. Here is an example of how we would use this
 
