@@ -107,13 +107,13 @@ end;
 Like our static array the distance between elements is the size of the elements
 
 {% highlight pascal %}
-Assert(NativeUInt(@LDynamicArray[1]) - NativeUInt(@LDynamicArray[0]) = SizeOf(LDynamicArray[0])); //The distance between elements is the size of the elements
+Assert(NativeUInt(@LDynamicArray[1]) - NativeUInt(@LDynamicArray[0]) = SizeOf(LDynamicArray[0])); 
 {% endhighlight %}  
 
 However, the memory address of dynamic array is not the same as address of the first element:
 
 {% highlight pascal %}
-Assert(@LDynamicArray <> @LDynamicArray[0]); //Memory address of dynamic array is not the same as address of the first element
+Assert(@LDynamicArray <> @LDynamicArray[0]);
 {% endhighlight %}  
 
 If we change our dynamic array size we will find that the pointer to the dynamic array stays the same, while the pointer to the data (the raw memory array), may change. `SetLength` also copies the memory of the array to the newly allocated array as needed. 
