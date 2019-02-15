@@ -177,7 +177,7 @@ begin
       V := i * 1.2;
       LDynamicArray[i] := V;         // modifying the elements of one array
       Assert(LDynamicArray2[i] = V); // affects the other
-      Assert(@LDynamicArray2[i] = @LDynamicArray[i]); // because the data exists in the same memory	location  
+      Assert(@LDynamicArray2[i] = @LDynamicArray[i]); // because the data exists in the same memory location  
     end;
 end;
 {% endhighlight %}   
