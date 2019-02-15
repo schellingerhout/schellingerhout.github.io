@@ -183,8 +183,8 @@ end;
 {% endhighlight %}   
 
 The benefit of this behavior is that we can have large amounts of data passed around using dynamic arrays. Dynamic arrays are reference counted and automatically disposed. Any API that uses the raw data pointer in a dynamic array must ensure that:
-*The dynamic array is referenced for as long as we need a pointer to the raw data
-*The pointer to the raw data needs to be updated after `SetLength` is called against the dynamic array
+- The dynamic array is referenced for as long as we need a pointer to the raw data
+- The pointer to the raw data needs to be updated after `SetLength` is called against the dynamic array
 
 ### Records with Variable Length Arrays ###
 
