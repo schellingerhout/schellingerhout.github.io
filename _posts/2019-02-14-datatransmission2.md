@@ -252,9 +252,12 @@ In Delphi `pChar` is a pointer to `Char`. We can read characters beyond that fir
 **Watch out!** Assigning a variable of type `DEV_BROADCAST_DEVICEINTERFACE` will transfer the `dbcc_size`, but only the first character of `dbcc_name`.
 {: .notice--warning}		  
 		  
-Typically records such as these are used in APIs where a single record is passed. Since the size of `DEV_BROADCAST_DEVICEINTERFACE` varies we cannot place it in an array. We can place a series of these records in a row, but indexing will not work because we do not have a fixed stride length between elements. In that case we would have to move our pointer by the size of each record in turn. 
+Typically records such as these are used in APIs where a single record is passed by reference. Since the size of `DEV_BROADCAST_DEVICEINTERFACE` varies we cannot place it in an array. We can place a series of these records in a row, but indexing will not work because we do not have a fixed stride length between elements. In that case we would have to move our pointer by the size of each record in turn. 
 
 To create a record such as this you would allocate memory equal to the size of the record definition plus the length of the character string. That size value would then also be written to the `dbcc_size` field. 
+
+Bonus: A dynamic array has a record header, `TDynArrayRec`, written before the raw data of the array. Knowing this, you may notice the similarity between the dynamic array data and the `DEV_BROADCAST_DEVICEINTERFACE` record. Both have headers before the raw data. Both are allocated with space for the header and the number of elements in the data. In the case of dynamic arrays the `Setlength()` function allocates the header and data space for us and returns the address of the first element of the array data. If we want to read the number of elements or the reference count we move a pointer to the raw data back by 
+`SizeOf(NativeInt)` to read the `Length: NativeInt` and back by an additional 4 bytes to read `RefCnt: Integer`. Next I will discuss ways we can move our pointer.
 
 ## Pointer Math ##
 
@@ -358,6 +361,7 @@ end;
 
 Most of you would have indexed `PChar`. The index syntax here is the same, but just expanded for our own pointer types. `PChar` is different from most other data pointers in that it usually does not need to be paired with a size. A `PChar` is usually terminated by a null character. We can potentially index data beyond the end of our array with other pointer types and we need to have the element count passed via our API. With the count and a pointer to a known structure type (or some way to derive this information), we can read data in arrays in most programming languages
 
+Bonus: You may be wondering why our spacing of elements work out so easily. Well in Delphi all data types are multiples of others (1, 2, 4, 8 etc.) and so they align to multiples of their size. There is one type that violates this rule :`Extended`, and only in 32-bit. In 32-bit `Extended` has 10 bytes, but in 64-bit it is an alias for `Double`. This type is the only type that sometimes requires the rarely used `packed array`.  I will not cover that type since it is hard to use cross-platform and we should avoid it in APIs. 
 
 ## Section Conclusion ##
 Arrays are contiguous blocks of same size values. Pointers to the raw data of arrays can be used to traverse the elements in an array. To successfully traverse an array in our API we need a pointer to the start of the data of the array, the size of the elements and the number of elements to read.
