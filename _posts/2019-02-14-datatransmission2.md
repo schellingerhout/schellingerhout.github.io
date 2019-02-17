@@ -32,22 +32,27 @@ var
   LStaticArray : Array[0..9] of Double;
 {% endhighlight %}  
 
-A block of memory will now exists consisting of 10 doubles in a row. The adress of a static array is the same as the address of its first element. This means `@LStaticArray` and `@LStaticArray[0]` return the same value;
+The notation within `[]` allows for a start and end index, or you can provide an enumerated type as an index. You should usually start the index range at 0, but if you can not, then the examples below will need to be offset by the value of the start index.
+
+At declaration of the code a block of memory will now exist consisting of 10 doubles in a row. The address of a static array is the same as the address of its first element. This means `@LStaticArray` and `@LStaticArray[0]` return the same value. 
 
 {% highlight pascal %}
-Assert(@LStaticArray = @LStaticArray[0]); //Memory address of static array is same as address of the first element
+Assert(@LStaticArray = @LStaticArray[0]); 
 {% endhighlight %}  
 
-If we call `SizeOf` on the static array we get the size of all the elements as a whole. 
+If we call `SizeOf` on the static array we get the total size of all the elements.
+
 {% highlight pascal %}
 Assert(SizeOf(LStaticArray) = SizeOf(LStaticArray[0]) * Length(LStaticArray));
 {% endhighlight %}  
 
-The size is the same size as the strucutre in memory, because the distance from element to element (stride) is simply the size of the element type. 
+The value of `SizeOf` is the same size as the strucutre in memory, because the distance from element to element (stride) is simply the size of the element type. 
 
 {% highlight pascal %}
-Assert(NativeUInt(@LStaticArray[1]) - NativeUInt(@LStaticArray[0]) = SizeOf(LStaticArray[0]));
+Assert(NativeUInt(@LStaticArray[1]) - NativeUInt(@LStaticArray[0]) = SizeOf(Double));
 {% endhighlight %}  
+
+In the example above `@StaticArray[0]` and `@StaticArray[1]` are pointers to our first and second element. We can see that the the differ by the size of the element: `SizeOf(Double)`.In production code many developers would rather use `SizeOf(LStaticArray[0])` because the code will continue to work if the type of the array needs to change.
 
 If we assign one fixed array to another we copy by value. The array does not move around in memory but stays at its initial location. Assignment simply copies the entire memory content.
 
@@ -85,16 +90,19 @@ end;
 
 If we declare a fixed array in our record it will contribute to the size of the record. The memory will be contained within the record structure. This provides for simple memory management. 
 
+Fixed arrays can easily be used cross platform when defined as part of our arrays.
+
 ### Dynamic Arrays ###
 
-Dynamic arrays are declared without specifying the number of elements
+Dynamic arrays are declared without specifying the number of elements:
+
 {% highlight pascal %}
 var
   LDynamicArray: TArray<Double>;
   LDynamicArray2: Array of Double;
 {% endhighlight %} 
 
-Even though these two arrays are the same, I recommend that you use the generic syntax because it allows us to assign arrays of the same type. Dynamic arrays are allocated by calling `SetLength()`
+Even though these two arrays are the same, I recommend that you use the generic syntax (`TArray<T>`) because it allows us to assign arrays of the same type. Dynamic arrays are allocated by calling `SetLength()`
   
 {% highlight pascal %}
 var
@@ -156,7 +164,17 @@ end;
 *Note:* When calling `SetLength` we may get the same memory address for our raw data, usually when shrinking the array. You may need to grow or shrink the array by many elements to force a new address. 
 {: .notice}
 
-Assigning a dynamic array has some interesting consequences that can cause some unexpected bugs. Each dynamic array has its own address, but once we assign a dynamic array the raw data is shared between the two. As soon as we call `SetLength()` on these arrays they may diverge and become independent again.
+So what exactly is a dynamic array? It is a pointer variable type that holds the address to the first element of data. 
+
+{% highlight pascal %}
+Assert(Pointer(LDynamicArray) = @LDynamicArray[0]);
+{% endhighlight %}
+
+Let us think of pointers in simple terms again, they are essentially just numeric values. If we assign an integer variable to another their values match, even though the variables that hold these values have their own independent addresses. Similarly, each dynamic array variable has its own address, but once we assign a dynamic array the value held in this variable is shared between the two. 
+
+However, as soon as we call `SetLength()` on a dynamic array a new value may be written, so the arrays may independent again. 
+
+Since assigning dynamic arrays sets the two variables to refer to the same data, we may encounter some unexpected concequences.
 
 {% highlight pascal %}
 var
@@ -170,7 +188,7 @@ begin
     LDynamicArray2 := LDynamicArray;
     Assert(@LDynamicArray2 <> @LDynamicArray); // The Dynamic arrays have different addresses
 
-    Assert(@LDynamicArray2[0] = @LDynamicArray[0]); // But their raw data exists in the same location!
+    Assert(Pointer(LDynamicArray2) = Pointer(LDynamicArray); // But they refer to the same raw data!
 
     for i := 0 to 9 do
     begin
@@ -185,6 +203,11 @@ end;
 The benefit of this behavior is that we can have large amounts of data passed around using dynamic arrays. Dynamic arrays are reference counted and automatically disposed. Any API that uses the raw data pointer in a dynamic array must ensure that:
 - The dynamic array is referenced for as long as we need a pointer to the raw data
 - The pointer to the raw data needs to be updated after `SetLength` is called against the dynamic array
+
+*Note:* If you are interested in how dynamic arrays know the element count and number of references look at `TDynArrayRec` in `system.pas`. This record is stored right before the first element of the array. 
+{: .notice}
+
+One last note on dynamic arrays. Since a dynamic array is simply a pointer to an array, it should not be a surprise that `SizeOf(LDynamicArray)` for any dynamic array is always `SizeOf(Pointer)`.
 
 ### Records with Variable Length Arrays ###
 
@@ -231,7 +254,7 @@ In Delphi `pChar` is a pointer to `Char`. We can read characters beyond that fir
 		  
 Typically records such as these are used in APIs where a single record is passed. Since the size of `DEV_BROADCAST_DEVICEINTERFACE` varies we cannot place it in an array. We can place a series of these records in a row, but indexing will not work because we do not have a fixed stride length between elements. In that case we would have to move our pointer by the size of each record in turn. 
 
-To create a record such as this you would allocate memory equal to the size of the record definition plus the length of the character string. That size value would then also be written to the `dbcc_size` field.
+To create a record such as this you would allocate memory equal to the size of the record definition plus the length of the character string. That size value would then also be written to the `dbcc_size` field. 
 
 ## Pointer Math ##
 
