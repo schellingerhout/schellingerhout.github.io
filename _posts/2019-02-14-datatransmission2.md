@@ -308,7 +308,7 @@ begin
 So, with a strongly typed pointer and the count we can easily access all of our elements in the array in a sequential fashion. 
 
 ### Treat the Pointer as a number ###
-To avoid the `Inc` and `Dev` has side effect of modifying the pointer, we can also do the math ourselves. All we must do is multiple the size of the element with the number of elements to walk and then add to our starting point.
+To avoid the `Inc` and `Dev` side effect of modifying the pointer, we can also do the math ourselves. All we must do is multiply the size of the element with the number of elements to walk and then add to our starting point.
 
 {% highlight pascal %}
 var
