@@ -34,7 +34,7 @@ var
 
 The notation within `[]` allows for a start and end index, or you can provide an enumerated type as an index. You should usually start the index range at 0, but if you can not, then the examples below will need to be offset by the value of the start index.
 
-At declaration of the code a block of memory will now exist consisting of 10 doubles in a row. The address of a static array is the same as the address of its first element. This means `@LStaticArray` and `@LStaticArray[0]` return the same value. 
+At declaration of the array a block of memory will now exist consisting of 10 doubles in a row. The address of a static array is the same as the address of its first element. This means `@LStaticArray` and `@LStaticArray[0]` return the same value. 
 
 {% highlight pascal %}
 Assert(@LStaticArray = @LStaticArray[0]); 
@@ -52,7 +52,7 @@ The value of `SizeOf` is the same size as the strucutre in memory, because the d
 Assert(NativeUInt(@LStaticArray[1]) - NativeUInt(@LStaticArray[0]) = SizeOf(Double));
 {% endhighlight %}  
 
-In the example above `@StaticArray[0]` and `@StaticArray[1]` are pointers to our first and second element. We can see that the the differ by the size of the element: `SizeOf(Double)`.In production code many developers would rather use `SizeOf(LStaticArray[0])` because the code will continue to work if the type of the array needs to change.
+In the example above `@StaticArray[0]` and `@StaticArray[1]` are pointers to our first and second element. We can see that their addresses differ by the size of the element: `SizeOf(Double)`. Just note that many developers would rather use `SizeOf(LStaticArray[0])` because the code will continue to work if the type of the array needs to change.
 
 If we assign one fixed array to another we copy by value. The array does not move around in memory but stays at its initial location. Assignment simply copies the entire memory content.
 
@@ -84,11 +84,11 @@ end;
 
 procedure goo(var ADblArray: TTenDoubles);
 begin
-// I hold a reference to the original record passed via ADblArray
+// I hold a reference to the original record array via ADblArray
 end;
 {% endhighlight %}  
 
-If we declare a fixed array in our record it will contribute to the size of the record. The memory will be contained within the record structure. This provides for simple memory management. 
+If we declare a fixed array as a field in our record it will contribute to the size of the record. The memory will be contained within the record structure. This provides for simple memory management. 
 
 Fixed arrays can easily be used cross platform when defined as part of our arrays.
 
@@ -207,6 +207,8 @@ The benefit of this behavior is that we can have large amounts of data passed ar
 *Note:* If you are interested in how dynamic arrays know the element count and number of references look at `TDynArrayRec` in `system.pas`. This record is stored right before the first element of the array. 
 {: .notice}
 
+Dynamic arrays are one of a few types (strings and interfaces) being the other two that are automatically initialized to nil.
+
 One last note on dynamic arrays. Since a dynamic array is simply a pointer to an array, it should not be a surprise that `SizeOf(LDynamicArray)` for any dynamic array is always `SizeOf(Pointer)`.
 
 ### Records with Variable Length Arrays ###
@@ -243,6 +245,8 @@ end;
 Strictly speaking, my direct conversion of `dbcc_name` should have been declared as `dbcc_name: array[0..0] of Char;`, a fixed length array of one character! Well, the actual name of the device is actually longer than just one character. The record's size as described in `dbcc_size` includes the length of the string contained in `dbcc_name` including the null character. 
 
 In Delphi `pChar` is a pointer to `Char`. We can read characters beyond that first character by indexing (e.g. `LMyPChar[5]`). Delphi provides support to convert from `pChar` to `String`. When a variable of type `pChar` is converted to `String` the characters are read until a null character (character with value 0) is reached. This means that we can read a null terminated character array without knowing its size, or in this case without reading the size of the record. 
+
+Delphi `string`s are essentially pointers similar to `pChar`, the difference is that a string's raw data has a header record just like the dynamic array before the raw data of the characters. This means that we can cast as `string` to `pChar`, but just like with a dynamic array we need to ensure that at least `string` variable reference remains so that the memory is not disposed. 
 
 {% highlight pascal %}
 // WMDeviceChange sample in lesson1
