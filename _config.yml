@@ -10,7 +10,7 @@ locale                   : "en"
 title                    : "Jasper Schellingerhout's Blog"
 title_separator          : "-"
 name                     : "Jasper Schellingerhout"
-description              : "Randomness."
+description              : "The personal blog of Jasper Schellingerhout."
 url                      : https://schellingerhout.github.io
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : schellingerhout/schellingerhout.github.io
