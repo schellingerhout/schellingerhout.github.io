@@ -246,16 +246,16 @@ Strictly speaking, my direct conversion of `dbcc_name` should have been declared
 
 In Delphi `pChar` is a pointer to `Char`. We can read characters beyond that first character by indexing (e.g. `LMyPChar[5]`). Delphi provides support to convert from `pChar` to `String`. When a variable of type `pChar` is converted to `String` the characters are read until a null character (character with value 0) is reached. This means that we can read a null terminated character array without knowing its size, or in this case without reading the size of the record. 
 
-Delphi `string`s are essentially pointers similar to `pChar`, the difference is that a string's raw data has a header record just like the dynamic array before the raw data of the characters. This means that we can cast as `string` to `pChar`, but just like with a dynamic array we need to ensure that at least `string` variable reference remains so that the memory is not disposed. 
-
 {% highlight pascal %}
 // WMDeviceChange sample in lesson1
  LUsbDeviceName := PChar(@LPBroadcastDeviceIntf^.dbcc_name);
 {% endhighlight %}  
-		  
+
+Delphi strings are essentially pointers similar to `pChar`, the difference is that a string's raw data has a header record just like the dynamic array before the raw data of the characters. This means that we can cast as `string` to `pChar`, but just like with a dynamic array we need to ensure that at least `string` variable reference remains so that the memory is not disposed. 
+
 **Watch out!** Assigning a variable of type `DEV_BROADCAST_DEVICEINTERFACE` will transfer the `dbcc_size`, but only the first character of `dbcc_name`.
 {: .notice--warning}		  
-		  
+
 Typically records such as these are used in APIs where a single record is passed by reference. Since the size of `DEV_BROADCAST_DEVICEINTERFACE` varies we cannot place it in an array. We can place a series of these records in a row, but indexing will not work because we do not have a fixed stride length between elements. In that case we would have to move our pointer by the size of each record in turn. 
 
 To create a record such as this you would allocate memory equal to the size of the record definition plus the length of the character string. That size value would then also be written to the `dbcc_size` field. 
