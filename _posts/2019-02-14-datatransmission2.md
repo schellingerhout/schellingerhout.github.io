@@ -46,13 +46,13 @@ If we call `SizeOf` on the static array we get the total size of all the element
 Assert(SizeOf(LStaticArray) = SizeOf(LStaticArray[0]) * Length(LStaticArray));
 {% endhighlight %}  
 
-The value of `SizeOf` is the same size as the strucutre in memory, because the distance from element to element (stride) is simply the size of the element type. 
+The value of `SizeOf` is the same size as the structure in memory, because the distance from element to element (stride) is simply the size of the element type. 
 
 {% highlight pascal %}
 Assert(NativeUInt(@LStaticArray[1]) - NativeUInt(@LStaticArray[0]) = SizeOf(Double));
 {% endhighlight %}  
 
-In the example above `@StaticArray[0]` and `@StaticArray[1]` are pointers to our first and second element. We can see that their addresses differ by the size of the element: `SizeOf(Double)`. Just note that many developers would rather use `SizeOf(LStaticArray[0])` because the code will continue to work if the type of the array needs to change.
+In the example above `@StaticArray[0]` and `@StaticArray[1]` are pointers to our first and second element. We can see that their addresses differ by the size of the element: `SizeOf(Double)`.In production code many developers would rather use `SizeOf(LStaticArray[0])` because the code will continue to work if the type of the array needs to change.
 
 If we assign one fixed array to another we copy by value. The array does not move around in memory but stays at its initial location. Assignment simply copies the entire memory content.
 
@@ -84,13 +84,13 @@ end;
 
 procedure goo(var ADblArray: TTenDoubles);
 begin
-// I hold a reference to the original record array via ADblArray
+// I hold a reference to the original record passed via ADblArray
 end;
 {% endhighlight %}  
 
 If we declare a fixed array as a field in our record it will contribute to the size of the record. The memory will be contained within the record structure. This provides for simple memory management. 
 
-Fixed arrays can easily be used cross platform when defined as part of our arrays.
+Fixed arrays can easily be used cross platform when defined as part of our records.
 
 ### Dynamic Arrays ###
 
@@ -161,7 +161,7 @@ begin
 end;
 {% endhighlight %}   
 
-*Note:* When calling `SetLength` we may get the same memory address for our raw data, usually when shrinking the array. You may need to grow or shrink the array by many elements to force a new address. 
+*Note:* When calling `SetLength` we may get the same memory address for our raw data, usually when shrinking the array. You may need to grow or shrink the array by many elements to force a new address.
 {: .notice}
 
 So what exactly is a dynamic array? It is a pointer variable type that holds the address to the first element of data. 
@@ -207,7 +207,7 @@ The benefit of this behavior is that we can have large amounts of data passed ar
 *Note:* If you are interested in how dynamic arrays know the element count and number of references look at `TDynArrayRec` in `system.pas`. This record is stored right before the first element of the array. 
 {: .notice}
 
-Dynamic arrays are one of a few types (strings and interfaces) being the other two that are automatically initialized to nil.
+Dynamic arrays, strings and interfaces are reference counted and are automatically initialized to nil.
 
 One last note on dynamic arrays. Since a dynamic array is simply a pointer to an array, it should not be a surprise that `SizeOf(LDynamicArray)` for any dynamic array is always `SizeOf(Pointer)`.
 
@@ -250,12 +250,10 @@ In Delphi `pChar` is a pointer to `Char`. We can read characters beyond that fir
 // WMDeviceChange sample in lesson1
  LUsbDeviceName := PChar(@LPBroadcastDeviceIntf^.dbcc_name);
 {% endhighlight %}  
-
-Delphi strings are essentially pointers similar to `pChar`, the difference is that a string's raw data has a header record just like the dynamic array before the raw data of the characters. This means that we can cast as `string` to `pChar`, but just like with a dynamic array we need to ensure that at least `string` variable reference remains so that the memory is not disposed. 
-
+		  
 **Watch out!** Assigning a variable of type `DEV_BROADCAST_DEVICEINTERFACE` will transfer the `dbcc_size`, but only the first character of `dbcc_name`.
 {: .notice--warning}		  
-
+		  
 Typically records such as these are used in APIs where a single record is passed by reference. Since the size of `DEV_BROADCAST_DEVICEINTERFACE` varies we cannot place it in an array. We can place a series of these records in a row, but indexing will not work because we do not have a fixed stride length between elements. In that case we would have to move our pointer by the size of each record in turn. 
 
 To create a record such as this you would allocate memory equal to the size of the record definition plus the length of the character string. That size value would then also be written to the `dbcc_size` field. 
