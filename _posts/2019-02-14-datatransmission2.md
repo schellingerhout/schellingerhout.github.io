@@ -2,15 +2,16 @@
 title: "Data Transmission with Delphi (Part 2: Arrays and Pointer Math)"
 excerpt_separator: "<!--more-->"
 categories:
+  - Data Transmission
+tags:
+  - Delphi  
+  - Data Transmission
+  - Cross-Language
   - DLL
   - Records
   - Structs
   - Pointer Math
-  - Arrays
-tags:
-  - Delphi  
-  - Communication
-  - Cross-Platform
+  - Arrays  
 ---
 
 In this blog post I will continue with arrays in communicating cross-platform via DLLs. 

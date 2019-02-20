@@ -2,14 +2,15 @@
 title: "Data Transmission with Delphi (Part 1: Pointers and Structures)"
 excerpt_separator: "<!--more-->"
 categories:
-  - DLL
-  - Records
-  - Structs
-  - Pointer Math
+  - Data Transmission
 tags:
   - Delphi  
   - Communication
-  - Cross-Platform
+  - Cross-Language
+  - DLL
+  - Records
+  - Structs
+
 ---
 
 In this blog post I will start to describe the data structures and the use of pointers in communicating cross-platform via DLLs. 
