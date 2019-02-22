@@ -34,7 +34,8 @@ So lets fix it. First lets locate nodejs
 
 ```
 $ whereis nodejs
-nodejs: /usr/bin/nodejs /usr/lib/nodejs /usr/include/nodejs /usr/share/nodejs /usr/share/man/man1/nodejs.1.gz
+nodejs: /usr/bin/nodejs /usr/lib/nodejs /usr/include/nodejs /usr/share/nodejs 
+  /usr/share/man/man1/nodejs.1.gz
 
 ```
 
