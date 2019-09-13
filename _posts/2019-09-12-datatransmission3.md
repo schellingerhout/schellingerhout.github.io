@@ -87,6 +87,32 @@ In the rest of this discussion I will focus on the easier method of synchronous 
 
 ## Directing incoming data ##
 
+In section 1 I coverted the idea of abstract structured types. The idea was that if we had a record that shared part of its structure with another we could safely interpret a pointer (memory address) as the smaller abstract of these types (sometimes called a header record). This is the same concept used in Windows messaging where `DEV_BROADCAST_HDR` is essentially the header part of other records such as `DEV_BROADCAST_DEVICEINTERFACE` or `DEV_BROADCAST_VOLUME`. The determination of how the memory could be fully interepreted was contained in `dbcv_devicetype`.
+
+{% highlight pascal %}
+...
+  case LPDeviceBroadcastHeader^.dbch_devicetype of
+      DBT_DEVTYP_DEVICEINTERFACE:
+        begin 
+          LPBroadcastDeviceIntf := PDEV_BROADCAST_DEVICEINTERFACE(LPDeviceBroadcastHeader);
+          LUsbDeviceName := PChar(@LPBroadcastDeviceIntf^.dbcc_name);
+      ...
+        end;
+
+      DBT_DEVTYP_VOLUME:
+        begin
+          LPBroadcastVolume := PDEV_BROADCAST_VOLUME(LPDeviceBroadcastHeader);
+          // use LPBroadcastVolume.dbcv_unitmask to find volume information
+          ...
+        end; 
+    end; 
+...    
+{% endhighlight %}  
+
+Our receiver can direct data in the same way:
+    * read part of the data, 
+    * use the partial data to determine the type and size of memory to read
+    * read the data as defined by the underlying type
 
 
 ## Section Conclusion ##
