@@ -68,26 +68,26 @@ type
 
 ### Someone needs to manage the memory ###
 
-In the scenario described above the sender holds the record that has the `String` type. This type just like dynamic arrays (like `TArray<Double>`) are reference counted types. Referencing the underlyping data of these types as either `PChar` for `String`, or `PDouble` for `TArray<Double>` does not increment the reference count. This means that as soon as the dynamic array or string is out of scope the memory is disposed and the pointer is invalid.
+In the scenario described above the sender holds the record that has the `String` type. This type just like dynamic arrays (like `TArray<Double>`) are reference counted types. Referencing the underlying data of these types as either `PChar` for `String`, or `PDouble` for `TArray<Double>` does not increment the reference count. This means that as soon as the dynamic array or string is out of scope the memory is disposed and the pointer is invalid.
 
 *Note:* Dynamic arrays and strings must be kept alive via a reference as long as there is a pointer to their underlying data.
 {: .notice}
 
 There are a few ways to manage this. 
-    * Receiving party allocates memory for the transmitting party to fill with data. The receiving party disposes the memory after it processed it (and at its convenience).
-    * Transmitting party allocates memory for the receiving party to copy or process completely (no references held). The transmitting party disposes the memory 
-        * once the send method returns, or 
-        * waits to be notified that the receiving party is done with the data, or
-        * the receving party terminates the session
+* Receiving party allocates memory for the transmitting party to fill with data. The receiving party disposes the memory after it processed it (and at its convenience).
+* Transmitting party allocates memory for the receiving party to copy or process completely (no references held). The transmitting party disposes the memory 
+* once the send method returns, or 
+  * waits to be notified that the receiving party is done with the data, or
+  * the receiving party terminates the session
 
-The scenario of allocating memory to be filled is very common in the Windows API, this is often a two step call. The first call would pass the buffer as `nil` and receive the size that you need to allocate.
+The scenario of allocating memory to be filled is very common in the Windows API, this is often a two-step call. The first call would pass the buffer as `nil` and receive the size that you need to allocate.
 
 In the rest of this discussion I will focus on the easier method of synchronous transmission where I assume data is received and copied or completely processed into other types at the receiver before I return. This way the transmitter can dispose as soon as the method call into the receiver returns
 
 
 ### Abstract types can be used to direct data ###
 
-In section 1 I coverted the idea of abstract structured types. The idea was that if we had a record that shared part of its structure with another we could safely interpret a pointer (memory address) as the smaller abstract of these types (sometimes called a header record). This is the same concept used in Windows messaging where `DEV_BROADCAST_HDR` is essentially the header part of other records such as `DEV_BROADCAST_DEVICEINTERFACE` or `DEV_BROADCAST_VOLUME`. The determination of how the memory could be fully interepreted was contained in `dbcv_devicetype`.
+In section 1 I covered the idea of abstract structured types. The idea was that if we had a record that shared part of its structure with another, we could safely interpret a pointer (memory address) as the smaller abstract of these types (sometimes called a header record). This is the same concept used in Windows messaging where `DEV_BROADCAST_HDR` is essentially the header part of other records such as `DEV_BROADCAST_DEVICEINTERFACE` or `DEV_BROADCAST_VOLUME`. The determination of how the memory could be fully interpreted was contained in `dbcv_devicetype`.
 
 {% highlight pascal %}
 ...
@@ -195,7 +195,6 @@ Type
     // PolyLineArcRec Specific
     Geometry : TArray<PTxRec>;   // since we have an array of pointers, this array can be null terminated
   End;
-
 {% endhighlight %}  
 
 ### The Receiver's data ###
