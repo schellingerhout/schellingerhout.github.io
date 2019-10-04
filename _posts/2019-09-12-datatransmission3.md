@@ -277,10 +277,64 @@ PPRxRec = ^PRxRec; //array of pointers to  RxRec
   End;
   {% endhighlight %}
   
-  ### Receiver's DLL Export ###
+### Receiver's DLL Export ###
   
   procedure SendTxRecord(APTxRec : PTxRec); stdcall; 
+   //put sample export here
+   
+   //Put stuff for sender here
+   
+   
+### Preparing Data for Transmission ###
+Each of our datatypes will be ready to receive the relevant information to transmit, but the values that are needed for processing on the receiver side such as `size` and `rectype` will need to be populated for every record before we can fill it with the data that we want to transmit. 
+
+Delphi does not have a way to auto-initialize records. Only the smart pointer types: Strings and Interfaces are automatically initialized as null. You could exploit the use of properties along with a string or interface field on the record to initialize it on demand, but that will not help us in the transmission of this record //put link to stackoverflow. We are passing an abstract type and there are no virtual calls on record structures. Even if these did exist, support would vary by programming language. Also, we really want our records to be a data map of memory and nothing more.
+
+Delphi provides for a simple syntax to declare record constants, for instance:
+
+{% highlight pascal %}
+const 
+  DefaultTxArcRec: TTxArcRec = ();
+{% endhighlight %}
   
+This constant as defined would be a default record with all memory zeroed out. This means integer and floating numeric values are zero and booleans are false. Zeroed out memory also means pointers are nil, which in turn means dynamic arrays are empty and strings are empty strings.
+
+We can do even better with our constant, when we declare fields and values using `field: value` syntax then only the declared fields receive values other than 0 all other values are still blank. Here is the improved constant:
+
+
+{% highlight pascal %}
+const 
+  DefaultTxArcRec: TTxArcRec =
+    (     
+      Size: SizeOf(TTxArcRec);
+      RecType: TxRectType_Arc;      
+     );
+{% endhighlight %}
   
+Constant record declarations can also be nested with the same considerations.
+
+So transmission process would be :
+* Obtain a record filled with appropriate `size` and `rectype` values
+* Populate the data to transmit
+* Transmit the record
+* If the record was dynamically allocated then dispose it after transmission
   
-  
+### Generalizing transmission ###
+The process of transmission follows a predictable path and may lend itself well to using generics and anonymous methods. The problem is that pointers to records do not give us virtual type info, but we could use the typeinfo of a specific record type to generalize our data.
+
+Here is the basic idea. Call a generic method that is specialized by record type. This method accepts an anonymnous method that supplies a `var` parameter of this record type that can be filled out with data to transmit. The record parameter passed into the anonymous method would already be populated with default values in the generic method, which also manages the lifetime of the record. From the sender side this would like something like this  :
+
+{% highlight pascal %}
+  TXer.Send<TxLineRec>( 
+    procedure(var ARec: TxLineRec) 
+    begin
+      ARec.p1.x := 0.5;
+      ARec.p2.y := 0.25;
+      ARec.p2.x := 1.0;
+      ARec.p2.y := 2.0;
+    end
+  );
+{% endhighlight %}
+In the sample above `TXer` would be my transmitter class with a generic method to transmit. Lets consider the process of defining the transmitter.
+
+## The Trasmitter Class ##
