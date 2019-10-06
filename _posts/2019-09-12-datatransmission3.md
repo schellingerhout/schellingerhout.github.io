@@ -275,16 +275,60 @@ PPRxRec = ^PRxRec; //array of pointers to  RxRec
     // GeometryListRec Specific
     Geometry : PPRxRec;   //  null terminated
   End;
-  {% endhighlight %}
+{% endhighlight %}
   
 ### Receiver's DLL Export ###
+ 
+The Receiver can export a method of this format:
   
-  procedure SendTxRecord(APTxRec : PTxRec); stdcall; 
-   //put sample export here
-   
-   //Put stuff for sender here
-   
-   
+{% highlight pascal %}
+  procedure SendTxRecord(APRxRec : PRxRec); stdcall;
+  begin
+	case APRXRec.RecType of
+	  RxRectType_Point :
+		ReceivePoint(PRxPointRec(APRxRec));
+	  RxRectType_Line : 
+		ReceiveLine(PRxLineRec(APRxRec));
+	  RxRectType_Arc : 
+		ReceiveArc(PRxArcRec(APRxRec));
+	  RxRectType_Polyline :
+		ReceivePolline(PRxPolyLineRec(APRxRec));
+	  RxRectType_GeometryList :
+	   ReceivePolline(RxGeometryListRec(APRxRec));
+	end;
+  end;  
+
+  exports SendTxRecord;
+{% endhighlight %}
+  
+It seems strange that the sender would have a method called "Send", but the receiver will not use it internally, instead a the Sender can link to it as 
+
+{% highlight pascal %}
+  procedure SendTxRecord(APTxRec : PTxRec); stdcall; external 'MyDLL.dll'
+{% endhighlight %}
+
+We can also add a similar method to process arrays of data that can be traversed with pointermath as discussed in Section 2. 
+
+{% highlight pascal %}
+  procedure SendTxRecords(APRxRec : PRxRec; ACount: integer); stdcall;
+  begin
+	case APRXRec.RecType of
+	  RxRectType_Point :
+		ReceivePoints(PRxPointRec(APRxRec), ACount);
+	  RxRectType_Line : 
+		ReceiveLines(PRxLineRec(APRxRec), ACount);
+	  RxRectType_Arc : 
+		ReceiveArcs(PRxArcRec(APRxRec), ACount);
+	  RxRectType_Polyline :
+		ReceivePollines(PRxPolyLineRec(APRxRec), ACount);
+	  RxRectType_GeometryList :
+	   ReceivePollines(RxGeometryListRec(APRxRec), ACount);
+	end;
+  end;  
+{% endhighlight %}
+
+
+
 ### Preparing Data for Transmission ###
 Each of our datatypes will be ready to receive the relevant information to transmit, but the values that are needed for processing on the receiver side such as `size` and `rectype` will need to be populated for every record before we can fill it with the data that we want to transmit. 
 
@@ -320,9 +364,114 @@ So transmission process would be :
 * If the record was dynamically allocated then dispose it after transmission
   
 ### Generalizing transmission ###
-The process of transmission follows a predictable path and may lend itself well to using generics and anonymous methods. The problem is that pointers to records do not give us virtual type info, but we could use the typeinfo of a specific record type to generalize our data.
+The process of transmission as described above follows a predictable path and may lend itself well to using generics and anonymous methods. The problem is that pointers to records do not give us virtual type info, but we could use the typeinfo of a specific record type to generalize our data.
 
-Here is the basic idea. Call a generic method that is specialized by record type. This method accepts an anonymnous method that supplies a `var` parameter of this record type that can be filled out with data to transmit. The record parameter passed into the anonymous method would already be populated with default values in the generic method, which also manages the lifetime of the record. From the sender side this would like something like this  :
+Here is the basic idea: When sending a record call a generic method that gets specialized by the record type `Send<TxLineRec>(...)`,  we could also pass an anonymous callback method so we can be populate the data in the record (beside the header). This anonymous method will give the caller the record to manipulate via a var parameter.  If we transmit a list we'll have to pass a count and receive an anonymous callback that presents both the record and its index in the list.
+
+To facilitate the generic calls, I'll wrap these Send calls ina 
+
+## The Transmitter Class ##
+
+### Interface ###
+Here is an example of what my transmitter class could look like:
+
+{% highlight pascal %}
+Type
+
+  TSendConfigProc<T> = reference to procedure(var A: T);
+  TSendConfigProcIter<T> = reference to procedure(var A: T; AIndex: integer);
+
+  TTxer = class
+    public
+
+     class procedure SendRecord(ARecord: PTxRec); static;
+     class procedure SendRecords(ARecordArray: PTxRec; ACount: integer); static;
+
+     class procedure Send<T>(AConfigureProc: TSendConfigProc<T>); overload;
+     class procedure Send<T>(ANumRecords: integer; AConfigureProc: TSendConfigProcIter<T>); overload;
+   end;
+{% endhighlight %}
+
+For our transmitter class we'll add the ability to send records and an array of records with a `Send` command that is generic and will take either an anonymous method to configure a record, or a count and an anonymous method that will configure a record, plus provide the index of the active item.
+
+The sample transmitter class also has `SendRecord` and `SendRecords` that are direct one-to-one wrappers of the DLL signatures. I'll explain the reason for these a bit later.
+
+### Generic Methods ###
+
+{% highlight pascal %}
+
+class procedure TTxer.Send<T>(AConfigureProc: TSendConfigProc<T>);
+Var
+  L: T;
+begin
+  L := TxRec.Default<T>;
+  AConfigureProc(L);
+  SendRecord(@L);
+end;
+
+class procedure TTxer.Send<T>(ANumRecords: integer; AConfigureProc: TSendConfigProcIter<T>);
+Var
+  LDynArray: TArray<T>;
+  i: integer;
+  LDefault : T;
+begin
+  SetLength(LDynArray, ANumRecords);
+
+  LDefault := TxRec.Default<T>;
+
+  for i := 0 to ANumRecords-1 do
+  begin
+    LDynArray[i] := LDefault;
+    AConfigureProc(LDynArray[i], i);
+  end;
+  SendRecords(@LDynArray[0], ANumRecords);
+end;
+
+{% endhighlight %}
+
+These calls facilitate the steps in our process as follows
+* We obtain a record filled with appropriate `size` and `rectype` values by our `TxRec.Default<T>` method
+* The API Consumer populate the data to transmit via the anonymous methods of types `TSendConfigProc<T>` and `TSendConfigProcIter<T>`
+* The record is transmitted via `SendRecord` and `SendRecords`
+* The records are disposed when the `L: T` variable and the reference counted `TArray<T>` dynamic array going out of scope
+
+We will examine each of these in more detail
+
+### Initializing Records ###
+
+Delphi constants allow for a loophole to modify values that should not change, all you have to do is obtain a pointer to the constant and you can manipulate the values. This makes using constants with pointer types particularly dangerous. 
+
+In this code you will see that I keep the scope of referencing the constant via pointer as small as possible. 
+{% highlight pascal %}
+
+class function TxRec.Default<T>: T;
+var
+  PT: ^T; // this will be a pointer to a const, do not modify values via this pointer
+begin
+  
+  if TypeInfo(T) =  TypeInfo(TxPointRec) then
+	PT := @DefaultPointRec
+  else if TypeInfo(T) =  TypeInfo(TxLineRec) then
+	PT := @DefaultLineRec
+  else if TypeInfo(T) =  TypeInfo(TxArcRec) then
+	PT := @DefaultArcRec
+  else if TypeInfo(T) =  TypeInfo(TxPolyLineRec) then
+	PT := @DefaultPolyLineRec
+  else if TypeInfo(T) =  TypeInfo(TxGeometryListRec) then
+	PT := @DefaultGeometryListRec
+  else
+    PT := nil; // raise exception
+
+  result := PT^; //We Copy value, so the constant is not inadvertently modified
+end;
+
+{% endhighlight %}
+
+You may recall that I added methods `SendRecord` and `SendRecords` to my transmitter class, the reason I did so was that a generic method cannot use the imported DLL method directly unless it is in the interface section of the unit. Similarly here: The defaultrecords will need to be declared in the interface section with the records. Unfortunately, even though records support constant declaration within the record name scope, we cannot declare a self constant such as we can with classes. So we'll have to declare these record constants separate from our records in the interface section of the unit.
+
+### Populating the Record ###
+
+The anonymous method passed by the consumer of the API serves as a way to populate the record
 
 {% highlight pascal %}
   TXer.Send<TxLineRec>( 
@@ -334,7 +483,59 @@ Here is the basic idea. Call a generic method that is specialized by record type
       ARec.p2.y := 2.0;
     end
   );
+  
+  Txer.Send<TxPolLineRec>(FPollines.Count, 
+	Procedure(var ARec: TxPolLineRec; AIdx: integer)
+	begin
+	  ARec.VertexCount := Length(FPollines[AIdx].Vertices);
+      ARec.Vertices := FPollines[AIdx].Vertices;  
+	end
+  );
 {% endhighlight %}
-In the sample above `TXer` would be my transmitter class with a generic method to transmit. Lets consider the process of defining the transmitter.
 
-## The Trasmitter Class ##
+Smart reference types such as strings, interfaces and dynamic arrays that are cast as dumb pointer types must be kept alive for the duration of transmission. In the case above assume `Vertices` on our polline objects in our list is a `TArray<PointRec>` and we have one on our record so the reference will be kept alive. If we had a field on our record of type `PPointRec` then we should ensure that the list element's array does not get modified.
+
+### Transmitting the Record ###
+
+
+The pointer to the record or array of records are handed off to the dll which should process the data synchronously (at least with the method that creates, transmits and disposes the data). We could add our DLL imports to the interface section and call them directly, or keep them in the implementation section and call them via the class. The class methods will just pass the parameters along
+
+{% highlight pascal %}
+class procedure TTxer.SendRecord(ARecord: PTxRec);
+begin
+   SendTxRecord(ARecord); //dll call
+end;
+
+class procedure TTxer.SendRecords(ARecordArray: PTxRec; ACount: integer);
+begin
+  SendTxRecords(ARecordArray, ACount); //dll call
+end;
+{% endhighlight %}
+
+### Disposal of the Record ###
+
+Disposal is done via reference counting of the dynamic array in the case of an array transmission, and in the case of a single record it will be disposed once it exists the scope of the `Send` method. We could also allocate a record via `New`. In that case we'd do something like this
+
+{% highlight pascal %}
+class procedure TTxer.Send<T>(AConfigureProc: TSendConfigProc<T>);
+Var
+  LPT: ^T;
+
+begin
+
+  New(LPT);
+  try
+    LPT^ := TxRec.Default<T>;
+
+    AConfigureProc(LPT^);
+    SendRecord(PTxRec(LPT));
+  finally
+   Dispose(LPT);
+  end;
+end;
+{% endhighlight %}
+
+I personal prefer the stack cleaning up the variable, but there may be cases where this method may be justified.
+
+## Conclusion ##
+That concludes this series on data transmission with records and arrays. Hopefully you'll be able to extend these concepts to other programming languages. C\C++ should be easy candidates for handling data transmission in this way, for .Net you'd probably have to write a wrapper class in C++\CLI because it may be tricky to write the proper PInvoke headers to process data.
