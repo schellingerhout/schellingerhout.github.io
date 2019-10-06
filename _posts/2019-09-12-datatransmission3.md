@@ -21,7 +21,7 @@ The purpose of this blog series is to understand how to transfer raw data at hig
 
 ## Quick Recap ##
 ### Records can interpret data in different ways ###
-As mentioned in prior sections that pointers are simply numbers that correspond to places in memory and that types associated with that address are the way we interpret the data. In many cases data can be interpreted in the same way. Here is an example of we could define a customer record at a transmitter:
+As mentioned in prior sections that pointers are simply numbers that correspond to places in memory and that types associated with that address are the way we interpret the data. In many cases data can be interpreted as compatible data types. Here is an example of we could define a customer record at a transmitter:
 
 
 {% highlight pascal %}
@@ -84,10 +84,7 @@ The scenario of allocating memory to be filled is very common in the Windows API
 
 In the rest of this discussion I will focus on the easier method of synchronous transmission where I assume data is received and copied or completely processed into other types at the receiver before I return. This way the transmitter can dispose as soon as the method call into the receiver returns
 
-
 ### Abstract types can be used to direct data ###
-
-
 
 In [Section 1]({{ site.baseurl }}{% post_url 2019-02-11-datatransmission1 %}) I covered the idea of abstract structured types. The idea was that if we had a record that shared part of its structure with another, we could safely interpret a pointer (memory address) as the smaller abstract of these types (sometimes called a header record). This is the same concept used in Windows messaging where `DEV_BROADCAST_HDR` is essentially the header part of other records such as `DEV_BROADCAST_DEVICEINTERFACE` or `DEV_BROADCAST_VOLUME`. The determination of how the memory could be fully interpreted was contained in `dbcv_devicetype`.
 
@@ -112,9 +109,9 @@ In [Section 1]({{ site.baseurl }}{% post_url 2019-02-11-datatransmission1 %}) I 
 {% endhighlight %}  
 
 Our receiver can direct data in the same way:
-    * read part of the data, 
-    * use the partial data to determine the type and size of memory to read
-    * read the data as defined by the underlying type
+* read part of the data, 
+* use the partial data to determine the type and size of memory to read
+* read the data as defined by the underlying type
 
 ## Building our API ##
 
@@ -284,23 +281,23 @@ PPRxRec = ^PRxRec; //array of pointers to  RxRec
 The Receiver can export a method of this format:
   
 {% highlight pascal %}
-  procedure SendTxRecord(APRxRec : PRxRec); stdcall;
-  begin
+procedure SendTxRecord(APRxRec : PRxRec); stdcall;
+begin
   case APRXRec.RecType of
     RxRectType_Point :
-    ReceivePoint(PRxPointRec(APRxRec));
+      ReceivePoint(PRxPointRec(APRxRec));
     RxRectType_Line : 
-    ReceiveLine(PRxLineRec(APRxRec));
+      ReceiveLine(PRxLineRec(APRxRec));
     RxRectType_Arc : 
-    ReceiveArc(PRxArcRec(APRxRec));
+      ReceiveArc(PRxArcRec(APRxRec));
     RxRectType_Polyline :
-    ReceivePolline(PRxPolyLineRec(APRxRec));
+      ReceivePolline(PRxPolyLineRec(APRxRec));
     RxRectType_GeometryList :
      ReceivePolline(RxGeometryListRec(APRxRec));
   end;
-  end;  
+end;  
 
-  exports SendTxRecord;
+exports SendTxRecord;
 {% endhighlight %}
   
 It seems strange that the sender would have a method called "Send", but the receiver will not use it internally, instead a the Sender can link to it as 
@@ -312,21 +309,21 @@ It seems strange that the sender would have a method called "Send", but the rece
 We can also add a similar method to process arrays of data that can be traversed with pointermath as discussed in Section 2. 
 
 {% highlight pascal %}
-  procedure SendTxRecords(APRxRec : PRxRec; ACount: integer); stdcall;
-  begin
+procedure SendTxRecords(APRxRec : PRxRec; ACount: integer); stdcall;
+begin
   case APRXRec.RecType of
     RxRectType_Point :
-    ReceivePoints(PRxPointRec(APRxRec), ACount);
+      ReceivePoints(PRxPointRec(APRxRec), ACount);
     RxRectType_Line : 
-    ReceiveLines(PRxLineRec(APRxRec), ACount);
+      ReceiveLines(PRxLineRec(APRxRec), ACount);
     RxRectType_Arc : 
-    ReceiveArcs(PRxArcRec(APRxRec), ACount);
+      ReceiveArcs(PRxArcRec(APRxRec), ACount);
     RxRectType_Polyline :
-    ReceivePollines(PRxPolyLineRec(APRxRec), ACount);
+      ReceivePollines(PRxPolyLineRec(APRxRec), ACount);
     RxRectType_GeometryList :
-     ReceivePollines(RxGeometryListRec(APRxRec), ACount);
+      ReceivePollines(RxGeometryListRec(APRxRec), ACount);
   end;
-  end;  
+end;  
 {% endhighlight %}
 
 
@@ -452,15 +449,15 @@ var
 begin
   
   if TypeInfo(T) =  TypeInfo(TxPointRec) then
-  PT := @DefaultPointRec
+    PT := @DefaultPointRec
   else if TypeInfo(T) =  TypeInfo(TxLineRec) then
-  PT := @DefaultLineRec
+    PT := @DefaultLineRec
   else if TypeInfo(T) =  TypeInfo(TxArcRec) then
-  PT := @DefaultArcRec
+    PT := @DefaultArcRec
   else if TypeInfo(T) =  TypeInfo(TxPolyLineRec) then
-  PT := @DefaultPolyLineRec
+    PT := @DefaultPolyLineRec
   else if TypeInfo(T) =  TypeInfo(TxGeometryListRec) then
-  PT := @DefaultGeometryListRec
+    PT := @DefaultGeometryListRec
   else
     PT := nil; // raise exception
 
@@ -490,7 +487,7 @@ The anonymous method passed by the consumer of the API serves as a way to popula
   Procedure(var ARec: TxPolLineRec; AIdx: integer)
   begin
     ARec.VertexCount := Length(FPollines[AIdx].Vertices);
-      ARec.Vertices := FPollines[AIdx].Vertices;  
+    ARec.Vertices := FPollines[AIdx].Vertices;  
   end
   );
 {% endhighlight %}
@@ -522,13 +519,10 @@ Disposal is done via reference counting of the dynamic array in the case of an a
 class procedure TTxer.Send<T>(AConfigureProc: TSendConfigProc<T>);
 Var
   LPT: ^T;
-
 begin
-
   New(LPT);
   try
     LPT^ := TxRec.Default<T>;
-
     AConfigureProc(LPT^);
     SendRecord(PTxRec(LPT));
   finally
