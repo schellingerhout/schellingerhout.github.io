@@ -87,7 +87,9 @@ In the rest of this discussion I will focus on the easier method of synchronous 
 
 ### Abstract types can be used to direct data ###
 
-In section 1 I covered the idea of abstract structured types. The idea was that if we had a record that shared part of its structure with another, we could safely interpret a pointer (memory address) as the smaller abstract of these types (sometimes called a header record). This is the same concept used in Windows messaging where `DEV_BROADCAST_HDR` is essentially the header part of other records such as `DEV_BROADCAST_DEVICEINTERFACE` or `DEV_BROADCAST_VOLUME`. The determination of how the memory could be fully interpreted was contained in `dbcv_devicetype`.
+
+
+In [Section 1]({{ site.baseurl }}{% post_url 2019-02-11-datatransmission1 %}) I covered the idea of abstract structured types. The idea was that if we had a record that shared part of its structure with another, we could safely interpret a pointer (memory address) as the smaller abstract of these types (sometimes called a header record). This is the same concept used in Windows messaging where `DEV_BROADCAST_HDR` is essentially the header part of other records such as `DEV_BROADCAST_DEVICEINTERFACE` or `DEV_BROADCAST_VOLUME`. The determination of how the memory could be fully interpreted was contained in `dbcv_devicetype`.
 
 {% highlight pascal %}
 ...
@@ -284,18 +286,18 @@ The Receiver can export a method of this format:
 {% highlight pascal %}
   procedure SendTxRecord(APRxRec : PRxRec); stdcall;
   begin
-	case APRXRec.RecType of
-	  RxRectType_Point :
-		ReceivePoint(PRxPointRec(APRxRec));
-	  RxRectType_Line : 
-		ReceiveLine(PRxLineRec(APRxRec));
-	  RxRectType_Arc : 
-		ReceiveArc(PRxArcRec(APRxRec));
-	  RxRectType_Polyline :
-		ReceivePolline(PRxPolyLineRec(APRxRec));
-	  RxRectType_GeometryList :
-	   ReceivePolline(RxGeometryListRec(APRxRec));
-	end;
+  case APRXRec.RecType of
+    RxRectType_Point :
+    ReceivePoint(PRxPointRec(APRxRec));
+    RxRectType_Line : 
+    ReceiveLine(PRxLineRec(APRxRec));
+    RxRectType_Arc : 
+    ReceiveArc(PRxArcRec(APRxRec));
+    RxRectType_Polyline :
+    ReceivePolline(PRxPolyLineRec(APRxRec));
+    RxRectType_GeometryList :
+     ReceivePolline(RxGeometryListRec(APRxRec));
+  end;
   end;  
 
   exports SendTxRecord;
@@ -312,18 +314,18 @@ We can also add a similar method to process arrays of data that can be traversed
 {% highlight pascal %}
   procedure SendTxRecords(APRxRec : PRxRec; ACount: integer); stdcall;
   begin
-	case APRXRec.RecType of
-	  RxRectType_Point :
-		ReceivePoints(PRxPointRec(APRxRec), ACount);
-	  RxRectType_Line : 
-		ReceiveLines(PRxLineRec(APRxRec), ACount);
-	  RxRectType_Arc : 
-		ReceiveArcs(PRxArcRec(APRxRec), ACount);
-	  RxRectType_Polyline :
-		ReceivePollines(PRxPolyLineRec(APRxRec), ACount);
-	  RxRectType_GeometryList :
-	   ReceivePollines(RxGeometryListRec(APRxRec), ACount);
-	end;
+  case APRXRec.RecType of
+    RxRectType_Point :
+    ReceivePoints(PRxPointRec(APRxRec), ACount);
+    RxRectType_Line : 
+    ReceiveLines(PRxLineRec(APRxRec), ACount);
+    RxRectType_Arc : 
+    ReceiveArcs(PRxArcRec(APRxRec), ACount);
+    RxRectType_Polyline :
+    ReceivePollines(PRxPolyLineRec(APRxRec), ACount);
+    RxRectType_GeometryList :
+     ReceivePollines(RxGeometryListRec(APRxRec), ACount);
+  end;
   end;  
 {% endhighlight %}
 
@@ -332,7 +334,7 @@ We can also add a similar method to process arrays of data that can be traversed
 ### Preparing Data for Transmission ###
 Each of our datatypes will be ready to receive the relevant information to transmit, but the values that are needed for processing on the receiver side such as `size` and `rectype` will need to be populated for every record before we can fill it with the data that we want to transmit. 
 
-Delphi does not have a way to auto-initialize records. Only the smart pointer types: Strings and Interfaces are automatically initialized as null. You could exploit the use of properties along with a string or interface field on the record to initialize it on demand, but that will not help us in the transmission of this record //put link to stackoverflow. We are passing an abstract type and there are no virtual calls on record structures. Even if these did exist, support would vary by programming language. Also, we really want our records to be a data map of memory and nothing more.
+Delphi does not have a way to auto-initialize records. Only the smart pointer types: Strings and Interfaces are automatically initialized as null. [You could exploit the use of properties along with a string or interface field on the record to initialize it on demand](https://stackoverflow.com/questions/39392920/how-can-delphi-records-be-initialized-automatically), but that will not help us in the transmission of this record //put link to stackoverflow. We are passing an abstract type and there are no virtual calls on record structures. Even if these did exist, support would vary by programming language. Also, we really want our records to be a data map of memory and nothing more.
 
 Delphi provides for a simple syntax to declare record constants, for instance:
 
@@ -368,7 +370,7 @@ The process of transmission as described above follows a predictable path and ma
 
 Here is the basic idea: When sending a record call a generic method that gets specialized by the record type `Send<TxLineRec>(...)`,  we could also pass an anonymous callback method so we can be populate the data in the record (beside the header). This anonymous method will give the caller the record to manipulate via a var parameter.  If we transmit a list we'll have to pass a count and receive an anonymous callback that presents both the record and its index in the list.
 
-To facilitate the generic calls, I'll wrap these Send calls ina 
+To facilitate the generic calls, I'll wrap these `Send` calls in a class
 
 ## The Transmitter Class ##
 
@@ -450,15 +452,15 @@ var
 begin
   
   if TypeInfo(T) =  TypeInfo(TxPointRec) then
-	PT := @DefaultPointRec
+  PT := @DefaultPointRec
   else if TypeInfo(T) =  TypeInfo(TxLineRec) then
-	PT := @DefaultLineRec
+  PT := @DefaultLineRec
   else if TypeInfo(T) =  TypeInfo(TxArcRec) then
-	PT := @DefaultArcRec
+  PT := @DefaultArcRec
   else if TypeInfo(T) =  TypeInfo(TxPolyLineRec) then
-	PT := @DefaultPolyLineRec
+  PT := @DefaultPolyLineRec
   else if TypeInfo(T) =  TypeInfo(TxGeometryListRec) then
-	PT := @DefaultGeometryListRec
+  PT := @DefaultGeometryListRec
   else
     PT := nil; // raise exception
 
@@ -485,11 +487,11 @@ The anonymous method passed by the consumer of the API serves as a way to popula
   );
   
   Txer.Send<TxPolLineRec>(FPollines.Count, 
-	Procedure(var ARec: TxPolLineRec; AIdx: integer)
-	begin
-	  ARec.VertexCount := Length(FPollines[AIdx].Vertices);
+  Procedure(var ARec: TxPolLineRec; AIdx: integer)
+  begin
+    ARec.VertexCount := Length(FPollines[AIdx].Vertices);
       ARec.Vertices := FPollines[AIdx].Vertices;  
-	end
+  end
   );
 {% endhighlight %}
 
@@ -538,4 +540,8 @@ end;
 I personal prefer the stack cleaning up the variable, but there may be cases where this method may be justified.
 
 ## Conclusion ##
+
+The repository for this blog series code can be found [here](https://github.com/schellingerhout/data-transmission-delphi).
+
 That concludes this series on data transmission with records and arrays. Hopefully you'll be able to extend these concepts to other programming languages. C\C++ should be easy candidates for handling data transmission in this way, for .Net you'd probably have to write a wrapper class in C++\CLI because it may be tricky to write the proper PInvoke headers to process data.
+
