@@ -181,7 +181,8 @@ Type
 
     // Polyline Specific
     VertexCount: Uint32;
-    Vertices : TArray<PointRec>;    // since x can have a valid value of zero, we need a count, we can't use null termination
+    Vertices : TArray<PointRec>; // since x can have a valid value of zero, 
+                                 // we need a count, we can't use null termination
   End;
 
   PTxGeometryListRec = ^TxGeometryListRec;
@@ -192,7 +193,8 @@ Type
 
 
     // PolyLineArcRec Specific
-    Geometry : TArray<PTxRec>;   // since we have an array of pointers, this array can be null terminated
+    Geometry : TArray<PTxRec>;  // since we have an array of pointers, 
+                                 // this array can be null terminated
   End;
 {% endhighlight %}  
 
@@ -202,13 +204,15 @@ Dynamic arrrays are mapped to pointer types.
 {% highlight pascal %}
 type
 {$Z4} //integer enum
-  RxRectTypeEnum = (RxRectType_Point,  RxRectType_Line, RxRectType_Arc, RxRectType_Polyline, RxRectType_GeometryList);
+  RxRectTypeEnum = (RxRectType_Point,  RxRectType_Line, RxRectType_Arc, RxRectType_Polyline, 
+    RxRectType_GeometryList);
 {$Z1}
 const
   RxRectType_Undefined = RxRectTypeEnum(-1);
 Type
 
-//The base memory block of all parameter recs, also serves as a signal parameter (no data transmitted)
+//The base memory block of all parameter recs, 
+// also serves as a signal parameter (no data transmitted)
 
 PPRxRec = ^PRxRec; //array of pointers to  RxRec
   PRxRec = ^RxRec;
