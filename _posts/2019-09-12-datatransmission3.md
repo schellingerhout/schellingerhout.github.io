@@ -76,7 +76,7 @@ In the scenario described above the sender holds the record that has the `String
 There are a few ways to manage this. 
 * Receiving party allocates memory for the transmitting party to fill with data. The receiving party disposes the memory after it processed it (and at its convenience).
 * Transmitting party allocates memory for the receiving party to copy or process completely (no references held). The transmitting party disposes the memory 
-* once the send method returns, or 
+  * once the send method returns, or 
   * waits to be notified that the receiving party is done with the data, or
   * the receiving party terminates the session
 
