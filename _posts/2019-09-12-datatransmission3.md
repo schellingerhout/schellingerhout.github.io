@@ -477,7 +477,7 @@ You may recall that I added methods `SendRecord` and `SendRecords` to my transmi
 The anonymous method passed by the consumer of the API serves as a way to populate the record
 
 {% highlight pascal %}
-  TXer.Send<TxLineRec>( 
+  TTXer.Send<TxLineRec>( 
     procedure(var ARec: TxLineRec) 
     begin
       ARec.p1.x := 0.5;
@@ -487,7 +487,7 @@ The anonymous method passed by the consumer of the API serves as a way to popula
     end
   );
   
-  Txer.Send<TxPolLineRec>(FPollines.Count, 
+  TTxer.Send<TxPolLineRec>(FPollines.Count, 
   Procedure(var ARec: TxPolLineRec; AIdx: integer)
   begin
     ARec.VertexCount := Length(FPollines[AIdx].Vertices);
