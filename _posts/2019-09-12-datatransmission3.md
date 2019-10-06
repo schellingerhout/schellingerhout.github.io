@@ -331,7 +331,7 @@ end;
 ### Preparing Data for Transmission ###
 Each of our datatypes will be ready to receive the relevant information to transmit, but the values that are needed for processing on the receiver side such as `size` and `rectype` will need to be populated for every record before we can fill it with the data that we want to transmit. 
 
-Delphi does not have a way to auto-initialize records. Only the smart pointer types: Strings and Interfaces are automatically initialized as null. [You could exploit the use of properties along with a string or interface field on the record to initialize it on demand](https://stackoverflow.com/questions/39392920/how-can-delphi-records-be-initialized-automatically), but that will not help us in the transmission of this record //put link to stackoverflow. We are passing an abstract type and there are no virtual calls on record structures. Even if these did exist, support would vary by programming language. Also, we really want our records to be a data map of memory and nothing more.
+Delphi does not have a way to auto-initialize records. Only the smart pointer types: Strings and Interfaces are automatically initialized as null. [You could exploit the use of properties along with a string or interface field on the record to initialize it on demand](https://stackoverflow.com/questions/39392920/how-can-delphi-records-be-initialized-automatically), but that will not help us in the transmission of this record. We are passing an abstract type and there are no virtual calls on record structures. Even if these did exist, support would vary by programming language. Also, we really want our records to be a data map of memory and nothing more.
 
 Delphi provides for a simple syntax to declare record constants, for instance:
 
