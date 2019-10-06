@@ -487,11 +487,11 @@ The anonymous method passed by the consumer of the API serves as a way to popula
     end
   );
   
-  TTxer.Send<TxPolLineRec>(FPollines.Count, 
-  Procedure(var ARec: TxPolLineRec; AIdx: integer)
+  TTxer.Send<TxPolyLineRec>(FPolylines.Count, 
+  Procedure(var ARec: TxPolyLineRec; AIdx: integer)
   begin
-    ARec.VertexCount := Length(FPollines[AIdx].Vertices);
-    ARec.Vertices := FPollines[AIdx].Vertices;  
+    ARec.VertexCount := Length(FPolylines[AIdx].Vertices);
+    ARec.Vertices := FPolylines[AIdx].Vertices;  
   end
   );
 {% endhighlight %}
