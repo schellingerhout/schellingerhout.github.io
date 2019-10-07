@@ -1,5 +1,5 @@
 ---
-title: "Data Transmission with Delphi (Part 3: Data at Sender and Receiver)"
+title: "Data Transmission with Delphi (Part 3: Transmitting and Interpreting Data) "
 excerpt_separator: "<!--more-->"
 categories:
   - Data Transmission
