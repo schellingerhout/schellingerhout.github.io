@@ -12,7 +12,7 @@ tags:
 In this blog post I will start to describe the process to develop a solution in Delphi using the Active Object Design Pattern. This pattern is a concurrency design pattern based in part on the Proxy pattern. 
 
 <!--more-->
-As far as I can determine it originated from "Pattern-Oriented Software Architecture, Volume 2: Patterns for Concurrent and Networked Objects" and you can view an updated paper on the subject here: [http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf](http://www.cs.wustl.edu/~schmidt/PDF/Act-Obj.pdf). I will refer to the paper from time to time and it may be good to first read it to grasp what it entails.
+As far as I can determine it originated from "Pattern-Oriented Software Architecture, Volume 2: Patterns for Concurrent and Networked Objects" and you can view an updated paper on the subject here: [http://www.dre.vanderbilt.edu/~schmidt/PDF/Act-Obj.pdf](http://www.dre.vanderbilt.edu/~schmidt/PDF/Act-Obj.pdf). I will refer to the paper from time to time and it may be good to first read it to grasp what it entails.
 
 The Active Object Pattern describes a system where the Client interacts with a Proxy that directs commands to a Servant Object. The Proxy presents the same or similar interface as the Servant to consumers. The Proxy uses a Scheduler (or Activation Queue) to queue method requests to the Servant and dispatches them in order*. Methods with return values are returned as Futures (also known as Promises). Demanding a Future Value blocks until the value is ready.
 
