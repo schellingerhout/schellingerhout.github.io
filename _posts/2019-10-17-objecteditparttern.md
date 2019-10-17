@@ -143,7 +143,7 @@ end;
 
 Decendent classes would look like this:
 
-{ % highlight pascal %}
+{% highlight pascal %}
 TDescendent = Class(TBase)
 begin
   Constructor Create; 
