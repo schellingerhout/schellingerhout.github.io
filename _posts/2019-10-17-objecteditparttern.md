@@ -6,7 +6,7 @@ categories:
 tags:
   - Delphi
 ---
-A success Object Oriented Design pattern for editing objects. This pattern allows free editing of objects, while allowing cancellation and preservation of the original object reference.
+A successful Object Oriented Design pattern for editing objects. This pattern allows free editing of objects, while allowing cancellation and preservation of the original object reference.
 <!--more-->
 
 I will guide you through my thought processes in developing a code pattern that I have used successfully in multiple implementations.
@@ -16,11 +16,11 @@ The goals of the object edit pattern is as follows:
 * Canceling an edit should leave the original object unchanged
 * Committing an edit should leave the original object's pointer or reference unchanged
 
-I will present this pattern using Delphi, but the concepts transcend a single programming language.
+I will present this pattern using Delphi, but the concepts transcend any single programming language.
 
 ## Risk-free Editing of Object ##
 
-This goal provides a challenge in that we may manipulate any number of properties at any number of levels. The implementation of an undo system may be complex. The use of a light weight editible object is brittle and requires constant maintenance. The simplest solution to this problem is to edit an identical independent copy of the original object. 
+This goal provesto be a challenge in that we may manipulate any number of properties at any number of levels. The implementation of an undo system may be complex. The use of a light weight editible object is brittle and requires constant maintenance. The simplest solution to this problem is to edit an identical independent copy of the original object. 
 
 To facilitate editing copies, each of my editable objects will need to have a copy constructor (here named `CreateCopy`):
 
@@ -99,6 +99,7 @@ Thus our complexity is shifted from our copy constructor and clone methods towar
 
 Here is an example of what our `Assign` method could look like on a complex object
 
+{ % highlight pascal %}
 procedure TMyComplexObject.Assign(ASource: TBase);
 var
  LSource: TMyComplexObject;
@@ -114,6 +115,7 @@ begin
     FWeakReference := LSource.FWeakReference;  
   end; 
 end;
+{% endhighlight %}
 
 Besides the rules of copy constructors, here re-appropriated for assignment there are a few best practices:
 * Assign fields instead of properties. We should be concerned with data preservation, properties may have side-effects
@@ -131,9 +133,9 @@ end;
 
 ...
 
-procedure TBase.Assign(PD: TPersistent);
+procedure TBase.Assign(ASource: TPersistent);
 begin
-  if not (PD is TBase) then
+  if not (ASource is TBase) then
     inherited; // will raise an exception 
 end;
 
@@ -141,6 +143,7 @@ end;
 
 Decendent classes would look like this:
 
+{ % highlight pascal %}
 TDescendent = Class(TBase)
 begin
   Constructor Create; 
@@ -150,7 +153,7 @@ begin
   procedure Assign(ASource: TPersistent);  overide;
   function Clone: TBase; virtual; abstract;  
 end;
-
+{% endhighlight %}
 
 ## Our Editor ##
 
@@ -177,16 +180,17 @@ begin
   LEdited := TABC.CreateCopy(ASubject);
   try
     LABCEditDialog.ABC := LEdited;
-  result := LABCEditDialog.ShowModal;
+    result := LABCEditDialog.ShowModal;
   
-  if result = mrOK then
-    ASubject.Assign(LEdited);
+    if result = mrOK then
+      ASubject.Assign(LEdited);
   
   finally
     LEdited.Free;
-  LABCEditDialog.Free;
+    LABCEditDialog.Free;
   end;
 end;
+
 {% endhighlight %}
 
 Our edit dialog can manipulate the object at will, knowing that if we hit cancel no edits are preserved, and if we commit our changes we will assign them to the original object.
@@ -194,4 +198,3 @@ Our edit dialog can manipulate the object at will, knowing that if we hit cancel
 ## Conclusion ##
 
 I hope you find the code pattern useful. If you do please be so kind to link to this article
-
