@@ -187,7 +187,7 @@ begin
   LABCEditDialog.Free;
   end;
 end;
-{% highlight pascal %}
+{% endhighlight %}
 
 Our edit dialog can manipulate the object at will, knowing that if we hit cancel no edits are preserved, and if we commit our changes we will assign them to the original object.
 
