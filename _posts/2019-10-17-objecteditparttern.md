@@ -107,11 +107,11 @@ begin
   inherited;
   if ASource is TMyComplexObject then
   begin
-  LSource := TMyComplexObject(ASource);
-  FField1 := LSource.FField1;
-  FComposedObject.Assign(LSource.FComposedObject);
+    LSource := TMyComplexObject(ASource);
+    FField1 := LSource.FField1;
+    FComposedObject.Assign(LSource.FComposedObject);
     FComposedList.Assign(LSource.FComposedList);
-  TListHelper.Assign(FNonAssignableList, LSource.FNonAssignableList); 
+    TListHelper.Assign(FNonAssignableList, LSource.FNonAssignableList); 
     FWeakReference := LSource.FWeakReference;  
   end; 
 end;
