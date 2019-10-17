@@ -99,7 +99,7 @@ Thus our complexity is shifted from our copy constructor and clone methods towar
 
 Here is an example of what our `Assign` method could look like on a complex object
 
-{ % highlight pascal %}
+{% highlight pascal %}
 procedure TMyComplexObject.Assign(ASource: TBase);
 var
  LSource: TMyComplexObject;
