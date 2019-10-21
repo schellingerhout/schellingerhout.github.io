@@ -11,6 +11,7 @@ tags:
   - Records
   - Structs
   - Pointer Math
+  - Pointer Arithmetic
   - Arrays  
 ---
 
