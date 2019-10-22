@@ -53,9 +53,9 @@ end;
 This goal is already accomplished with our editing of a copied object, provided that we implement our copy constructor according to the following rules:
 
 * Composed objects are duplicated with a copy constructor. 
-* References types are assigned directly. This includes
+* Weak references to values of reference types are assigned directly. This includes
   * object and pointer types
-  * reference counted types strings, dynamic arrays, interfaces
+  * reference counted types: strings, dynamic arrays, interfaces
 
 This new requirement means that all composed objects also need a copy constructor. Composed lists can have their elements duplicated with the use of the `Clone` virtual method, instead of checking each class and calling each specific copy constructor by type. The only problem situation is composed interfaced types that are edited along with the object. This odd scenario would require special handling, I consider this an exceptional case and is not addressed by this pattern. 
 
