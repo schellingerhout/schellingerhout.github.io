@@ -10,7 +10,8 @@ tags:
   - DLL
   - Records
   - Structs
-
+sidebar:
+  nav: data_transmission
 ---
 
 In this blog post I will start to describe the data structures and the use of pointers in communicating cross-platform via DLLs. 
