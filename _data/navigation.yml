@@ -12,7 +12,9 @@ main:
   #   url: /sitemap/
 data_transmission:
  - title: "Data Transmission with Delphi"
-    children:     - title: "Part 1: Pointers and Structures"url: /data%20transmission/datatransmission1/
+   children:     
+      - title: "Part 1: Pointers and Structures"
+        url: /data%20transmission/datatransmission1/
       - title: "Part 2: Arrays and Pointer Math"
         url: /data%20transmission/datatransmission2/
       - title: "Part 3: Transmitting and Interpreting Data"
