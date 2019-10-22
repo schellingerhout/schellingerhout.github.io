@@ -28,3 +28,5 @@ activeobject:
       url: /design%20patterns/activeobject-pattern2/
     - title: "Part 3: Futures"
       url: /design%20patterns/activeobject-pattern3/
+    - title: "Part 4: The Servant and the Proxy"  
+      url: /design%20patterns/activeobject-pattern4/
