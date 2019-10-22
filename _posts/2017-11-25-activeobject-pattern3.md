@@ -7,6 +7,9 @@ tags:
   - Delphi  
   - Concurrency
   - Active Object
+
+sidebar:
+  nav: activeobject  
 ---
 
 In this blog post I will continue to describe the process to develop a solution in Delphi using the Active Object Design Pattern. Specifically, we will see how Future Values are delivered
