@@ -12,6 +12,8 @@ tags:
   - Structs
   - Pointer Math
   - Arrays  
+sidebar:
+  nav: data_transmission  
 ---
 
 In this blog post I will continue with arrays in communicating cross-platform via DLLs. 
