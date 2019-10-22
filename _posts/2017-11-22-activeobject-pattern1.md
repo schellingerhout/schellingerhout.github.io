@@ -7,8 +7,8 @@ tags:
   - Delphi  
   - Concurrency
   - Active Object
-nav:
-  activeobject
+sidebar:
+  nav: activeobject
 ---
 
 In this blog post I will start to describe the process to develop a solution in Delphi using the Active Object Design Pattern. This pattern is a concurrency design pattern based in part on the Proxy pattern. 
