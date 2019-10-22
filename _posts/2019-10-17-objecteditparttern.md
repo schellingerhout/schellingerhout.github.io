@@ -20,7 +20,7 @@ I will present this pattern using Delphi, but the concepts transcend any single 
 
 ## Risk-free Editing of Object ##
 
-This goal provesto be a challenge in that we may manipulate any number of properties at any number of levels. The implementation of an undo system may be complex. The use of a light weight editible object is brittle and requires constant maintenance. The simplest solution to this problem is to edit an identical independent copy of the original object. 
+This goal proves to be a challenge in that we may manipulate any number of properties at any number of levels. The implementation of an undo system may be complex. The use of a light weight editible object is brittle and requires constant maintenance. The simplest solution to this problem is to edit an identical independent copy of the original object. 
 
 To facilitate editing copies, each of my editable objects will need to have a copy constructor (here named `CreateCopy`):
 
