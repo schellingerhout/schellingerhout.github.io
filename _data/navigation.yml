@@ -19,14 +19,15 @@ data_transmission:
         url: /data%20transmission/datatransmission2/
       - title: "Part 3: Transmitting and Interpreting Data"
         url: /data%20transmission/datatransmission3/
+        
 activeobject:
   - title: "Active Object Pattern in Delphi"
-  children:
-    - title: "Part 1: Method Requests"
-      url: /design%20patterns/activeobject-pattern1/
-    - title: "Part 2: The Scheduler"
-      url: /design%20patterns/activeobject-pattern2/
-    - title: "Part 3: Futures"
-      url: /design%20patterns/activeobject-pattern3/
-    - title: "Part 4: The Servant and the Proxy"  
-      url: /design%20patterns/activeobject-pattern4/
+    children:
+     - title: "Part 1: Method Requests"
+       url: /design%20patterns/activeobject-pattern1/
+     - title: "Part 2: The Scheduler"
+       url: /design%20patterns/activeobject-pattern2/
+     - title: "Part 3: Futures"
+       url: /design%20patterns/activeobject-pattern3/
+     - title: "Part 4: The Servant and the Proxy"  
+       url: /design%20patterns/activeobject-pattern4/
