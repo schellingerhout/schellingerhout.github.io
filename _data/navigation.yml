@@ -36,10 +36,10 @@ activeobject:
     children:
       - title: "Gang of Four Creational Patterns in Delphi"
         url: /design%20patterns/design-patterns-creational-delphi/
-       - title: "A Successful Object Edit Pattern"
-         url: /design%20patterns/objecteditparttern/
-       - title: "Fundamental Object Oriented Design Pinciples"
-         url: /design%20patterns/OODesign1/
+      - title: "A Successful Object Edit Pattern"
+        url: /design%20patterns/objecteditparttern/
+      - title: "Fundamental Object Oriented Design Pinciples"
+        url: /design%20patterns/OODesign1/
        
 creationalpatterns:
   - title: "You may also be interested in"
