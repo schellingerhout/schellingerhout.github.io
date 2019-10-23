@@ -6,6 +6,9 @@ categories:
 tags:
   - Delphi
   - Design Patterns
+  
+sidebar:
+  nav: creationalpatterns    
 ---
 Delphi versions of the Maze code samples of Creational Design Patterns in "Design Patterns: Elements of Reusable Object-Oriented Software". 
 
