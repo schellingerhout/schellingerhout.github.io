@@ -5,6 +5,10 @@ categories:
   - Design Patterns
 tags:
   - Delphi
+ 
+sidebar:
+  nav: objecteditpattern  
+  
 ---
 A successful Object Oriented Design pattern for editing objects. This pattern allows free editing of objects, while allowing cancellation and preservation of the original object reference.
 <!--more-->
