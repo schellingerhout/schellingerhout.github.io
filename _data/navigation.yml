@@ -31,6 +31,7 @@ activeobject:
        url: /design%20patterns/activeobject-pattern3/
      - title: "Part 4: The Servant and the Proxy"  
        url: /design%20patterns/activeobject-pattern4/
+       
   - title: "You may also be interested in"
      children:
      - title: "Gang of Four Creational Patterns in Delphi"
@@ -59,6 +60,7 @@ activeobject:
          url: /design%20patterns/OODesign2/
        - title: Polymorphism 
          url: /design%20patterns/OODesign3/
+         
     - title: "You may also be interested in"
       children:
        - title: "Gang of Four Creational Patterns in Delphi"
