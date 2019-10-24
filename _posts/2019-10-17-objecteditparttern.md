@@ -10,7 +10,7 @@ sidebar:
   nav: objecteditpattern  
   
 ---
-A successful Object Oriented Design pattern for editing objects. This pattern allows free editing of objects, while allowing cancellation and preservation of the original object reference.
+A successful Object-Oriented Design Pattern for editing objects. This pattern allows free editing of objects, while allowing cancellation and preservation of the original object reference.
 <!--more-->
 
 I will guide you through my thought processes in developing a code pattern that I have used successfully in multiple implementations.
@@ -24,7 +24,7 @@ I will present this pattern using Delphi, but the concepts transcend any single 
 
 ## Risk-free Editing of Object ##
 
-This goal proves to be a challenge in that we may manipulate any number of properties at any number of levels. The implementation of an undo system may be complex. The use of a light weight editible object is brittle and requires constant maintenance. The simplest solution to this problem is to edit an identical independent copy of the original object. 
+This goal proves to be a challenge in that we may manipulate any number of properties at any number of levels. The implementation of an undo system may be complex. The use of a light weight editable object is brittle and requires constant maintenance. The simplest solution to this problem is to edit an identical independent copy of the original object. 
 
 To facilitate editing copies, each of my editable objects will need to have a copy constructor (here named `CreateCopy`):
 
@@ -63,7 +63,7 @@ This goal is already accomplished with our editing of a copied object, provided 
 
 This new requirement means that all composed objects also need a copy constructor. Composed lists can have their elements duplicated with the use of the `Clone` virtual method, instead of checking each class and calling each specific copy constructor by type. The only problem situation is composed interfaced types that are edited along with the object. This odd scenario would require special handling, I consider this an exceptional case and is not addressed by this pattern. 
 
-## Comitting Edits Leaves the Original Object Pointer Unchanged ##
+## Committing Edits Leaves the Original Object Pointer Unchanged ##
   
 The safety provided by editing the copied object also introduces a problem. We have a new object, with a new reference. All references to the original object will need to be updated. This can be resolved by "assigning" the edited copy to the original object. An assignment method that takes an object and assign its fields, references and composed objects according to similar rules to our copy constructor will serve this purpose. We can even use a properly defined assignment method in our copy constructor to prevent duplication of code. Our copy constructor would then simply look like this.
 
@@ -85,13 +85,13 @@ TBase = Class
 end;
 {% endhighlight %}
 
-And descendents like this
+And descendants like this
 
 {% highlight pascal %}
-TDescendent = Class(TBase)
+TDescendant = Class(TBase)
 begin
   Constructor Create; 
-  Constructor CreateCopy(ASource: TDescendent);
+  Constructor CreateCopy(ASource: TDescendant);
   Destructor Destroy; override;
 
   procedure Assign(ASource: TBase); overide;
@@ -99,7 +99,7 @@ begin
 end;
 {% endhighlight %}
 
-Thus our complexity is shifted from our copy constructor and clone methods towards our implementation of an assignment method.
+Thus, our complexity is shifted from our copy constructor and clone methods towards our implementation of an assignment method.
 
 Here is an example of what our `Assign` method could look like on a complex object
 
@@ -148,10 +148,10 @@ end;
 Decendent classes would look like this:
 
 {% highlight pascal %}
-TDescendent = Class(TBase)
+TDescendant = Class(TBase)
 begin
   Constructor Create; 
-  Constructor CreateCopy(ASource: TDescendent);
+  Constructor CreateCopy(ASource: TDescendant);
   Destructor Destroy; override;
 
   procedure Assign(ASource: TPersistent);  overide;
@@ -197,8 +197,8 @@ end;
 
 {% endhighlight %}
 
-Our edit dialog can manipulate the object at will, knowing that if we hit cancel no edits are preserved, and if we commit our changes we will assign them to the original object.
+Our edit dialog can manipulate the object at will, knowing that if we hit cancel no edits are preserved, and if we commit our changes, we will assign them to the original object.
 
 ## Conclusion ##
 
-I hope you find the code pattern useful. If you do please be so kind to link to this article
+I hope you find the code pattern useful. If you do, please be so kind to link to this article
