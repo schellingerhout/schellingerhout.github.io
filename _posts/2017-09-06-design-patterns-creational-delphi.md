@@ -63,7 +63,7 @@ end.
 
 ## Builder
 
-The builder pattern is similar except that the consumer only sees the highest level of abstraction. Intermediate products are identified in parameters via some kind of index or other key identifier.
+The builder pattern is similar except that the consumer only sees the highest level of abstraction. Intermediate products are identified in parameters via an index or other key identifier.
 
 {% highlight pascal %}
 
@@ -85,7 +85,7 @@ end;
 //   LMaze := MazeGame.CreateMaze(ABuilder);
 //The game in turn can create the maze in an abstract way. 
 //Difference here between the builder and the factory is that the 
-// Consumer does not need to know constituant parts
+// Consumer does not need to know constituent parts
  
 implementation
 
@@ -96,7 +96,7 @@ Notice that the builder offers a higher level of abstraction
 
 ## Factory Method
 
-In short its a method that creates a product, the method must be overriden by decendents to extend the base (or sometimes fail-over) product range.
+In short, it's a method that creates a product, the method must be overridden by descendants to extend the base (or sometimes fail-over) product range.
 
 {% highlight pascal %}
 unit IntfFactoryMethod;
@@ -115,11 +115,11 @@ public
   function CreateProduct(AProductID: integer): IProduct; virtual;  
 end;
 
-//The function that creates the products is virtual and can be overridden
-// The abstract creator may have an implementation or we may also have
+// The function that creates the products is virtual and can be overridden
+// The abstract creator may have an implementation, or we may also have
 // a base product creator defined. The design pattern really only centers 
-// around the method. It must be virtual, Descendents implement and fall throug
-//  is handled via inheritence
+// around the method. It must be virtual, Descendants implement and fall through
+// is handled via inheritence
 
 implementation
 
@@ -128,11 +128,11 @@ uses
 
 Type
 
-TBaseProductA = class(TInterfacedObnject, IProduct)
+TBaseProductA = Class(TInterfacedObject, IProduct)
  // definition not important for illustration
 end;
 
-TBaseProductB = class(TInterfacedObnject, IProduct)
+TBaseProductB = Class(TInterfacedOnject, IProduct)
  // definition not important for illustration
 end;
 
@@ -153,7 +153,7 @@ end;
 end.
 {% endhighlight %}
 
-We can add a concrete implementation. We can add any number underneath the abstract creator. Products at the abstract creator level are always available while. Concrete factories will add any number of new products in potentially independent hierarchies. This may pose some risk in requestion products the class cannot create. It also opens up the potential of re-implementation or hiding of base products.
+We can add a concrete implementation. We can add any number underneath the abstract creator. Products at the abstract creator level are always available while. Concrete factories will add any number of new products in potentially independent hierarchies. This may pose some risk in requesting products the class cannot create. It also opens the potential of re-implementation or hiding of base products.
 
 {% highlight pascal %}
 unit ConcreateFactoryMethod;
@@ -178,11 +178,11 @@ uses
 
 Type
 
-TAdvancedProductX = class(TInterfacedObnject, IProduct)
+TAdvancedProductX = Class(TInterfacedObnject, IProduct)
  // definition not important for illustration
 end;
 
-TAdvancedProductY = class(TProductA)
+TAdvancedProductY = Class(TProductA)
  // definition not important for illustration
 end;
 
