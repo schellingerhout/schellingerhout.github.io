@@ -1,5 +1,5 @@
 ---
-title: "Web Frontend Boot Camp Day 1 - Lesson 1: HTML"
+title: "Web Frontend Boot Camp. Day 1 - Lesson 1: HTML"
 excerpt_separator: "<!--more-->"
 categories:
   - Web Frontend
