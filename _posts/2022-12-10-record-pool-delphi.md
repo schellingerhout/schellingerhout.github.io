@@ -10,9 +10,10 @@ tags:
   - Memory
 ---
 
-The design of a memory pool in Delphi that holds records (structures). This pool can grow, while never moving records in memory (this is also called pointer stability). 
+The design of a memory pool in Delphi that holds records. Its purpose is to speed up dynamic memory allocation of a large number of the same record type.
 
 <!--more-->
+This pool can grow, while never moving records in memory (this is also called pointer stability).
 
 ## Motivation 
 
@@ -76,12 +77,14 @@ Resizing the array to add an element moves the contiguous block of memory to a n
 | 2008    | Pointer1        | 200   |
 | 2016    | Pointer2        | 0     |
  
+Note that while our entire array and its values are now at different locations, they still hold the samve values. This means that our `Pointer0` and `Pointer1` is left unchanged.
 
 ## Putting it all together 
 
 Dynamic arrays are pointer types. While we can't resize the arrays that hold our records, we can safely resize an array that holds a dynamic array of records. We already concluded that we can’t resize these dynamic arrays of records, but we can add new ones. 
 
-I will also use the term “row” to refer to the dynamic arrays that hold our records. Our pool can be defined as a generic type TPool<T> and the array that holds the arrays of our type is declared as TArray<TArray<T>>   
+I use the term “row” to refer to the dynamic arrays that hold our records. Our pool can be defined as a generic type `TPool<T>` and the array that holds the arrays of our type is declared as `TArray<TArray<T>>`  
+
 
 ``` pascal
 TPool<T> = Record 
@@ -92,7 +95,7 @@ private
 End; 
 ```
 
-To access a pointer from the Pool we’ll add a method named New that returns a pointer. This aids in consumers understanding that it is similar in behavior to the loose function New. 
+To access a pointer from the Pool we’ll add a method named `New` that returns a pointer. This aids in consumers understanding that it is similar in behavior to the loose function `New`. 
 
 ``` pascal
 TPool<T> = Record 
