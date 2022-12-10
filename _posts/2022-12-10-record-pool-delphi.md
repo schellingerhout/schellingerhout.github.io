@@ -72,7 +72,7 @@ Resizing the array to add an element moves the contiguous block of memory to a n
 | Address | Item            | Value |
 | ------: | ----            | ----: |
 | 1988    | Reference Count | 1     |
-| 1992    | Length          | 2     |
+| 1992    | Length          | 3     |
 | 2000    | Pointer0        | 100   | 
 | 2008    | Pointer1        | 200   |
 | 2016    | Pointer2        | 0     |
@@ -91,7 +91,6 @@ TPool<T> = Record
 private 
   Rows: TArray<TArray<T>>; 
 ... 
-
 End; 
 ```
 
