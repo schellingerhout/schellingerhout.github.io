@@ -24,7 +24,7 @@ Many computational geometry algorithms depend on linked lists or doubly linked l
 
 ## Dynamic Arrays Revisited 
 
-Before we continue designing our record pool, first just a recap of how dynamic arrays work. For more detail on how dynamic arrays work, please reference my [prior post on data transmission.]({{ site.baseurl }}{% post_url 2019-02-14-datatransmission2 %}
+Before we continue designing our record pool, first just a recap of how dynamic arrays work. For more detail on how dynamic arrays work, please reference my [prior post on data transmission.]({{ site.baseurl }}{% post_url 2019-02-14-datatransmission2 %})
 
 Dynamic arrays are smart pointers to the element type declared in their definition. For instance, `TArray<TMyRecord>` is also a record pointer of type `PMyRecord=^TMyRecord`. The difference is that the dynamic array also stores the reference count and the number of elements right before the very first element in the array. This means our memory looks like this: 
 
