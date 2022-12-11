@@ -81,7 +81,7 @@ Note that while our entire array and its values are now at different locations, 
 
 ## Putting it all together 
 
-Dynamic arrays are pointer types. While we can't resize the arrays that hold our records, we can safely resize an array that holds a dynamic array of records. We already concluded that we can’t resize these dynamic arrays of records, but we can add new ones. 
+Dynamic arrays are pointer types. While we can't resize the arrays that hold our records, we can safely resize an array that holds the dynamic arrays of records. We already concluded that we can’t resize these dynamic arrays of records, but we can add new ones. 
 
 I use the term “row” to refer to the dynamic arrays that hold our records. Our pool can be defined as a generic type `TPool<T>` and the array that holds the arrays of our type is declared as `TArray<TArray<T>>`  
 
