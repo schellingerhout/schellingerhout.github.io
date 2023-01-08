@@ -2,7 +2,7 @@
 title: "An Array Builder for Delphi"
 excerpt_separator: "<!--more-->"
 categories:
-  - Memory Management
+  - Utilities
 tags:
   - Delphi  
   - Arrays
