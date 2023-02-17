@@ -1,5 +1,5 @@
 ---
-title: "Introducing the New Bing Chat AI: Conversational AI for Everyone"
+title: "Introducing the New Bing Chat AI: Conversational AI for Everyone (by ChatGPT)"
 excerpt_separator: "<!--more-->"
 categories:
   -Artificial Intelligence
@@ -17,8 +17,10 @@ tags:
 Bing has recently released a new Chat AI that promises to revolutionize the way we interact with machines. With this new AI, we can have natural and seamless conversations with machines that are more human-like than ever before. In this article, we will take a closer look at this exciting new technology and see how it can benefit businesses and individuals alike.
 
 <!--more-->
-Note: This article was written by ChatGPT{: .notice}
 
+*Note:* This article was completely written by ChatGPT. I will write about my own experience in the next post 
+{: .notice}
+  
 ## What is the Bing Chat AI?
 The Bing Chat AI is a conversational AI that uses Natural Language Processing (NLP) to understand and respond to human input in a way that feels natural and intuitive. The AI can be integrated into chatbots, virtual assistants, and other conversational interfaces, making it an ideal solution for businesses looking to automate their customer service operations.
 
