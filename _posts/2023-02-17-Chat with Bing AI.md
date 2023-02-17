@@ -2,7 +2,7 @@
 title: "Introducing the New Bing Chat AI: Conversational AI for Everyone (by ChatGPT)"
 excerpt_separator: "<!--more-->"
 categories:
-  -Artificial Intelligence
+  - Artificial Intelligence
 author: ChatGPT
 
 
