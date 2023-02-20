@@ -18,7 +18,7 @@ Bing has recently released a new Chat AI that promises to revolutionize the way 
 
 <!--more-->
 
-*Note:* This article was completely written by ChatGPT. I will write about my own experience in the next post 
+*Note:* This article was completely written by ChatGPT and contains many factual errors. ChatGPT will generate responses that seem believable, but are factually incorrect. This is a limitation to how GPT models are trained. I will write about my own experience in the next post 
 {: .notice}
   
 ## What is the Bing Chat AI?
