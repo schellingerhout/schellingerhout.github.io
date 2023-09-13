@@ -93,7 +93,7 @@ begin
 end;
 {% endhighlight %}  
 
-However, the nastiness was factored out and hidden in `TxRec.Default<T>`, which had to figure out type information for type T and then return a default for it. Since generics are generated for each type the code was duplicated for each `class function TxRec.Default<T>: T;` code was generated for each type that filled `T`. 
+However, the nastiness was factored out and hidden in `TxRec.Default<T>`, which had to figure out type information for type T and then return a default for it. Since generics are generated for each type the code was duplicated for each type that filled `T` for `class function TxRec.Default<T>: T;`. 
 
 {% highlight pascal %}
 class function TxRec.Default<T>: T;
