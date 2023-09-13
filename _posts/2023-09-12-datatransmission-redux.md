@@ -158,8 +158,8 @@ End;
 class operator TxLineRec.Initialize(out Dest: TxLineRec);
 begin
   Dest.Size := SizeOf(TxLineRec);
-  Dest.RecType :=TxRectType_Line;
-  // p1 and p2 are not initialzed
+  Dest.RecType := TxRectType_Line;
+  // p1 and p2 are not initialized
 end;
 
 {% endhighlight %}
@@ -197,12 +197,12 @@ When we call SetLength and new records are allocated for the array there is one 
 
 I don't know what other overheads are associated with managed records. They seem to be more analogous to C++ classes and structs that exist on the stack instead of dynamically allocated on the free store (like all Delphi objects). Testing would be needed to see if there is any extra processing. In my basic testing I did not notice any differences.
 
-Managed records allow us to have stack managed types that can box types that are dynamically allocated on the free store (colloquially called the heap). Dyanmically allocated types can be constructed in initialize and disposed in finalize without developers needing to call constructors and box code in try-finally blocks. These types are scope managed.
+Managed records allow us to have stack managed types that can box types that are dynamically allocated on the free store (colloquially called the heap). Dynamically allocated types can be constructed in `Initialize` and disposed in `Finalize` without developers needing to call constructors and box code in try-finally blocks. These types are scope managed.
 
 ## Other Improvements to the Transmitter Class  ##
 I realized in rewriting some of the code that signaling that does not require any configuration, or records that can be transmitted once configured based on their own `Initialize` code. So there are now three overloads for `Send<T>`.
 
-I also realized the need for end-users to control records themselves without a configuration callback and to facilicate that I added two overloads for `SendRecords`
+I also considered the need for end-users to control records themselves without a configuration callbacks, and to facilicate that, I added two overloads for `SendRecords`
 
 {% highlight pascal %}
 TTxer = class
