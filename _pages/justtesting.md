@@ -129,8 +129,8 @@ end;
 In our case we don't box any types that need to be disposed so we don't need `Finalize`, but we can use `Initialize` per each of our records to have them load their size and enumerated type.
 
 For instance, our line record can be changed to look like this:
-{% highlight pascal %}
 
+``` pascal
 TxLineRec = Record
   // Common header
   Size: Cardinal; // UInt32
