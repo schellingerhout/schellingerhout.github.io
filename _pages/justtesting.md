@@ -1,26 +1,12 @@
 ---
-title: "Data Transmission with Delphi Redux"
-excerpt_separator: "<!--more-->"
-categories:
-  - Data Transmission
-tags:
-  - Delphi  
-  - Data Transmission
-  - Cross-Language
-  - DLL
-  - Records
-  - Structs
-  - Pointer Math
-  - Arrays  
-sidebar:
-  nav: data_transmission
+title: "Just testing"
+excerpt: Nothing to see here, except a test page"
 sitemap: false
 permalink: /justtesting.html
 ---
 
 In this blog post I will revisit my series from four years ago and update it with more current technology
 
-<!--more-->
 Revisiting the series that deal with the transfer of raw data at high speed with direct access using pointers to structures that can be supported by most programming platforms. 
 
 ## Why am I revisiting a four year old post? ##
