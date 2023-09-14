@@ -1,401 +1,226 @@
 ---
-title: "Jusst a test page"
-excerpt: "Jasper is just testing how Github renders the markdown"
+title: "Data Transmission with Delphi Redux"
+excerpt_separator: "<!--more-->"
+categories:
+  - Data Transmission
+tags:
+  - Delphi  
+  - Data Transmission
+  - Cross-Language
+  - DLL
+  - Records
+  - Structs
+  - Pointer Math
+  - Arrays  
+sidebar:
+  nav: data_transmission
 sitemap: false
 permalink: /justtesting.html
 ---
 
-Nothing to see here
+In this blog post I will revisit my series from four years ago and update it with more current technology
+
+<!--more-->
+Revisiting the series that deal with the transfer of raw data at high speed with direct access using pointers to structures that can be supported by most programming platforms. 
+
+## Why am I revisiting a four year old post? ##
+I was never happy with the solution to get default values based on the generic type and new functionality in Delphi has allowed me to clean up some of the code I wrote for [Part 3]({{ site.baseurl }}{% post_url 2019-09-12-datatransmission3 %}) of my series on data transmission. 
+
+I want to share what I found, how it can clean up the code from the prior article and potential for other uses in your own projects.
+
+### In case you missed it ###
+I finished my original series of three articles exactly four years ago to the date. If you missed it here are some links to the original posts.
+* [Part 1: Pointers and Structures]({{ site.baseurl }}{% post_url 2019-02-11-datatransmission1 %})
+* [Part 2: Arrays and Pointer Arithmetic]({{ site.baseurl }}{% post_url 2019-02-14-datatransmission2 %})
+* [Part 3: Transmitting and Interpreting Data]({{ site.baseurl }}{% post_url 2019-09-12-datatransmission3 %})
+
+Here is the gist for those that don't want to read that much:
+If two parties share a pointer and some common understanding of the structure of the memory at that location, then we can have very fast communication. Since arrays are contiguous blocks of memory we can rapidly advance through memory and read structures provided that we know the size of each of the structures, their composition and the number of structures we need to read.
+
+The end result was a library example using closures to configure records for transmission. In my example I created a transmitter `TTxer` that can send any of a number of geometry entity records defined using generics.
+
 
 ``` pascal
-unit RecordList;
+//Transmit records one by one
+ TTXer.Send<TxLineRec>( 
+    procedure(var R: TxLineRec) 
+    begin
+      R.p1.x := 0.5;
+      R.p1.y := 0.25;
+      R.p2.x := 1.0;
+      R.p2.y := 2.0;
+    end
+  );
+  
+ // Transmit records as an array (pointer and count)
+  TTxer.Send<TxPolyLineRec>(FPolylines.Count, 
+    Procedure(var R: TxPolyLineRec; i: integer)
+    begin
+      R.VertexCount := Length(FPolylines[i].Vertices);
+      R.Vertices := FPolylines[i].Vertices;  
+    end
+  );
+```  
 
-interface
+## Getting defaults from generics types are messy ##
+In order to transmit my data I had to initialize each of my records before passing them to the anonymous callback closure. Below is the code to send individual and arrays of records. It is rather elegant:
 
-uses
-  System.Generics.Defaults;
-
-Type
-
-
-  TRecordList<T> = Record
-  public
-    Type
-      RecordPointer = ^T;
-
-
-    Type
-      TEnumerator = class
-      private
-        FIndex: integer;
-        FCount: integer;
-        FList: TArray<T>;   //dynamic arrays are ref counted
-      public
-        constructor Create(count: integer; const List: TArray<T>);
-        function GetCurrent: RecordPointer; inline;
-        function MoveNext: Boolean; inline;
-        property Current: RecordPointer read GetCurrent;
-      end;
-
-
-  private
-    FCount: integer;
-    FList: TArray<T>;
-    FEqualityComparer: IEqualityComparer<T>;
-
-    procedure Expand;
-    function Get(Index: Integer): RecordPointer;
-    procedure SetCount(const Value: integer);
-    function GetEqualityComparer: IEqualityComparer<T>;
-    function GetCapacity: integer;
-    procedure SetCapacity(const Value: integer);
-
-
-
-  public
-    constructor Create(InitialCapacity: integer);
-
-    function Add: RecordPointer; overload;
-    procedure Add(const Element: T); overload;  // copy record
-    procedure Add(const Elements: TArray<T>); overload;   // copy records
-
-    function Insert(Index: integer): RecordPointer; overload;
-    procedure Insert(Index: integer; const Element: T); overload;  // copy record
-
-    procedure SetStartIndex(Index: integer);
-    procedure Rotate(StartIndex, EndIndex: integer);
-
-    procedure AddDistinct(const Element: T);  // copy record if not present
-
-    procedure TakeOwnership(var Elements: TArray<T>);
-
-    procedure MoveDataTo(var RecordList: TRecordList<T>);
-    procedure MoveDataFrom(var RecordList: TRecordList<T>);
-
-    function GetCopy:  TRecordList<T>;
-    function GetCopyWithBuffer(MaxBuffer: integer): TRecordList<T>;
-
-    function GetArray: TArray<T>;
-    function GetCopyOfArray: TArray<T>;
-
-    function First: RecordPointer;
-    function Last: RecordPointer;
-
-    procedure Sort(const Comparer: IComparer<T>);
-
-    procedure Pack;
-    procedure PackWithBuffer(MaxBuffer: integer);
-    procedure Clear;
-
-    procedure Exchange(Index1, Index2: integer);
-    function GetEnumerator:  TEnumerator;
-    procedure Remove(Index: integer);
-
-    property Items[Index: Integer]: RecordPointer read Get; default;  // readonly!
-    property Count: integer read FCount write SetCount;
-    property EqualityComparer: IEqualityComparer<T> read GetEqualityComparer write FEqualityComparer;
-    property Capacity: integer read GetCapacity write SetCapacity;
-  End;
-
-
-
-implementation
-
-uses
-  System.Generics.Collections;
-
-{ TRecordList<T> }
-procedure TRecordList<T>.Exchange(Index1, Index2: integer);
-var
-  Temp: T;
+``` pascal
+class procedure TTxer.Send<T>(AConfigureProc: TSendConfigProc<T>);
+Var
+  L: T;
 begin
-  Temp := FList[Index1];
-  FList[Index1] := FList[Index2];
-  FList[Index2] := Temp;
+  L := TxRec.Default<T>;
+  AConfigureProc(L);
+  SendRecord(@L);
 end;
 
-procedure  TRecordList<T>.Expand;
-var
-  Size: integer;
-begin
-  Size := Length(FList);
-  repeat
-    if Size > 64 then
-      Size := (Size * 3) div 2
-    else if Size > 8 then
-      Size := Size + 16
-    else
-      Size := Size + 4;
-  until Size > FCount;
-
-  SetLength(FList, Size);
-end;
-
-
-function TRecordList<T>.First: RecordPointer;
-begin
-  result := @FList[0];
-end;
-
-function TRecordList<T>.Get(Index: Integer): RecordPointer;
-begin
-  result := @FList[Index];
-end;
-
-function TRecordList<T>.GetArray: TArray<T>;
-begin
-  if FCount <> Length(FList) then
-    Pack;
-
-  result := FList;
-end;
-
-function TRecordList<T>.GetCapacity: integer;
-begin
-  result := Length(FList);
-end;
-
-function TRecordList<T>.GetCopy: TRecordList<T>;
-begin
-  result.FList := Copy(FList, 0, FCount);
-  result.FCount := FCount;
-end;
-
-function TRecordList<T>.GetCopyWithBuffer(MaxBuffer: Integer): TRecordList<T>;
-var
-  AvailableBuffer: integer;
-begin
-  AvailableBuffer := Length(FList) - FCount;
-  if AvailableBuffer < MaxBuffer then
-    MaxBuffer := AvailableBuffer;
-
-  result.FList := Copy(FList, 0, FCount + MaxBuffer);
-  result.FCount := FCount;
-end;
-
-
-function TRecordList<T>.GetCopyOfArray: TArray<T>;
-begin
-  result := Copy(FList);
-end;
-
-function TRecordList<T>.GetEnumerator: TEnumerator;
-begin
-  result := TEnumerator.Create(FCount, FList);
-end;
-
-function TRecordList<T>.GetEqualityComparer: IEqualityComparer<T>;
-begin
-  if FEqualityComparer = nil then
-     FEqualityComparer := TEqualityComparer<T>.Default;
-
-  result :=  FEqualityComparer;
-end;
-
-function TRecordList<T>.Insert(Index: integer): RecordPointer;
-begin
-  if index >= FCount then
-    Exit(Add());
-
-  if FCount = Length(FList) then
-    Expand;
-
-  if Index < FCount then
-    System.Move(FList[Index], FList[Index + 1], (FCount - Index) * SizeOf(T));
-
-  Inc(FCount);
-
-  result :=  @FList[Index];
-end;
-
-procedure TRecordList<T>.Insert(Index: integer; const Element: T);
-begin
-  Insert(Index)^ := Element;
-end;
-
-function TRecordList<T>.Last: RecordPointer;
-begin
-  result := @FList[FCount-1];
-end;
-
-procedure TRecordList<T>.MoveDataFrom(var RecordList: TRecordList<T>);
-begin
-  RecordList.MoveDataTo(self);
-end;
-
-procedure TRecordList<T>.MoveDataTo(var RecordList: TRecordList<T>);
-begin
-  Pack;
-  if RecordList.count = 0 then
-    RecordList.TakeOwnership(FList)
-  else
-    RecordList.Add(FList);
-
-  Clear;
-end;
-
-procedure TRecordList<T>.Pack;
-begin
-  SetLength(FList, FCount);
-end;
-
-procedure TRecordList<T>.PackWithBuffer(MaxBuffer: integer);
-var
-  AvailableBuffer: integer;
-begin
-  AvailableBuffer := Length(FList) - FCount;
-
-  if AvailableBuffer <= MaxBuffer then
-    exit;
-
-  SetLength(FList, FCount + MaxBuffer);
-end;
-
-procedure TRecordList<T>.Remove(Index: integer);
-begin
-  Dec(FCount);
-
-  if Index < FCount then
-    System.Move(FList[Index + 1], FList[Index], (FCount - Index) * SizeOf(T));   // source, dest, count
-end;
-
-procedure TRecordList<T>.Rotate(StartIndex, EndIndex: integer);
-var
-  ItemAtStart: T;
-  LNumMovedToStart: integer;
-
-begin
-
-  if EndIndex <= StartIndex then
-    exit;
-
-  ItemAtStart := FList[StartIndex]; //copy to preserve
-  System.Move(FList[StartIndex + 1], FList[StartIndex], EndIndex - StartIndex);
-  FList[EndIndex] := ItemAtStart;
-
-end;
-
-procedure TRecordList<T>.SetCapacity(const Value: integer);
-begin
-  if Value > Length(FList) then
-    SetLength(FList, Value);
-end;
-
-procedure TRecordList<T>.SetCount(const Value: integer);
-begin
-  FCount := Value;
-end;
-
-procedure TRecordList<T>.SetStartIndex(Index: integer);
-var
-  NumMovedToStart: integer;
-  FBuffer: TArray<T>;
-begin
-
- if Index > 0 then
- begin
-   SetLength(FBuffer, Index);
-   System.Move(FList[0], FBuffer[0], Index * SizeOf(T));
-
-   NumMovedToStart := FCount-Index;
-   System.Move(FList[Index], FList[0], NumMovedToStart * SizeOf(T));
-   System.Move(FBuffer[0], FList[NumMovedToStart], Index * SizeOf(T));
- end;
-
-end;
-
-procedure TRecordList<T>.Sort(const Comparer: IComparer<T>);
-begin
-  TArray.Sort<T>(FList, Comparer, 0, FCount);
-end;
-
-procedure TRecordList<T>.Add(const Element: T);
-begin
-  Add()^ := Element;
-end;
-
-procedure TRecordList<T>.Add(const Elements: TArray<T>);
-var
-  NextSlotIndex: integer;
-begin
-
-  NextSlotIndex :=  FCount;  // next
-  Inc(FCount, Length(Elements));
-
-  if FCount > High(FList) then
-    Expand;  // Expand is based on FCount
-
-  if Length(Elements) > 0 then
-     Move(Elements[0], FList[NextSlotIndex],  Length(Elements) * SizeOf(T));
-
-end;
-
-
-procedure TRecordList<T>.AddDistinct(const Element: T);
-var
+class procedure TTxer.Send<T>(ANumRecords: integer; AConfigureProc: TSendConfigProcIter<T>);
+Var
+  LDynArray: TArray<T>;
   i: integer;
+  LDefault: T;
 begin
+  SetLength(LDynArray, ANumRecords);
 
-  for i := FCount-1 downto 0 do
-    if EqualityComparer.Equals(FList[i], Element) then
-      exit;
+  LDefault := TxRec.Default<T>;
 
-  Add(Element);
+  for i := 0 to ANumRecords - 1 do
+  begin
+    LDynArray[i] := LDefault;
+    AConfigureProc(LDynArray[i], i);
+  end;
+  SendRecords(@LDynArray[0], ANumRecords);
+
 end;
-
-function TRecordList<T>.Add: RecordPointer;
-begin
-  if FCount > High(FList) then
-    Expand;
-
-  result := @FList[FCount];
-  Inc(FCount);
-end;
-
-procedure TRecordList<T>.Clear;
-const
-  DefaultRec: TRecordList<T> = ();
-begin
-  self := DefaultRec;
-end;
-
-
-constructor TRecordList<T>.Create(InitialCapacity: integer);
-begin
-  FCount := 0;
-  // FList is auto intialized since it is a dynamic array
-  if InitialCapacity > 0 then
-    SetLength(FList, InitialCapacity);
-end;
-
-
-procedure TRecordList<T>.TakeOwnership(var Elements: TArray<T>);
-begin
-  FList := Elements;
-  Elements := nil;
-  FCount := Length(FList);
-end;
-
-{ TRecordList<T>.TEnumerator<T> }
-
-constructor TRecordList<T>.TEnumerator.Create(count: integer; const List: TArray<T>);
-begin
-  inherited Create;
-  FIndex := -1;
-  FCount := count;
-  FList := List;
-end;
-
-function TRecordList<T>.TEnumerator.GetCurrent: RecordPointer;
-begin
-  Result := @FList[FIndex];
-end;
-
-function TRecordList<T>.TEnumerator.MoveNext: Boolean;
-begin
-  Inc(FIndex);
-  Result := FIndex < FCount;
-end;
-
-end.
 ```
+
+However, the nastiness was factored out and hidden in `TxRec.Default<T>`, which had to figure out type information for type T and then return a default for it. Since generics are generated for each type the code was duplicated for each type that filled `T` for `class function TxRec.Default<T>: T;`. 
+
+``` pascal
+class function TxRec.Default<T>: T;
+var
+  PT: ^T; // this will be a pointer to a const, do not modify values via this pointer
+begin
+
+  if TypeInfo(T) = TypeInfo(TxPointRec) then
+    PT := @DefaultPointRec
+  else if TypeInfo(T) = TypeInfo(TxLineRec) then
+    PT := @DefaultLineRec
+  else if TypeInfo(T) = TypeInfo(TxArcRec) then
+    PT := @DefaultArcRec
+  else if TypeInfo(T) = TypeInfo(TxPolyLineRec) then
+    PT := @DefaultPolyLineRec
+  else if TypeInfo(T) = TypeInfo(TxGeometryListRec) then
+    PT := @DefaultGeometryListRec
+  else
+    PT := nil; // raise exception
+
+  result := PT^; // We Copy value, so the constant is not inadvertently modified
+end;
+```
+
+I really dislike this code and tried to find alternatives. I investigated the build in function `Default(T)` that is used in the Generic Collections to set or return default values, but I could not find a way to override its behavor for my types. The code for `Default(T)` is not in system.pas and may be some compiler magic. I finally resolved to leave it as such.
+
+### Delphi 10.4 has some new tricks ###
+Unbeknownst to most Delphi developers two new operators were snuck into Delphi 10.4, they are not even in the installed help file, but only mentioned in the online the documentation and in a blog post by Marco Cantu. These two operators are `Initialize` and `Finalize` and the implications of these are huge (more on this later).
+
+`Initialize` allows us to define code that runs when a record first enters into scope, plus and most astounding to me, the code for `Initialize` is also called per element in an array if its allocated. 
+
+To make our record a "managed" record we add these two operators 
+
+``` pascal
+TMyRecord = record
+
+  // record data not relevant to illustration
+
+  class operator Initialize (out Dest: TMyRecord);
+  class operator Finalize(var Dest: TMyRecord);
+end;
+{% endhighlight %}  
+
+### Replacing `TxRec.Default<T>` with `Intialize` operator ###
+In our case we don't box any types that need to be disposed so we don't need `Finalize`, but we can use `Initialize` per each of our records to have them load their size and enumerated type.
+
+For instance, our line record can be changed to look like this:
+{% highlight pascal %}
+
+TxLineRec = Record
+  // Common header
+  Size: Cardinal; // UInt32
+  RecType: TxRectTypeEnum;
+
+  // Line Specific
+  p1, p2: PointRec;
+
+  class operator Initialize(out Dest: TxLineRec);
+End;
+...
+
+class operator TxLineRec.Initialize(out Dest: TxLineRec);
+begin
+  Dest.Size := SizeOf(TxLineRec);
+  Dest.RecType := TxRectType_Line;
+  // p1 and p2 are not initialized
+end;
+```
+
+The rest of the records can similarly be adjusted. This means we no longer have one central function that checks the type information to determine the default value to return, but rather each type controls their own initialization.
+
+Our send code is now even cleaner
+
+``` pascal
+class procedure TTxer.Send<T>(AConfigureProc: TSendConfigProc<T>);
+Var
+  L: T;
+begin
+  AConfigureProc(L);
+  SendRecord(@L);
+end;
+
+class procedure TTxer.Send<T>(ANumRecords: integer; AConfigureProc: TSendConfigProcIter<T>);
+Var
+  LDynArray: TArray<T>;
+  i: integer;
+  LDefault: T;
+begin
+  SetLength(LDynArray, ANumRecords);
+
+  for i := 0 to ANumRecords - 1 do
+    AConfigureProc(LDynArray[i], i);
+
+  SendRecords(@LDynArray[0], ANumRecords);
+end;
+```  
+
+## Cost and Benefits of Managed records ##
+When we call SetLength and new records are allocated for the array there is one call to `Initialize` per element. In my older code it was a faster local memory copy in the loop before configuring the record before transmission.
+
+I don't know what other overheads are associated with managed records. They seem to be more analogous to C++ classes and structs that exist on the stack instead of dynamically allocated on the free store (like all Delphi objects). Testing would be needed to see if there is any extra processing. In my basic testing I did not notice any differences.
+
+Managed records allow us to have stack managed types that can box types that are dynamically allocated on the free store (colloquially called the heap). Dynamically allocated types can be constructed in `Initialize` and disposed in `Finalize` without developers needing to call constructors and box code in try-finally blocks. These types are scope managed.
+
+## Other Improvements to the Transmitter Class  ##
+I realized in rewriting some of the code that signaling that does not require any configuration, or records that can be transmitted once configured based on their own `Initialize` code. So there are now three overloads for `Send<T>`.
+
+I also considered the need for end-users to control records themselves without a configuration callbacks, and to facilicate that, I added two overloads for `SendRecords`
+
+``` pascal
+TTxer = class
+private
+
+public
+
+  class procedure SendRecord(ARecord: PTxRec); static;
+  class procedure SendRecords(ARecordArray: PTxRec; ACount: integer); static;
+
+  class procedure Send<T>(); overload;  // signal type, no configured data
+  class procedure Send<T>(AConfigureProc: TSendConfigProc<T>); overload;
+  class procedure Send<T>(ANumRecords: integer; AConfigureProc: TSendConfigProcIter<T>); overload;
+end;
+```
+
+
+## Conclusion ##
+
+The updated repository for this blog series code can be found [here](https://github.com/schellingerhout/data-transmission-delphi/tree/Delphi10.4). You will notice that its a branch named Delphi10.4, the original source code is still under the master branch
