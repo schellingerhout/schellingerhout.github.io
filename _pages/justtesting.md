@@ -137,7 +137,7 @@ TMyRecord = record
   class operator Initialize (out Dest: TMyRecord);
   class operator Finalize(var Dest: TMyRecord);
 end;
-{% endhighlight %}  
+```
 
 ### Replacing `TxRec.Default<T>` with `Intialize` operator ###
 In our case we don't box any types that need to be disposed so we don't need `Finalize`, but we can use `Initialize` per each of our records to have them load their size and enumerated type.
