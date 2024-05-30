@@ -37,5 +37,13 @@ The solution is very easy:
 2. Enter your phone number and it will send you a code to de-register, 
 3. then text a friend with an iPhone to send you a test text message
 
+## Can Apple fix this?
+
+Apple would need to have a way to detect that a phone number is no longer associated with an iPhone. It may be hard for them to establish systems to do this. If messages are continually not delivered or at least not delivered to an iPhone with iMessage associated they need to consider delivering via cell networks
+
+## Can Cell providers help?
+
+Yes! Cell providers should establish systems to de-register phone numbers with iMessage as they are recycled. Or, establish a database for Apple to query to automatically de-register recycled numbers
+
 ## Conclusion
 I hope that you found this useful or at least interesting. 
