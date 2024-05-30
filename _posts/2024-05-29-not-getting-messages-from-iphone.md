@@ -39,7 +39,7 @@ The solution is very easy:
 
 ## Can Apple fix this?
 
-Apple would need to have a way to detect that a phone number is no longer associated with an iPhone. It may be hard for them to establish systems to do this. If messages are continually not delivered or at least not delivered to an iPhone with iMessage associated they need to consider delivering via cell networks
+Apple would need to have a way to detect that a phone number is no longer associated with an iPhone. It may be hard for them to establish systems to do this. If messages are continually not delivered - or at least not delivered to an iPhone with iMessage associated - they need to consider delivering via cell networks
 
 ## Can Cell providers help?
 
