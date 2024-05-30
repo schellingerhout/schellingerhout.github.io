@@ -11,22 +11,22 @@ tags:
   - iMessage
 ---
 
-Who is to blame for when a Samsung user with a new phone number can't get text messages from iPhones. 
+Who is to blame for when a Samsung user with a new phone number can't get text messages from iPhones?
 
 <!--more-->
-Spoiler: It may be Apple's fault, you can fix it very easily.
+Spoiler: It may be Apple's fault; you can fix it very easily.
 
 ## You've tried it all
 * Rebooted your phone, 
 * Checked your APNs,
 * Even called your cell provider's support (where all three people you talk to are called "John"),
-* Sent SMS and MMS messages to friends that receive them fine
+* Sent SMS and MMS messages to friends that receive them fine (both on Android or iPhone)
 * Received text messages from other Android phones,
 but you just don't receive any text messages from iPhones. 😡
 
 ## iMessage 
 
-iMessage is a secure message protocol and app for sending messages over the Internet. So what does iMessage have to do with your problem? Well if you got a new phone or a new phone number your old number may have been recycled. If your old number is still associated with iMessage then it seems that Apple will send it via iMessage instead of via SMS, meaning you will never receive it.
+iMessage is a secure message protocol and app for sending messages over the Internet. So, what does iMessage have to do with your problem? Well, if you got a new phone or a new phone number your old number may have been recycled. If your old number is still associated with iMessage then it seems that Apple will send it via iMessage instead of via SMS, meaning you will never receive it.
 
 ## So how do you fix this?
 
