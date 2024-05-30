@@ -26,7 +26,7 @@ but you just don't receive any text messages from iPhones. 😡
 
 ## iMessage 
 
-iMessage is a secure message protocol and app for sending messages over the Internet. So, what does iMessage have to do with your problem? Well, if you got a new phone number it may be an previously used number that was recycled. If your new recycled phone number is still associated with iMessage, then it seems that Apple will send it via iMessage instead of via SMS, meaning you will never receive it.
+iMessage is a secure message protocol and app for sending messages over the Internet. So, what does iMessage have to do with your problem? Well, if you got a new phone number it may be a previously used number that was recycled. If your new recycled phone number is still associated with iMessage, then it seems that Apple will send it via iMessage instead of via SMS, meaning you will never receive it.
 
 ## So how do you fix this?
 
