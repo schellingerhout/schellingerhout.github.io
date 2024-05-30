@@ -30,7 +30,7 @@ iMessage is a secure message protocol and app for sending messages over the Inte
 
 ## So how do you fix this?
 
-So how do I remove my phone number from iMessage if I've never even used iMessage or owned an iPhone. 
+So how do I remove my phone number from iMessage if I've never even used iMessage or owned an iPhone? 
 
 The solution is very easy: 
 1. go to [Apple's page dedicated to deregistering from iMessage](https://selfsolve.apple.com/deregister-imessage)
